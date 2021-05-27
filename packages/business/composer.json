@@ -1,0 +1,42 @@
+{
+  "name": "derhub/business",
+  "description": "",
+  "authors": [
+    {
+      "name": "Johnder Baul",
+      "email": "imjohnderbaul@gmail.com"
+    }
+  ],
+  "require": {
+    "ext-pdo": "*",
+    "derhub/shared": "dev-master",
+    "gedmo/doctrine-extensions": "^3.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "phpunit/phpunit": "^9.5",
+    "spiral/pagination": "^2.7",
+    "derhub/integration": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Derhub\\Business\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Business\\": "tests"
+    }
+  },
+  "scripts": {
+    "psalm": "../../vendor/bin/psalm ."
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../*"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
