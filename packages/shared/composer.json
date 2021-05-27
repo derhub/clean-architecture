@@ -1,0 +1,46 @@
+{
+  "name": "derhub/shared",
+  "description": "",
+  "authors": [
+    {
+      "name": "Johnder Baul",
+      "email": "imjohnderbaul@gmail.com"
+    }
+  ],
+  "require": {
+    "beberlei/assert": "^3.3",
+    "giggsey/libphonenumber-for-php": "^8.12",
+    "league/fractal": "^0.19.2",
+    "psr/http-message": "^1.0",
+    "ramsey/uuid": "^4.1",
+    "symfony/string": "^5.2",
+    "symfony/translation-contracts": "^2.3",
+    "doctrine/orm": "^2.8",
+    "league/iso3166": "^3.0"
+  },
+  "require-dev": {
+    "illuminate/database": "^8.37",
+    "roave/security-advisories": "dev-latest",
+    "phpunit/phpunit": "^9.5",
+    "swoole/ide-helper": "@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "Derhub\\Shared\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Shared\\": "tests"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Derhub\\Shared\\Integrations\\Laravel\\LaravelServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
