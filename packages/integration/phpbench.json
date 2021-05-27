@@ -1,0 +1,19 @@
+{
+  "runner.bootstrap": "vendor/autoload.php",
+  "report.generators": {
+    "bench": {
+      "extends": "aggregate",
+      "title": "aggregate",
+      "cols": [
+        "benchmark",
+        "subject",
+        "mean",
+        "worst",
+        "best",
+        "mem_peak",
+        "stdev",
+        "rstdev"
+      ]
+    }
+  }
+}
