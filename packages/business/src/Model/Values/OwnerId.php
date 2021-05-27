@@ -2,8 +2,9 @@
 
 namespace Derhub\Business\Model\Values;
 
-use Derhub\Shared\Model\ValueObject\ValueObjectStr;
-use Derhub\Shared\ValueObject\UuidValueObject;
+
+use Derhub\Shared\Values\UuidValueObject;
+use Derhub\Shared\Values\ValueObjectStr;
 
 class OwnerId implements ValueObjectStr
 {

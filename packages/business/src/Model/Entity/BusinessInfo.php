@@ -63,7 +63,7 @@ class BusinessInfo implements Entity
         ];
     }
 
-    public function sameIdentity(Entity $other): bool
+    public function sameAs(Entity $other): bool
     {
         return $other instanceof self
             && $other->ownerId() === $this->ownerId();

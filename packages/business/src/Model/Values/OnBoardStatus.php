@@ -2,12 +2,15 @@
 
 namespace Derhub\Business\Model\Values;
 
-use Derhub\Shared\Model\ValueObject;
+use Derhub\Shared\Values;
 use Derhub\Shared\Utils\Assert;
+use Derhub\Shared\Values\ValueObject;
+use Derhub\Shared\Values\ValueObjectInt;
+use Derhub\Shared\Values\ValueObjectStr;
 
 class OnBoardStatus implements
-    ValueObject\ValueObjectStr,
-    ValueObject\ValueObjectInt
+    ValueObjectStr,
+    ValueObjectInt
 {
     public const ONBOARD = 2;
     public const HANDED = 1;

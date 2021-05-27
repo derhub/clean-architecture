@@ -2,12 +2,12 @@
 
 namespace Derhub\Business\Model\Values;
 
-use Derhub\Shared\Model\ValueObject;
 use Derhub\Shared\Utils\Assert;
+use Derhub\Shared\Values\ValueObject;
+use Derhub\Shared\Values\ValueObjectInt;
+use Derhub\Shared\Values\ValueObjectStr;
 
-class Status implements
-    ValueObject\ValueObjectInt,
-    ValueObject\ValueObjectStr
+class Status implements ValueObjectInt, ValueObjectStr
 {
     public const DISABLED = 0;
     public const ENABLED = 1;

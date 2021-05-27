@@ -2,6 +2,7 @@
 
 namespace Tests\Business\Model;
 
+use Derhub\Business\Infrastructure\Database\InMemoryBusinessRepository;
 use Derhub\Business\Model\Entity\BusinessInfo;
 use Derhub\Business\Model\Event\BusinessCountryChanged;
 use Derhub\Business\Model\Event\BusinessEnabled;
@@ -17,7 +18,6 @@ use Derhub\Business\Model\Values\OnBoardStatus;
 use Derhub\Business\Model\Values\OwnerId;
 use Derhub\Business\Model\Values\Slug;
 
-use Derhub\Business\Infrastructure\InMemoryBusinessRepository;
 use Derhub\Business\Model\Event\BusinessDisabled;
 use Derhub\Business\Model\Business;
 use Derhub\Business\Model\Event\BusinessHanded;
@@ -30,7 +30,7 @@ use Derhub\Integration\TestUtils\ModuleTestCase;
 use Derhub\Shared\Infrastructure\FakeSpecification\FakeSpecification;
 use Derhub\Shared\Model\DomainEvent;
 use Derhub\Shared\Utils\Uuid;
-use Derhub\Shared\ValueObject\DateTimeLiteral;
+use Derhub\Shared\Values\DateTimeLiteral;
 
 class IsUniqueName extends FakeSpecification implements UniqueNameSpec
 {

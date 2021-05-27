@@ -2,8 +2,8 @@
 
 namespace Derhub\Business\Model\Values;
 
-use Derhub\Shared\Model\ValueObject\ValueObjectStr;
-use Derhub\Shared\ValueObject\UuidValueObject;
+use Derhub\Shared\Values\ValueObjectStr;
+use Derhub\Shared\Values\UuidValueObject;
 
 final class BusinessId implements ValueObjectStr
 {

@@ -2,10 +2,10 @@
 
 namespace Derhub\Business\Model\Values;
 
-use Derhub\Shared\Model\ValueObject;
-use Derhub\Shared\Model\ValueObject\ValueObjectStr;
 use Derhub\Shared\Utils\Assert;
 use Derhub\Shared\Utils\Str;
+use Derhub\Shared\Values\ValueObject;
+use Derhub\Shared\Values\ValueObjectStr;
 
 class Slug implements ValueObjectStr
 {

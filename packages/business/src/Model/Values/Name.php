@@ -2,8 +2,8 @@
 
 namespace Derhub\Business\Model\Values;
 
-use Derhub\Shared\Model\ValueObject;
-use Derhub\Shared\Model\ValueObject\ValueObjectStr;
+use Derhub\Shared\Values\ValueObject;
+use Derhub\Shared\Values\ValueObjectStr;
 use Derhub\Shared\Utils\Assert;
 
 class Name implements ValueObjectStr
