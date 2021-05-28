@@ -2,9 +2,9 @@
 
 namespace Derhub\Shared\Database\Doctrine\Types;
 
+use Derhub\Shared\Values\ValueObjectStr;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
-use Derhub\Shared\Model\ValueObject\ValueObjectStr;
 
 trait DbalTyping
 {
@@ -50,17 +50,6 @@ trait DbalTyping
         }
 
         return $this->convertFromRaw($value);
-
-//        $class = $this->defineClass();
-//        if (method_exists($class, 'fromString')) {
-//            return $class::fromString($value);
-//        }
-//
-//        throw ConversionException::conversionFailedInvalidType(
-//            $value,
-//            $class,
-//            [null, $class]
-//        );
     }
 
     public function convertToDatabaseValue($value, ?AbstractPlatform $platform)
