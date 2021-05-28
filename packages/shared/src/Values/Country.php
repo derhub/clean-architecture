@@ -27,6 +27,11 @@ abstract class Country implements ValueObjectStr
             && $other->toString() === $this->toString();
     }
 
+    public static function validate(string $value): bool
+    {
+        return true;
+    }
+
     public static function fromString(string $value): static
     {
         return static::fromAlpha2($value);

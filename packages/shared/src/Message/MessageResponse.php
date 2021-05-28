@@ -4,8 +4,6 @@ namespace Derhub\Shared\Message;
 
 interface MessageResponse
 {
-    public function aggregate(): string;
-
     public function errors(): array;
 
     public function warning(): array;

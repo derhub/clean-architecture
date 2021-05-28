@@ -10,10 +10,16 @@ class CountryLookup
     public const KEY_CURRENCY = 'currency';
     public const KEY_NAME = 'name';
 
+    public static function isValidKey(string $key): bool
+    {
+        return isset(self::$countries[$key]);
+    }
+
     public static function fromAlpha2($value): array
     {
-        self::ensureAlpha2Values();
-        Assert::inArray($value, self::$alpha2Values);
+        if (! self::isValidKey($value)) {
+            throw InvalidCountryException::fromKey($value);
+        }
         return self::$countries[$value];
     }
 
@@ -25,13 +31,6 @@ class CountryLookup
     public static function keys(): array
     {
         return self::$alpha2Values;
-    }
-
-    private static function ensureAlpha2Values(): void
-    {
-        if (empty(self::$alpha2Values)) {
-            self::$alpha2Values = array_keys(self::$countries);
-        }
     }
 
     private static array $alpha2Values = [];

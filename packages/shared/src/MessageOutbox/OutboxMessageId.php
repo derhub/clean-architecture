@@ -3,6 +3,7 @@
 namespace Derhub\Shared\MessageOutbox;
 
 use Derhub\Shared\Utils\Uuid;
+use Derhub\Shared\Values\ValueObject;
 use Derhub\Shared\Values\ValueObjectStr;
 
 class OutboxMessageId implements ValueObjectStr
