@@ -6,7 +6,7 @@ namespace Derhub\Business\Model\Exception;
 
 use Derhub\Shared\Exceptions\DomainException;
 
-final class EmptySlugException extends \Exception implements DomainException
+final class InvalidSlugException extends \Exception implements DomainException
 {
     public static function fromHandOver(): self
     {
@@ -18,8 +18,12 @@ final class EmptySlugException extends \Exception implements DomainException
         return new self('business slug is required when onboard');
     }
 
-    public static function fromChangeSlug(): self
+    public static function fromException(DomainException|\Exception $e): self
     {
-        return new self('business slug already exists');
+        return new self(
+            $e->getMessage(),
+            $e->getCode(),
+            $e,
+        );
     }
 }

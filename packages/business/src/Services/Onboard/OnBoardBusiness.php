@@ -2,16 +2,18 @@
 
 namespace Derhub\Business\Services\Onboard;
 
-use Derhub\Business\Services\BaseMessage;
 use Derhub\Shared\Message\Command\Command;
 
-final class OnBoardBusiness extends BaseMessage implements Command
+class OnBoardBusiness implements Command
 {
+    private int $version = 1;
+
     public function __construct(
         private string $name,
         private string $ownerId,
         private string $slug,
         private string $country,
+        private string $onboardStatus,
     ) {
     }
 
@@ -33,5 +35,15 @@ final class OnBoardBusiness extends BaseMessage implements Command
     public function country(): string
     {
         return $this->country;
+    }
+
+    public function onboardStatus(): string
+    {
+        return $this->onboardStatus;
+    }
+
+    public function version(): int
+    {
+        return $this->version;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Derhub\Business\Infrastructure\Persistence\Doctrine;
+namespace Derhub\Business\Infrastructure\Database\Doctrine;
 
 use Derhub\Business\Infrastructure\Persistence\Doctrine\Type\BusinessCountryType;
 use Derhub\Business\Infrastructure\Persistence\Doctrine\Type\BusinessOnBoardStatusType;

@@ -2,6 +2,8 @@
 
 namespace Derhub\Business\Model\Values;
 
+use Derhub\Business\Model\Exception\InvalidSlugException;
+use Derhub\Shared\Exceptions\DomainException;
 use Derhub\Shared\Utils\Assert;
 use Derhub\Shared\Utils\Str;
 use Derhub\Shared\Values\ValueObject;
@@ -43,7 +45,11 @@ class Slug implements ValueObjectStr
 
     public static function validate(string|array $value): bool
     {
-        Assert::slug($value);
+        try {
+            Assert::slug($value);
+        } catch (DomainException $e) {
+            throw InvalidSlugException::fromException($e);
+        }
         return true;
     }
 

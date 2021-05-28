@@ -1,18 +1,18 @@
 <?php
 
-namespace Derhub\Business\Services\FindByAggregateId;
+namespace Derhub\Business\Services\GetByAggregateId;
 
 use Derhub\Business\Module;
 use Derhub\Business\Services\BusinessQueryItem;
-use Derhub\Business\Services\BusinessItemMapperImpl;
+use Derhub\Business\Services\BusinessItemMapperDoctrine;
 use Derhub\Business\Services\BusinessQueryItemMapper;
 use Derhub\Shared\Message\Query\AbstractQueryResponse;
 
-class FindByAggregateIdResponse extends AbstractQueryResponse
+class GetByAggregateIdResponse extends AbstractQueryResponse
 {
     private iterable $result;
 
-    public function __construct(private BusinessQueryItemMapper $mapper)
+    public function __construct()
     {
         parent::__construct();
 
@@ -31,9 +31,7 @@ class FindByAggregateIdResponse extends AbstractQueryResponse
 
     public function result(): iterable
     {
-        foreach ($this->result as $item) {
-            yield $this->mapper->fromArray($item);
-        }
+        return $this->result;
     }
 
 }

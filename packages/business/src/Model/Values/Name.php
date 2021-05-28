@@ -2,12 +2,16 @@
 
 namespace Derhub\Business\Model\Values;
 
+use Derhub\Business\Model\Exception\InvalidNameException;
+use Derhub\Shared\Exceptions\DomainException;
 use Derhub\Shared\Values\ValueObject;
 use Derhub\Shared\Values\ValueObjectStr;
 use Derhub\Shared\Utils\Assert;
 
 class Name implements ValueObjectStr
 {
+    public const MAX_LENGTH = 100;
+
     private ?string $value;
 
     public function __construct()
@@ -17,16 +21,21 @@ class Name implements ValueObjectStr
 
     private static function init(string $value): self
     {
-        Assert::maxLength($value, 100);
+        try {
+            Assert::notEmpty($value);
+            Assert::maxLength($value, self::MAX_LENGTH);
 
-        $self = new self();
-        $self->value = $value;
-        return $self;
+            $self = new self();
+            $self->value = $value;
+            return $self;
+        } catch (DomainException $e) {
+            throw InvalidNameException::fromException($e);
+        }
     }
 
     public function __toString(): string
     {
-        return 'business name ' . $this->value ?? '';
+        return 'business name '.$this->value ?? '';
     }
 
     public function value(): ?string

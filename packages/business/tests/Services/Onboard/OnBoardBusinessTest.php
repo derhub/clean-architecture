@@ -5,8 +5,7 @@ namespace Tests\Business\Services\Onboard;
 use Derhub\Business\Model\Business;
 use Derhub\Business\Model\Exception\NameAlreadyExist;
 use Derhub\Business\Model\Exception\SlugExistException;
-use Derhub\Business\Model\Specification\UniqueNameSpec;
-use Derhub\Business\Model\Specification\UniqueSlugSpec;
+use Derhub\Business\Model\Values\OnBoardStatus;
 use Derhub\Business\Model\Values\OwnerId;
 use Derhub\Business\Services\Onboard\OnBoardBusiness;
 use Derhub\Business\Services\Onboard\OnBoardBusinessHandler;
@@ -15,19 +14,12 @@ use Tests\Business\Services\BaseServiceTestCase;
 
 class OnBoardBusinessTest extends BaseServiceTestCase
 {
-
-    public function setUp(): void
+    protected function getHandler(): object
     {
-        parent::setUp();
-        $this->container->add(
-            OnBoardBusinessHandler::class,
-            function () {
-                return new OnBoardBusinessHandler(
-                    $this->repository,
-                    $this->mockUniqueNameSpec,
-                    $this->mockUniqueSlugSpec,
-                );
-            }
+        return new OnBoardBusinessHandler(
+            $this->repository,
+            $this->mockUniqueNameSpec,
+            $this->mockUniqueSlugSpec,
         );
     }
 
@@ -49,10 +41,11 @@ class OnBoardBusinessTest extends BaseServiceTestCase
         return $this->given(Business::class)
             ->when(
                 new OnBoardBusiness(
-                    'test',
-                    OwnerId::generate()->toString(),
-                    'test-1-2-3-4',
-                    'PH'
+                    name: 'test',
+                    ownerId: OwnerId::generate()->toString(),
+                    slug: 's-d-f-g',
+                    country: 'PH',
+                    onboardStatus: OnBoardStatus::byOwner()->toString(),
                 )
             )
             ;

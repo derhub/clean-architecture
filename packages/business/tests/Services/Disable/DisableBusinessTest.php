@@ -2,18 +2,19 @@
 
 namespace Tests\Business\Services\Disable;
 
-use Derhub\Business\Infrastructure\InMemoryBusinessRepository;
 use Derhub\Business\Model\Business;
-use Derhub\Business\Model\Values\BusinessId;
-use Derhub\Business\Module;
 use Derhub\Business\Services\Disable\DisableBusiness;
 use Derhub\Business\Services\Disable\DisableBusinessHandler;
 use Derhub\Business\Services\Disable\DisableBusinessResponse;
-use Derhub\Shared\ModuleInterface;
 use Tests\Business\Services\BaseServiceTestCase;
 
 class DisableBusinessTest extends BaseServiceTestCase
 {
+    protected function getHandler(): object
+    {
+        return new DisableBusinessHandler($this->repository);
+    }
+
     /**
      * @test
      */

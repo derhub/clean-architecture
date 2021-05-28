@@ -1,6 +1,6 @@
 <?php
 
-namespace Derhub\Business\Services\BusinessList;
+namespace Derhub\Business\Services\GetBusinesses;
 
 use Derhub\Business\Infrastructure\Database\QueryBusinessRepository;
 use Derhub\Business\Model\Values\BusinessId;
@@ -14,17 +14,15 @@ use Derhub\Shared\Query\Filters\OperationFilter;
 use Derhub\Shared\Query\Filters\PaginationFilter;
 use Derhub\Shared\Query\Filters\SortFilter;
 
-class BusinessListHandler
+class GetBusinessesHandler
 {
-    public function __construct(
-        private QueryBusinessRepository $repository,
-        private BusinessQueryItemMapper $mapper,
-    ) {
+    public function __construct(private QueryBusinessRepository $repository)
+    {
     }
 
-    public function __invoke(BusinessList $msg): BusinessListResponse
+    public function __invoke(GetBusinesses $msg): GetBusinessesResponse
     {
-        $response = new BusinessListResponse($this->mapper);
+        $response = new GetBusinessesResponse();
         try {
             $filters = [
                 new SortFilter(SharedValues::COL_CREATED_AT, 'desc'),
@@ -36,14 +34,12 @@ class BusinessListHandler
             $filters = $this->addFilterForSlugs($filters, $msg->slugs());
             $filters = $this->addFilterForStatus($filters, $msg->enabled());
 
-            $results = $this->repository
-                ->addFilters(
-                    ...$filters
-                )
+            $query = $this->repository
+                ->addFilters($filters)
                 ->iterableResult()
             ;
 
-            $response->setResults($results);
+            $response->setResults($query);
         } catch (LayeredException $e) {
             $response->addError($e::class, $e->getMessage(), $e);
         }

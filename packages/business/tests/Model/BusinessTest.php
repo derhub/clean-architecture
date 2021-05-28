@@ -3,13 +3,12 @@
 namespace Tests\Business\Model;
 
 use Derhub\Business\Infrastructure\Database\InMemoryBusinessRepository;
-use Derhub\Business\Model\Entity\BusinessInfo;
 use Derhub\Business\Model\Event\BusinessCountryChanged;
 use Derhub\Business\Model\Event\BusinessEnabled;
 use Derhub\Business\Model\Event\BusinessNameChanged;
 use Derhub\Business\Model\Event\BusinessOwnershipTransferred;
 use Derhub\Business\Model\Event\BusinessSlugChanged;
-use Derhub\Business\Model\Exception\EmptyOwnerIdException;
+use Derhub\Business\Model\Exception\InvalidOwnerIdException;
 use Derhub\Business\Model\Exception\NameAlreadyExist;
 use Derhub\Business\Model\Exception\SlugExistException;
 use Derhub\Business\Model\Specification\UniqueSlugSpec;
@@ -20,12 +19,10 @@ use Derhub\Business\Model\Values\Slug;
 
 use Derhub\Business\Model\Event\BusinessDisabled;
 use Derhub\Business\Model\Business;
-use Derhub\Business\Model\Event\BusinessHanded;
 use Derhub\Business\Model\Event\BusinessOnboarded;
 use Derhub\Business\Model\Specification\UniqueNameSpec;
 use Derhub\Business\Model\Values\BusinessId;
 use Derhub\Business\Model\Values\Name;
-use Derhub\Business\Model\Values\Status;
 use Derhub\Integration\TestUtils\ModuleTestCase;
 use Derhub\Shared\Infrastructure\FakeSpecification\FakeSpecification;
 use Derhub\Shared\Model\DomainEvent;
@@ -43,13 +40,13 @@ class IsUniqueSlug extends FakeSpecification implements UniqueSlugSpec
 
 class BusinessTest extends ModuleTestCase
 {
-    private const INFO = 'info';
-    private const SLUG = 'slug';
+    private BusinessId $lastId;
 
     protected function setUp(): void
     {
         parent::setUp();
         DateTimeLiteral::freezeAt(DateTimeLiteral::now());
+        $this->lastId = BusinessId::generate();
     }
 
     protected function tearDown(): void
@@ -74,14 +71,8 @@ class BusinessTest extends ModuleTestCase
             $model->pullEvents()
         );
 
-        $this->checkObjectPropertyValues(
-            $model,
-            [
-                self::INFO => (new BusinessInfo())->newOwner($ownerId),
-            ],
-        );
 
-        $this->expectException(EmptyOwnerIdException::class);
+        $this->expectException(InvalidOwnerIdException::class);
         $model->transferOwnership(new OwnerId());
     }
 
@@ -93,12 +84,7 @@ class BusinessTest extends ModuleTestCase
             IsUniqueSlug::yes(),
             $slug
         );
-        $this->checkObjectPropertyValues(
-            $model,
-            [
-                self::SLUG => $slug,
-            ],
-        );
+
         $this->assertEvents([BusinessSlugChanged::class], $model->pullEvents());
 
         $this->expectException(SlugExistException::class);
@@ -117,12 +103,7 @@ class BusinessTest extends ModuleTestCase
             IsUniqueName::yes(),
             $name
         );
-        $this->checkObjectPropertyValues(
-            $model,
-            [
-                self::INFO => (new BusinessInfo())->newName($name),
-            ],
-        );
+
         $this->assertEvents([BusinessNameChanged::class], $model->pullEvents());
 
         $this->expectException(NameAlreadyExist::class);
@@ -138,74 +119,29 @@ class BusinessTest extends ModuleTestCase
         $ownerId = OwnerId::fromString(Uuid::generate());
 
         $model = $this->createModel();
-        $model->changeSlug(
-            IsUniqueSlug::yes(),
-            Slug::fromString('testdddd'),
-        );
-        $model->changeName(
-            IsUniqueName::yes(),
-            Name::fromString('test 1'),
-        );
-        $model->transferOwnership($ownerId);
-        $model->changeCountry(Country::fromAlpha2('PH'));
-        $model->pullEvents();
 
-        $model->onBoard();
+        $model->onBoard(
+            nameSpec: IsUniqueName::yes(),
+            slugSpec: IsUniqueSlug::yes(),
+            id: $this->lastId,
+            ownerId: $ownerId,
+            name: Name::fromString('test 1'),
+            slug: Slug::fromString('test-2-s-f-g'),
+            country: Country::fromAlpha2('PH'),
+            boardingStatus: OnBoardStatus::byOwner(),
+        );
         $this->assertEvents(
             [
                 BusinessOnboarded::class,
             ],
             $model->pullEvents(),
         );
-
-        $this->checkObjectPropertyValues(
-            $model,
-            [
-                'onBoardStatus' => OnBoardStatus::onBoard(),
-                'status' => Status::enable(),
-                'createdAt' => DateTimeLiteral::now(),
-            ]
-        );
-    }
-
-    public function test_hand_over(): void
-    {
-        $ownerId = OwnerId::fromString(Uuid::generate());
-
-        $model = $this->createModel();
-        $model->changeSlug(
-            IsUniqueSlug::yes(),
-            Slug::fromString('testdddd'),
-        );
-        $model->changeName(
-            IsUniqueName::yes(),
-            Name::fromString('test 1'),
-        );
-        $model->transferOwnership($ownerId);
-        $model->changeCountry(Country::fromString('PH'));
-        $model->pullEvents();
-
-        $model->handOver();
-        $this->assertEvents(
-            [
-                BusinessHanded::class,
-            ],
-            $model->pullEvents(),
-        );
-
-        $this->checkObjectPropertyValues(
-            $model,
-            [
-                'onBoardStatus' => OnBoardStatus::handed(),
-                'status' => Status::enable(),
-            ]
-        );
     }
 
     private function createModel(): Business
     {
-        $id = BusinessId::fromString((string)Uuid::generate());
-        return new Business(aggregateRootId: $id);
+        $this->lastId = BusinessId::fromString((string)Uuid::generate());
+        return new Business($this->lastId);
     }
 
     public function test_disabled(): void
@@ -240,13 +176,6 @@ class BusinessTest extends ModuleTestCase
         $model->changeCountry($country);
         $this->assertEvents(
             [BusinessCountryChanged::class], $model->pullEvents()
-        );
-
-        $this->checkObjectPropertyValues(
-            $model,
-            [
-                'info' => (new BusinessInfo())->newCountry($country),
-            ]
         );
     }
 }

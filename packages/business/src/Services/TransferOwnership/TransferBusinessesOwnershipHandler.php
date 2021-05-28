@@ -25,7 +25,8 @@ final class TransferBusinessesOwnershipHandler
         $res = new TransferBusinessesOwnershipResponse($msg->aggregateRootId());
         try {
             $id = BusinessId::fromString($msg->aggregateRootId());
-            $model = $this->getModel($id);
+            /** @var \Derhub\Business\Model\Business $model */
+            $model = $this->repo->get($id);
 
             $model->transferOwnership(OwnerId::fromString($msg->ownerId()));
             $this->repo->save($model);
@@ -34,17 +35,5 @@ final class TransferBusinessesOwnershipHandler
         }
 
         return $res;
-    }
-
-    private function getModel(BusinessId $id): Business
-    {
-        /** @var ?\Derhub\Business\Model\Business $model */
-        $model = $this->repo->get($id);
-
-        if (! $model) {
-            throw BusinessNotFound::fromId($id);
-        }
-
-        return $model;
     }
 }

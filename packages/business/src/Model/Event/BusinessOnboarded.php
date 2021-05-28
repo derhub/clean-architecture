@@ -13,8 +13,9 @@ final class BusinessOnboarded implements DomainEvent
         private string $ownerId,
         private string $name,
         private string $slug,
-        private string $createdAt,
         private string $country,
+        private string $boardingStatus,
+        private string $createdAt,
     ) {
     }
 
@@ -51,6 +52,11 @@ final class BusinessOnboarded implements DomainEvent
     public function country(): string
     {
         return $this->country;
+    }
+
+    public function boardingStatus(): int
+    {
+        return $this->boardingStatus;
     }
 
 }

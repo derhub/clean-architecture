@@ -1,6 +1,6 @@
 <?php
 
-namespace Derhub\Business\Services\FindByAggregateId;
+namespace Derhub\Business\Services\GetByAggregateId;
 
 use Derhub\Business\Infrastructure\Database\QueryBusinessRepository;
 use Derhub\Business\Model\Values\BusinessId;
@@ -10,17 +10,14 @@ use Derhub\Shared\Exceptions\LayeredException;
 use Derhub\Shared\Query\Filters\InArrayFilter;
 use Derhub\Shared\Query\Filters\OperationFilter;
 
-class FindByAggregateIdHandler
+class GetByAggregateIdHandler
 {
-    public function __construct(
-        private QueryBusinessRepository $repository,
-        private BusinessQueryItemMapper $mapper
-    ) {
+    public function __construct(private QueryBusinessRepository $repository) {
     }
 
-    public function __invoke(FindByAggregateId $msg): FindByAggregateIdResponse
+    public function __invoke(GetByAggregateId $msg): GetByAggregateIdResponse
     {
-        $response = new FindByAggregateIdResponse($this->mapper);
+        $response = new GetByAggregateIdResponse();
         try {
             $aggregateIds = $msg->aggregateRootId();
             BusinessId::validate($aggregateIds);
@@ -40,7 +37,7 @@ class FindByAggregateIdHandler
             }
 
             $find = $this->repository
-                ->addFilters($filter)
+                ->addFilter($filter)
                 ->iterableResult()
             ;
             $response->setResult($find);

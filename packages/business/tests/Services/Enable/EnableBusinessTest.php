@@ -10,16 +10,9 @@ use Tests\Business\Services\BaseServiceTestCase;
 
 class EnableBusinessTest extends BaseServiceTestCase
 {
-    public function setUp(): void
+    protected function getHandler(): object
     {
-        parent::setUp();
-
-        $this->container->add(
-            EnableBusinessHandler::class,
-            function () {
-                return new EnableBusinessHandler($this->repository);
-            }
-        );
+        return new EnableBusinessHandler($this->repository);
     }
 
     /**

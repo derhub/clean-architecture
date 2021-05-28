@@ -1,19 +1,16 @@
 <?php
 
-namespace Derhub\Business\Services\BusinessList;
+namespace Derhub\Business\Services\GetBusinesses;
 
 use Derhub\Business\Module;
 use Derhub\Business\Services\BusinessQueryItemMapper;
 use Derhub\Shared\Message\Query\AbstractQueryResponse;
 
-class BusinessListResponse extends AbstractQueryResponse
+class GetBusinessesResponse extends AbstractQueryResponse
 {
     private iterable $results;
 
-    public function __construct(
-        private BusinessQueryItemMapper $mapper,
-
-    ) {
+    public function __construct() {
         parent::__construct();
 
         $this->results = [];
@@ -35,8 +32,6 @@ class BusinessListResponse extends AbstractQueryResponse
      */
     public function result(): iterable
     {
-        foreach ($this->results as $item) {
-            yield $this->mapper->fromArray($item);
-        }
+        return $this->results;
     }
 }

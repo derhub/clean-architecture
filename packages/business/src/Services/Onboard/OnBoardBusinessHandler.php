@@ -8,6 +8,7 @@ use Derhub\Business\Model\Specification\UniqueNameSpec;
 use Derhub\Business\Model\Specification\UniqueSlugSpec;
 use Derhub\Business\Model\Values\Country;
 use Derhub\Business\Model\Values\Name;
+use Derhub\Business\Model\Values\OnBoardStatus;
 use Derhub\Business\Model\Values\OwnerId;
 use Derhub\Business\Model\Values\Slug;
 use Derhub\Shared\Exceptions\DomainException;
@@ -21,32 +22,28 @@ final class OnBoardBusinessHandler
     ) {
     }
 
-    public function __invoke(OnBoardBusiness $cmd): OnBoardBusinessResponse
-    {
+    public function __invoke(
+        OnBoardBusiness $message
+    ): OnBoardBusinessResponse {
         $response = new OnBoardBusinessResponse(null);
 
         try {
             $id = $this->repo->getNextId();
             $response->setAggregateRootId($id->toString());
 
-            //TODO: check if id exist here?
+            $model = new Business();
 
-            $model = new Business($id);
-            $model
-                ->changeName(
-                    $this->uniqueNameSpec,
-                    Name::fromString($cmd->name()),
-                )
-                ->changeSlug(
-                    $this->uniqueSlugSpec,
-                    Slug::fromString($cmd->slug()),
-                )
-                ->changeCountry(
-                    Country::fromString($cmd->country()),
-                )
-                ->transferOwnership(OwnerId::fromString($cmd->ownerId()))
-                ->onBoard()
-            ;
+            $model->onBoard(
+                $this->uniqueNameSpec,
+                $this->uniqueSlugSpec,
+                id: $id,
+                ownerId: OwnerId::fromString($message->ownerId()),
+                name: Name::fromString($message->name()),
+                slug: Slug::fromString($message->slug()),
+                country: Country::fromString($message->country()),
+                boardingStatus:
+                OnBoardStatus::fromString($message->onboardStatus()),
+            );
             $this->repo->save($model);
         } catch (DomainException $e) {
             $response->addErrorFromException($e);

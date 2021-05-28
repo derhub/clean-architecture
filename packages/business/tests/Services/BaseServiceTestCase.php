@@ -32,13 +32,15 @@ abstract class BaseServiceTestCase extends MessageTestCase
 
         $this->queryMapper = new BusinessQueryItemMapper();
         $this->queryRepo = new QueryRepositoryStub();
+
+        $handler = $this->getHandler();
         $this->container->add(
-            DisableBusinessHandler::class,
-            function () {
-                return new DisableBusinessHandler($this->repository);
-            }
+            $handler::class,
+            static fn () => $handler,
         );
     }
+
+    abstract protected function getHandler(): object;
 
     public function createQueryItemObject(): BusinessQueryItem
     {

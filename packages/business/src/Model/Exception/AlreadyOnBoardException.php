@@ -11,4 +11,10 @@ class AlreadyOnBoardException extends \Exception implements DomainException
     {
         return new self('business already onboarded');
     }
+
+    public static function fromOnboardStatus(
+        \Derhub\Business\Model\Values\OnBoardStatus $onBoardStatus
+    ) {
+        return new self((string)$onBoardStatus);
+    }
 }

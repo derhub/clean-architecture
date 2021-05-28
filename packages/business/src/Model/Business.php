@@ -17,10 +17,10 @@ use Derhub\Business\Model\Event\BusinessSlugChanged;
 use Derhub\Business\Model\Exception\AlreadyOnBoardException;
 use Derhub\Business\Model\Exception\AlreadyHandedException;
 use Derhub\Business\Model\Exception\EmptyCountryException;
-use Derhub\Business\Model\Exception\EmptySlugException;
+use Derhub\Business\Model\Exception\InvalidSlugException;
 use Derhub\Business\Model\Exception\ChangesToDisabledBusinessException;
-use Derhub\Business\Model\Exception\EmptyNameException;
-use Derhub\Business\Model\Exception\EmptyOwnerIdException;
+use Derhub\Business\Model\Exception\InvalidNameException;
+use Derhub\Business\Model\Exception\InvalidOwnerIdException;
 
 use Derhub\Business\Model\Exception\NameAlreadyExist;
 use Derhub\Business\Model\Exception\SlugExistException;
@@ -28,6 +28,7 @@ use Derhub\Business\Model\Specification\UniqueName;
 use Derhub\Business\Model\Specification\UniqueNameSpec;
 use Derhub\Business\Model\Specification\UniqueSlug;
 use Derhub\Business\Model\Specification\UniqueSlugSpec;
+use Derhub\Business\Model\Values\Country;
 use Derhub\Business\Model\Values\OnBoardStatus;
 use Derhub\Business\Model\Values\Slug;
 use Derhub\Business\Model\Values\Status;
@@ -39,6 +40,7 @@ use Derhub\Business\Model\Values\BusinessId;
 use Derhub\Business\Model\Values\Name;
 use Derhub\Business\Model\Values\OwnerId;
 use Derhub\Shared\Model\UseTimestampsWithSoftDelete;
+use Derhub\Shared\Values\DateTimeLiteral;
 
 /**
  * @template-implements AggregateRoot<BusinessId>
@@ -54,12 +56,14 @@ final class Business implements AggregateRoot
     private Slug $slug;
     private OnBoardStatus $onBoardStatus;
     private Status $status;
+    private BusinessId $aggregateRootId;
 
-    public function __construct(private BusinessId $aggregateRootId)
+    public function __construct(?BusinessId $aggregateRootId = null)
     {
+        $this->aggregateRootId = $aggregateRootId ?? new BusinessId();
         $this->info = new BusinessInfo();
-        $this->onBoardStatus = OnBoardStatus::notHanded();
-        $this->status = Status::enable();
+        $this->onBoardStatus = new OnBoardStatus();
+        $this->status = new Status();
         $this->slug = new Slug();
 
         $this->initTimestamps();
@@ -129,28 +133,41 @@ final class Business implements AggregateRoot
         return $this;
     }
 
-
-    public function onBoard(): self
-    {
-        if ($this->owner()->isEmpty()) {
-            throw EmptyOwnerIdException::fromOnboard();
-        }
-
-        if ($this->info->name()->isEmpty()) {
-            throw EmptyNameException::fromOnboard();
-        }
-
-        if ($this->info->country()->isEmpty()) {
-            throw EmptyCountryException::fromOnboard();
-        }
-
-        if ($this->slug->isEmpty()) {
-            throw EmptySlugException::fromOnboard();
-        }
-
+    public function onBoard(
+        UniqueNameSpec $nameSpec,
+        UniqueSlugSpec $slugSpec,
+        BusinessId $id,
+        OwnerId $ownerId,
+        Name $name,
+        Slug $slug,
+        Country $country,
+        OnBoardStatus $boardingStatus,
+    ): self {
         if ($this->onBoardStatus->toInt() > 0) {
-            throw AlreadyOnBoardException::fromOnboard();
+            throw AlreadyOnBoardException::fromOnboardStatus(
+                $this->onBoardStatus
+            );
         }
+
+        $checkName = $nameSpec->isSatisfiedBy(new UniqueName($name));
+        if (! $checkName) {
+            throw NameAlreadyExist::withName($name);
+        }
+
+        $checkSlug = $slugSpec->isSatisfiedBy(new UniqueSlug($slug));
+        if (! $checkSlug) {
+            throw SlugExistException::fromSlug($slug);
+        }
+
+        $this->aggregateRootId = $id;
+        $this->info = $this->info
+            ->newName($name)
+            ->newOwner($ownerId)
+            ->newCountry($country)
+        ;
+        $this->slug = $slug;
+        $this->onBoardStatus = $boardingStatus;
+        $this->createdAt = DateTimeLiteral::now();
 
         $this->record(
             new BusinessOnboarded(
@@ -158,12 +175,11 @@ final class Business implements AggregateRoot
                 ownerId: $this->owner()->toString(),
                 name: $this->info->name()->toString(),
                 slug: $this->slug->toString(),
-                createdAt: $this->createdAt->toString(),
                 country: $this->info->country()->toString(),
+                boardingStatus: $this->onBoardStatus->toString(),
+                createdAt: $this->createdAt->toString(),
             )
         );
-
-        $this->onBoardStatus = OnBoardStatus::onBoard();
 
         return $this;
     }
@@ -190,43 +206,6 @@ final class Business implements AggregateRoot
         return $this;
     }
 
-    public function handOver(): self
-    {
-        if ($this->onBoardStatus->isHanded()) {
-            throw AlreadyHandedException::fromHandOver();
-        }
-
-        if ($this->owner()->isEmpty()) {
-            throw EmptyOwnerIdException::fromHandOver();
-        }
-
-        if ($this->info->name()->isEmpty()) {
-            throw EmptyNameException::fromHandOver();
-        }
-
-        if ($this->slug->isEmpty()) {
-            throw EmptySlugException::fromHandOver();
-        }
-
-        if ($this->info->country()->isEmpty()) {
-            throw EmptyCountryException::fromHandOver();
-        }
-
-        $this->onBoardStatus = OnBoardStatus::handed();
-
-        $this->record(
-            new BusinessHanded(
-                aggregateRootId: $this->aggregateRootId()->toString(),
-                ownerId: $this->info->ownerId()->toString(),
-                name: $this->info->name()->toString(),
-                slug: $this->slug->toString(),
-                country: $this->info->country()->toString(),
-            )
-        );
-
-        return $this;
-    }
-
     public function changeSlug(
         UniqueSlugSpec $slugSpec,
         Slug $slug
@@ -249,13 +228,13 @@ final class Business implements AggregateRoot
     }
 
     /**
-     * @throws \Derhub\Business\Model\Exception\EmptyOwnerIdException
+     * @throws \Derhub\Business\Model\Exception\InvalidOwnerIdException
      * @throws \Derhub\Business\Model\Exception\ChangesToDisabledBusinessException
      */
     public function transferOwnership(OwnerId $ownerId): self
     {
         if ($ownerId->isEmpty()) {
-            throw EmptyOwnerIdException::fromOnboard();
+            throw InvalidOwnerIdException::fromOnboard();
         }
 
         $this->info = $this->info->newOwner($ownerId);

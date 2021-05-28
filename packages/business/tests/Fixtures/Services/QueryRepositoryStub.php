@@ -9,24 +9,30 @@ class QueryRepositoryStub implements QueryBusinessRepository
 {
 
     private mixed $results;
+
+    public function setResults(mixed $data): self
+    {
+        $this->results = $data;
+        return $this;
+    }
+
     public function __construct()
     {
         $this->results = null;
     }
 
-    public function addFilters(QueryFilter ...$filters): self
+    public function addFilters(array $filters): self
+    {
+        return $this;
+    }
+
+    public function addFilter(QueryFilter $filters): self
     {
         return $this;
     }
 
     public function applyFilters(): self
     {
-        return $this;
-    }
-
-    public function setResults(mixed $data): self
-    {
-        $this->results = $data;
         return $this;
     }
 
@@ -60,5 +66,20 @@ class QueryRepositoryStub implements QueryBusinessRepository
     public function exists(string $field, mixed $value): ?bool
     {
         return $this->results;
+    }
+
+    public function addFilterSlug(array|string $slug): QueryBusinessRepository
+    {
+        return $this;
+    }
+
+    public function addFilterId(array|string $id): QueryBusinessRepository
+    {
+        return $this;
+    }
+
+    public function addFilterStatus(array|int $status): QueryBusinessRepository
+    {
+        return $this;
     }
 }

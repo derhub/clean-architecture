@@ -2,14 +2,12 @@
 
 namespace Derhub\Business\Model\Values;
 
-use Derhub\Shared\Values\ValueObjectStr;
+use Derhub\Shared\Model\AggregateRootId;
 use Derhub\Shared\Values\UuidValueObject;
 
-final class BusinessId implements ValueObjectStr
+final class BusinessId implements AggregateRootId
 {
-    use UuidValueObject {
-        UuidValueObject::__construct as private;
-    }
+    use UuidValueObject;
 
     public function __toString(): string
     {

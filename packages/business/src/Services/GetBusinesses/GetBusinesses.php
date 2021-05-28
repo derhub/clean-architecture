@@ -1,20 +1,27 @@
 <?php
 
-namespace Derhub\Business\Services\BusinessList;
+namespace Derhub\Business\Services\GetBusinesses;
 
 use Derhub\Business\Services\BaseMessage;
 use Derhub\Business\Shared\SharedValues;
 use Derhub\Shared\Message\Query\Query;
 
-final class BusinessList extends BaseMessage implements Query
+final class GetBusinesses extends BaseMessage implements Query
 {
+    private int $version = 1;
+
+    public function version(): int
+    {
+        return $this->version;
+    }
+
     public function __construct(
         private int $page,
         private int $perPage,
         private ?array $aggregateIds = null,
         private ?array $slugs = null,
         private null|bool|int $enabled = null,
-        private null|string|int|array $onboardType = null,
+        private null|string|int|array $onBoardType = null,
     ) {
     }
 
@@ -43,8 +50,8 @@ final class BusinessList extends BaseMessage implements Query
         return $this->enabled;
     }
 
-    public function onboardType(): null|string|int|array
+    public function onBoardType(): null|string|int|array
     {
-        return $this->onboardType;
+        return $this->onBoardType;
     }
 }

@@ -7,6 +7,13 @@ use Derhub\Shared\Message\Command\Command;
 
 class TransferBusinessesOwnership extends BaseMessage implements Command
 {
+    private int $version = 1;
+
+    public function version(): int
+    {
+        return $this->version;
+    }
+
     public function __construct(
         private string $aggregateRootId,
         private string $ownerId,

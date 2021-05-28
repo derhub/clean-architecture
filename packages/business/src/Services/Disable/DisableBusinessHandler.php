@@ -22,7 +22,8 @@ final class DisableBusinessHandler
         try {
             $id = BusinessId::fromString($msg->aggregateRootId());
 
-            $model = $this->getModel($id);
+            /** @var \Derhub\Business\Model\Business $model */
+            $model = $this->repo->get($id);
 
             $model->disable();
 
@@ -32,17 +33,5 @@ final class DisableBusinessHandler
         }
 
         return $response;
-    }
-
-    private function getModel(BusinessId $id): Business
-    {
-        /** @var ?\Derhub\Business\Model\Business $model */
-        $model = $this->repo->get($id);
-
-        if (! $model) {
-            throw BusinessNotFound::fromId($id);
-        }
-
-        return $model;
     }
 }

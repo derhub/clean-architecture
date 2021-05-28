@@ -3,12 +3,25 @@
 namespace Derhub\Business\Model\Values;
 
 
+use Derhub\Business\Model\Exception\InvalidOwnerIdException;
+use Derhub\Shared\Exceptions\DomainException;
 use Derhub\Shared\Values\UuidValueObject;
 use Derhub\Shared\Values\ValueObjectStr;
 
 class OwnerId implements ValueObjectStr
 {
-    use UuidValueObject;
+    use UuidValueObject {
+        UuidValueObject::fromString as private __fromString;
+    }
+
+    public static function fromString(string $value): self
+    {
+        try {
+            return self::__fromString($value);
+        } catch (DomainException $e) {
+            throw  InvalidOwnerIdException::fromException($e);
+        }
+    }
 
     public function __toString()
     {

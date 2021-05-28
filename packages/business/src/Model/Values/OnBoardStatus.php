@@ -12,14 +12,14 @@ class OnBoardStatus implements
     ValueObjectStr,
     ValueObjectInt
 {
-    public const ONBOARD = 2;
-    public const HANDED = 1;
+    public const ONBOARD_OWNER = 2;
+    public const ONBOARD_SALES = 1;
     public const NONE = 0;
 
     public const STATUES = [
-        self::HANDED => 'handed',
         self::NONE => 'none',
-        self::ONBOARD => 'onboard',
+        self::ONBOARD_SALES => 'onboard-sales',
+        self::ONBOARD_OWNER => 'onboard-owner',
     ];
 
     private int $value;
@@ -60,7 +60,7 @@ class OnBoardStatus implements
 
     public function __toString()
     {
-        return sprintf('business is %s', $this->toString());
+        return sprintf('business on-boarding status %s', $this->toString());
     }
 
     public static function fromInt(int $value): self
@@ -73,33 +73,23 @@ class OnBoardStatus implements
         return $this->value;
     }
 
-    public function isHanded(): bool
+    public function isSales(): bool
     {
-        return $this->value === self::HANDED;
+        return $this->value === self::ONBOARD_SALES;
     }
 
-    public static function handed(): self
+    public static function bySales(): self
     {
-        return self::init(self::HANDED);
+        return self::init(self::ONBOARD_SALES);
     }
 
-    public static function notHanded(): self
+    public function isOwner(): bool
     {
-        return self::init(self::NONE);
+        return $this->value === self::ONBOARD_OWNER;
     }
 
-    public function isNotHanded(): bool
+    public static function byOwner(): self
     {
-        return $this->value === self::NONE;
-    }
-
-    public static function onBoard(): self
-    {
-        return self::init(self::ONBOARD);
-    }
-
-    public function isOnboard(): bool
-    {
-        return $this->value === self::ONBOARD;
+        return self::init(self::ONBOARD_OWNER);
     }
 }

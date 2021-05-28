@@ -5,7 +5,7 @@ namespace Derhub\Business\Model\Event;
 use Derhub\Business\Services\BaseMessage;
 use Derhub\Shared\Model\DomainEvent;
 
-final class BusinessEnabled extends BaseMessage implements DomainEvent
+final class BusinessEnabled implements DomainEvent
 {
     private int $version = 1;
 

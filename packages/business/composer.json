@@ -10,7 +10,7 @@
   "require": {
     "ext-pdo": "*",
     "derhub/shared": "dev-master",
-    "gedmo/doctrine-extensions": "^3.0"
+    "derhub/shared-database": "dev-master"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
