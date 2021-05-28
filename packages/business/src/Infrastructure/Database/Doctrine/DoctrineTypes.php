@@ -2,13 +2,13 @@
 
 namespace Derhub\Business\Infrastructure\Database\Doctrine;
 
-use Derhub\Business\Infrastructure\Persistence\Doctrine\Type\BusinessCountryType;
-use Derhub\Business\Infrastructure\Persistence\Doctrine\Type\BusinessOnBoardStatusType;
-use Derhub\Business\Infrastructure\Persistence\Doctrine\Type\BusinessIdType;
-use Derhub\Business\Infrastructure\Persistence\Doctrine\Type\BusinessNameType;
-use Derhub\Business\Infrastructure\Persistence\Doctrine\Type\BusinessOwnerIdType;
-use Derhub\Business\Infrastructure\Persistence\Doctrine\Type\BusinessSlugType;
-use Derhub\Business\Infrastructure\Persistence\Doctrine\Type\BusinessStatusType;
+use Derhub\Business\Infrastructure\Database\Doctrine\Type\BusinessCountryType;
+use Derhub\Business\Infrastructure\Database\Doctrine\Type\BusinessOnBoardStatusType;
+use Derhub\Business\Infrastructure\Database\Doctrine\Type\BusinessIdType;
+use Derhub\Business\Infrastructure\Database\Doctrine\Type\BusinessNameType;
+use Derhub\Business\Infrastructure\Database\Doctrine\Type\BusinessOwnerIdType;
+use Derhub\Business\Infrastructure\Database\Doctrine\Type\BusinessSlugType;
+use Derhub\Business\Infrastructure\Database\Doctrine\Type\BusinessStatusType;
 
 class DoctrineTypes
 {

@@ -26,7 +26,7 @@ class InMemoryContainer implements ContainerInterface
     public function get(string $id)
     {
         if (! $this->has($id)) {
-            throw new InMemoryContainerNotFoundException('not found ' . $id);
+            throw new InMemoryContainerNotFoundException('not found '.$id);
         }
         return $this->container[$id];
     }
@@ -34,5 +34,15 @@ class InMemoryContainer implements ContainerInterface
     public function has(string $id): bool
     {
         return isset($this->container[$id]);
+    }
+
+    public function bind(string $class, mixed $abstract): self
+    {
+        return $this;
+    }
+
+    public function singleton(string $class, mixed $abstract): self
+    {
+        return $this;
     }
 }

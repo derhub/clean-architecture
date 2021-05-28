@@ -142,6 +142,7 @@ class ModuleTestCase extends TestCase
     private function createModuleService(): ModuleService
     {
         return new ModuleServiceImpl(
+            $this->container,
             $this->moduleList,
             $this->commandProvider,
             $this->queryProvider,

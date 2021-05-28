@@ -2,7 +2,6 @@
 <doctrine-mapping
         xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
         xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
@@ -21,7 +20,7 @@
         <field type="business_onboard_status" name="onBoardStatus"
                column="onboard_status"/>
 
-        <embedded name="info" class="Derhub\Business\Model\Entity\BusinessInfo"
+        <embedded name="info" class="Derhub\Business\Model\BusinessInfo"
                   use-column-prefix="false"/>
 
         <field type="datetime_literal" name="createdAt" column="created_at"

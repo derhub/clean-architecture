@@ -15,13 +15,9 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
 
     public function test_module_service_values(): void
     {
-        $services = $this->getModule()->getServices();
+        $services = $this->getModule()->services();
         $servicesNames = array_keys($services);
-        $requiredArrayKeys = [
-            'commands',
-            'queries',
-            'events',
-        ];
+        $requiredArrayKeys = ModuleInterface::SERVICES;
 
         foreach ($requiredArrayKeys as $name) {
             self::assertContains(
@@ -103,7 +99,7 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
         self::assertTrue($this->moduleService->isStarted());
 
 
-        $serviceValues = $module->getServices();
+        $serviceValues = $module->services();
         // test query
         foreach ($serviceValues['queries'] as $className => $query) {
             $msgName = ($this->messageNameResolver)($className);

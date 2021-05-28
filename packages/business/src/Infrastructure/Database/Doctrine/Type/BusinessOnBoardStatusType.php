@@ -1,10 +1,10 @@
 <?php
 
-namespace Derhub\Business\Infrastructure\Persistence\Doctrine\Type;
+namespace Derhub\Business\Infrastructure\Database\Doctrine\Type;
 
+use Derhub\Shared\Database\Doctrine\Types\DbalTyping;
 use Doctrine\DBAL\Types\IntegerType;
 use Derhub\Business\Model\Values\OnBoardStatus;
-use Derhub\Shared\Persistence\Doctrine\Types\DbalTyping;
 
 class BusinessOnBoardStatusType extends IntegerType
 {

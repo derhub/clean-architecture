@@ -2,27 +2,24 @@
 
 namespace Derhub\Shared\Database\Doctrine;
 
-
 use Derhub\Shared\Database\Exceptions\AggregateNotFound;
 use Derhub\Shared\Database\Exceptions\FailedToSaveAggregate;
-use Derhub\Shared\Model\AggregateRepository;
-use Derhub\Shared\Model\AggregateRoot;
-use Derhub\Shared\Model\AggregateRootId;
+use Derhub\Shared\Persistence\DatabasePersistenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Doctrine\Persistence\ObjectRepository;
 
 /**
  * @template T
  */
-abstract class DoctrinePersistenceRepository implements AggregateRepository
+class DoctrinePersistenceRepository implements DatabasePersistenceRepository
 {
     /**
-     * @var \Doctrine\ORM\EntityRepository<T>
+     * @var \Doctrine\ORM\EntityRepository<T>|null
      */
-    protected EntityRepository $doctrineRepo;
+    protected ?EntityRepository $doctrineRepo;
+    private ?string $aggregateClassName;
 
     /**
      * DoctrinePersistenceRepository constructor.
@@ -31,40 +28,59 @@ abstract class DoctrinePersistenceRepository implements AggregateRepository
     public function __construct(
         protected EntityManagerInterface $entityManager
     ) {
-        $this->doctrineRepo = $this->getDoctrineRepo();
+        $this->aggregateClassName = null;
+        $this->doctrineRepo = null;
     }
 
     /**
-     * @var \Doctrine\ORM\EntityRepository<T>
+     * @param class-string<T> $className
+     * @throws \Exception
      */
-    abstract protected function getDoctrineRepo(): EntityRepository;
-
-    abstract public function getNextId(): mixed;
+    public function setAggregateClass(string $className): void
+    {
+        $this->aggregateClassName = $className;
+        $this->doctrineRepo = $this->entityManager->getRepository($className);
+    }
 
     /**
-     * @psalm-return T
-     *
-     * @param \Derhub\Shared\Model\AggregateRootId $id
+     * @return \Doctrine\ORM\EntityRepository
+     * @throws \Derhub\Shared\Database\Doctrine\MissingAggregateClassNameException
+     */
+    protected function getDoctrineRepo(): EntityRepository
+    {
+        if ($this->aggregateClassName === null) {
+            throw MissingAggregateClassNameException::notProvided();
+        }
+        
+        return $this->doctrineRepo;
+    }
+
+    /**
+     * @param string|int $aggregateRootId
      * @return object
      * @throws \Derhub\Shared\Database\Exceptions\AggregateNotFound
+     * @throws \Derhub\Shared\Database\Doctrine\MissingAggregateClassNameException
      */
-    public function get(AggregateRootId $id): object
+    public function findById(string|int $aggregateRootId): object
     {
-        $find = $this->doctrineRepo->find($id);
+        $find = $this->getDoctrineRepo()->find($aggregateRootId);
         if ($find === null) {
-            throw AggregateNotFound::fromId($id);
+            throw AggregateNotFound::fromId($aggregateRootId);
         }
 
         return $find;
     }
 
-    public function save(AggregateRoot $aggregateRoot): void
+    /**
+     * @throws \Derhub\Shared\Database\Exceptions\FailedToSaveAggregate
+     */
+    public function persist(object $aggregateRoot): void
     {
         try {
             $this->entityManager->persist($aggregateRoot);
             $this->entityManager->flush($aggregateRoot);
         } catch (OptimisticLockException | ORMException $e) {
-            throw FailedToSaveAggregate::fromAggregateWithException(
+            throw FailedToSaveAggregate::fromObjectWithException(
                 $aggregateRoot,
                 $e
             );

@@ -1,10 +1,10 @@
 <?php
 
-namespace Derhub\Business\Infrastructure\Persistence\Doctrine\Type;
+namespace Derhub\Business\Infrastructure\Database\Doctrine\Type;
 
+use Derhub\Shared\Database\Doctrine\Types\DbalTyping;
 use Doctrine\DBAL\Types\GuidType;
 use Derhub\Business\Model\Values\BusinessId;
-use Derhub\Shared\Persistence\Doctrine\Types\DbalTyping;
 
 class BusinessIdType extends GuidType
 {

@@ -16,7 +16,6 @@ use Tests\Integration\Fixtures\Query\QueryMessageFixtureHandler;
 
 class TestModule implements ModuleInterface
 {
-
     public const ID = 'test_module';
 
     public function getId(): string
@@ -24,9 +23,11 @@ class TestModule implements ModuleInterface
         return self::ID;
     }
 
-    public function getServices(): array
+    public function services(): array
     {
         return [
+            self::DEPENDENCY_BIND => [],
+            self::DEPENDENCY_SINGLETON => [],
             'commands' => [
                 CommandMessageFixture::class => CommandMessageFixtureHandler::class,
                 CmdMessageWithFactoryTest::class => CmdMessageWithFactoryHandler::class,

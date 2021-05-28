@@ -7,10 +7,10 @@ use Derhub\Shared\Model\Exceptions\AggregateNotFoundException;
 
 class AggregateNotFound extends \Exception implements AggregateNotFoundException
 {
-    public static function fromId(AggregateRootId $id): self
+    public static function fromId(mixed $id): self
     {
         return new self(
-            sprintf('%s aggregate not found', (string)$id),
+            sprintf('%s aggregate not found', $id),
         );
     }
 }

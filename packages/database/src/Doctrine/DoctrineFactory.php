@@ -2,26 +2,15 @@
 
 namespace Derhub\Shared\Database\Doctrine;
 
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\PhpFileCache;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
-use Derhub\Shared\Database\Doctrine\Types\DateTimeLiteralType;
-use Derhub\Shared\Database\Doctrine\Types\EmailType;
-use Derhub\Shared\Database\Doctrine\Types\UserIdType;
 
 class DoctrineFactory
 {
     public static function registerDefaultTypes(): void
     {
-        Type::addType(UserIdType::NAME, UserIdType::class);
-        Type::addType(EmailType::NAME, EmailType::class);
-        Type::addType(
-            DateTimeLiteralType::NAME,
-            DateTimeLiteralType::class
-        );
+
     }
 
     /**
@@ -51,7 +40,6 @@ class DoctrineFactory
             $config['metadata'],
             $config['dev_mode'],
             $config['proxy_dir'] ?? null,
-            new ArrayCache(),
         );
 
         return EntityManager::create(

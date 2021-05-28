@@ -2,6 +2,9 @@
 
 namespace Derhub\Business\Infrastructure\Database\Doctrine;
 
+use Derhub\Business\Services\BusinessQueryItemMapper;
+use Derhub\Shared\Query\QueryItemMapper;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Derhub\Business\Shared\SharedValues;
 use Derhub\Business\Infrastructure\Database\QueryBusinessRepository;
@@ -14,6 +17,12 @@ use Derhub\Shared\Database\Doctrine\DoctrineQueryRepository;
 class DoctrineQueryBusinessRepository extends DoctrineQueryRepository
     implements QueryBusinessRepository
 {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        BusinessQueryItemMapper $mapper
+    ) {
+        parent::__construct($entityManager, $mapper);
+    }
 
     protected function getTableName(): string
     {

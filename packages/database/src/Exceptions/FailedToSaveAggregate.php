@@ -8,8 +8,8 @@ use Derhub\Shared\Model\Exceptions\FailedToSaveAggregateException;
 class FailedToSaveAggregate extends \Exception
     implements FailedToSaveAggregateException
 {
-    public static function fromAggregateWithException(
-        AggregateRoot $aggregateRoot,
+    public static function fromObjectWithException(
+        object $aggregateRoot,
         \Throwable $e
     ): self {
         return new self(

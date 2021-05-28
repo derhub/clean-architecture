@@ -3,6 +3,7 @@
 namespace Derhub\Integration\ModuleService;
 
 use Derhub\Integration\MessageType;
+use Derhub\Shared\Container\ContainerInterface;
 use Derhub\Shared\Message\Command\CommandListenerProvider;
 use Derhub\Shared\Message\Event\EventListenerProvider;
 use Derhub\Shared\Message\ListenerProviderInterface;
@@ -15,6 +16,7 @@ class ModuleServiceImpl implements ModuleService
     private MessageNameResolver $messageNameResolver;
 
     public function __construct(
+        private ContainerInterface $container,
         private ModuleList $manager,
         private CommandListenerProvider $commandListener,
         private QueryListenerProvider $queryListener,
@@ -56,6 +58,7 @@ class ModuleServiceImpl implements ModuleService
 
         foreach ($this->manager->all() as $module) {
             $module->start();
+            $this->registerDependencies($module);
             $this->registerServices($module);
         }
 
@@ -64,34 +67,50 @@ class ModuleServiceImpl implements ModuleService
         $this->isStarted = true;
     }
 
+    private function registerDependencies(ModuleInterface $module): void
+    {
+        $services = $module->services();
+        $binds = $services[$module::DEPENDENCY_BIND];
+
+        foreach ($binds as $class => $abstract) {
+            $this->container->bind($class, $abstract);
+        }
+
+        $binds = $services[$module::DEPENDENCY_SINGLETON];
+
+        foreach ($binds as $class => $abstract) {
+            $this->container->singleton($class, $abstract);
+        }
+    }
+
     private function registerServices(ModuleInterface $module): void
     {
-        $services = $module->getServices();
+        $services = $module->services();
 
         $this->registerMessage(
             $this->commandListener,
             $module->getId(),
             MessageType::COMMAND,
-            $services['commands'],
+            $services[$module::SERVICE_COMMANDS],
         );
 
         $this->registerMessage(
             $this->queryListener,
             $module->getId(),
             MessageType::QUERY,
-            $services['queries'],
+            $services[$module::SERVICE_QUERIES],
         );
 
         $this->registerMessage(
             $this->eventListener,
             $module->getId(),
             MessageType::EVENT,
-            $services['events'],
+            $services[$module::SERVICE_EVENTS],
         );
 
         $this->registerListeners(
             $this->eventListener,
-            $services['listeners'],
+            $services[$module::SERVICE_LISTENERS],
         );
     }
 

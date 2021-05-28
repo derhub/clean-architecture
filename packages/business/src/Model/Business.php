@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Derhub\Business\Model;
 
-use Derhub\Business\Model\Entity\BusinessInfo;
+use Derhub\Business\Model\BusinessInfo;
 use Derhub\Business\Model\Event\BusinessCountryChanged;
 use Derhub\Business\Model\Event\BusinessDisabled;
 use Derhub\Business\Model\Event\BusinessHanded;

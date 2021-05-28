@@ -1,13 +1,12 @@
 <?php
 
-namespace Derhub\Business\Model\Entity;
+namespace Derhub\Business\Model;
 
 use Derhub\Business\Model\Values\Country;
 use Derhub\Business\Model\Values\Name;
 use Derhub\Business\Model\Values\OwnerId;
-use Derhub\Shared\Entity\Entity;
+use Derhub\Shared\Model\Entity;
 use Derhub\Shared\Utils\Assert;
-use libphonenumber\CountryCodeToRegionCodeMap;
 
 class BusinessInfo implements Entity
 {
@@ -60,6 +59,7 @@ class BusinessInfo implements Entity
         return [
             'name' => $this->name()->toString(),
             'owner_id' => $this->ownerId()->toString(),
+            'country' => $this->country()->toString(),
         ];
     }
 

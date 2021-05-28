@@ -10,6 +10,7 @@ class LaravelContainer implements ContainerInterface
      * @var callable():\Illuminate\Contracts\Container\Container
      */
     private $laravel;
+    
     public function __construct(callable $laravel)
     {
         $this->laravel = $laravel;
@@ -28,5 +29,15 @@ class LaravelContainer implements ContainerInterface
     public function resolve(string $class): mixed
     {
         return ($this->laravel)()->make($class);
+    }
+
+    public function bind(string $class, mixed $abstract): mixed
+    {
+        return ($this->laravel)()->bind($class, $abstract);
+    }
+
+    public function singleton(string $class, mixed $abstract): mixed
+    {
+        return ($this->laravel)()->singleton($class, $abstract);
     }
 }

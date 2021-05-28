@@ -2,6 +2,8 @@
 
 namespace Derhub\Integration\Laravel;
 
+use Derhub\Shared\MessageOutbox\MessageOutboxObjectWrapper;
+use Derhub\Shared\MessageOutbox\MessageOutboxObjectWrapperFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Derhub\Integration\LaravelEventBus\EventLaravelBus;
 use Derhub\Integration\LaravelEventBus\Locator\EventHandlerProvider;
@@ -60,6 +62,8 @@ class LaravelServiceProvider extends ServiceProvider
             OutboxRepository::class,
             DoctrineOutboxRepository::class
         );
+
+        $this->app->bind(MessageOutboxObjectWrapper::class, MessageOutboxObjectWrapperFactory::class);
 
         $this->registerMessageBus();
         $this->registerCommand();

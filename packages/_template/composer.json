@@ -1,0 +1,40 @@
+{
+  "name": "earlybird/package-name",
+  "description": "",
+  "type": "template",
+  "authors": [
+    {
+      "name": "Johnder Baul",
+      "email": "imjohnderbaul@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "earlybird/shared": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "EB\\Template\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Template\\": "tests"
+    }
+  },
+  "scripts": {
+    "psalm": "../../vendor/bin/psalm ."
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../*"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require-dev": {
+    "earlybird/integration": "dev-master",
+    "phpunit/phpunit": "^9.5"
+  }
+}
