@@ -1,6 +1,6 @@
 <?php
 
-namespace Derhub\Shared\Entity;
+namespace Derhub\Shared\Model;
 
 interface Entity
 {

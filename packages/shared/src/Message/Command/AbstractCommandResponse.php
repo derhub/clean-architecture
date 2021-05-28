@@ -15,9 +15,9 @@ abstract class AbstractCommandResponse extends AbstractMessageResponse implement
     }
 
     /**
-     * @param string|null $aggregateRootId
+     * @param string $aggregateRootId
      */
-    public function setAggregateRootId(?string $aggregateRootId): void
+    public function setAggregateRootId(string $aggregateRootId): void
     {
         $this->aggregateRootId = $aggregateRootId;
     }
