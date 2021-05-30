@@ -4,6 +4,8 @@ namespace Tests\Shared;
 
 use Derhub\Shared\AbstractModule;
 use PHPUnit\Framework\TestCase;
+use Tests\Shared\Fixtures\TestClass2;
+use Tests\Shared\Fixtures\TestMessage;
 
 class AbstractModuleTest extends TestCase
 {
@@ -111,6 +113,58 @@ class AbstractModuleTest extends TestCase
                 \Tests\Shared\Fixtures\TestMessage::class => \Tests\Shared\Fixtures\TestMessage::class,
             ],
             $services[\Derhub\Shared\ModuleInterface::SERVICE_EVENTS]
+        );
+    }
+
+    public function it_register_dependencies(): void
+    {
+        $this->module->addDependency(
+            TestMessage::class,
+            function () {
+                return new \stdClass();
+            }
+        );
+
+        $this->module->addDependency(
+            TestClass2::class,
+            TestMessage::class,
+        );
+
+        $this->module->addDependencySingleton(
+            TestClass2::class,
+            TestMessage::class,
+        );
+
+        $this->module->addDependencySingleton(
+            TestMessage::class,
+            function () {
+                return new \stdClass();
+            }
+        );
+
+        $services = $this->module->services();
+        self::assertEquals(
+            [
+                TestMessage::class,
+                function () {
+                    return new \stdClass();
+                },
+                TestClass2::class,
+                TestMessage::class,
+            ],
+            $services[\Derhub\Shared\ModuleInterface::DEPENDENCY_BIND]
+        );
+
+        self::assertEquals(
+            [
+                TestMessage::class,
+                function () {
+                    return new \stdClass();
+                },
+                TestClass2::class,
+                TestMessage::class,
+            ],
+            $services[\Derhub\Shared\ModuleInterface::DEPENDENCY_SINGLETON]
         );
     }
 }

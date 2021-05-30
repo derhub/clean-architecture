@@ -1,6 +1,6 @@
 <?php
 
-namespace Derhub\Business\Infrastructure\Specifications\Doctrine;
+namespace Derhub\Business\Infrastructure\Specifications;
 
 use Derhub\Business\Infrastructure\Database\QueryBusinessRepository;
 use Derhub\Business\Model\Specification\UniqueNameSpec;

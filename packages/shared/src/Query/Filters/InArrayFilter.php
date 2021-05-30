@@ -34,7 +34,7 @@ class InArrayFilter implements QueryFilter
         return $this->value;
     }
 
-    public function operration(): string
+    public function operation(): string
     {
         return $this->operation;
     }

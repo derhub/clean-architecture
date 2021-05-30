@@ -35,11 +35,11 @@ final class Module implements ModuleInterface
         );
         $this->addDependency(
             Model\Specification\UniqueSlug::class,
-            Infrastructure\Specifications\Doctrine\QueryUniqueSlugSpec::class,
+            Infrastructure\Specifications\QueryUniqueSlugSpec::class,
         );
         $this->addDependency(
             Model\Specification\UniqueName::class,
-            Infrastructure\Specifications\Doctrine\QueryUniqueNameSpec::class,
+            Infrastructure\Specifications\QueryUniqueNameSpec::class,
         );
 
         /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Derhub\Business\Infrastructure\Specifications\Doctrine;
+namespace Derhub\Business\Infrastructure\Specifications;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Derhub\Business\Infrastructure\Database\QueryBusinessRepository;
