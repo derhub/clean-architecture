@@ -33,11 +33,6 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
         $this->queryBuilder = $this->model->createQueryBuilder(self::ALIAS);
     }
 
-    public function getQueryBuilder(): QueryBuilder
-    {
-        return $this->queryBuilder;
-    }
-
     public function create(mixed $id, QueryFilter $filter): QueryBuilder
     {
         $this->loopKey = $id;
@@ -74,7 +69,7 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
         QueryBuilder $queryBuilder,
         InArrayFilter $filter
     ): QueryBuilder {
-        $symbol = $filter->operration();
+        $symbol = $filter->operation();
         $lookupField = $this->createLookupField($filter);
         return $queryBuilder
             ->where(
@@ -113,7 +108,7 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
 
         return $queryBuilder
             ->where(
-                "{$this->createField($filter)} $symbol :{$lookupField}"
+                "{$this->createField($filter)} $symbol :$lookupField"
             )
             ->setParameter($lookupField, $filter->value())
             ;
@@ -138,16 +133,16 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
 
         return $queryBuilder
             ->where(
-                "{$this->createField($filter)} >$symbol :min{$lookupField}"
+                "{$this->createField($filter)} >$symbol :min$lookupField"
             )
             ->setParameter(
-                "min{$lookupField}", $filter->minValue()
+                "min$lookupField", $filter->minValue()
             )
             ->where(
-                "{$this->createField($filter)} <$symbol :max{$lookupField}"
+                "{$this->createField($filter)} <$symbol :max$lookupField"
             )
             ->setParameter(
-                "max{$lookupField}", $filter->maxValue()
+                "max$lookupField", $filter->maxValue()
             )
             ;
     }
@@ -167,7 +162,7 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
 
     public function createLookupField(
         QueryFilter $filter,
-    ) {
+    ): string {
         return $filter->field().$this->loopKey;
     }
 
