@@ -12,13 +12,13 @@ interface ModuleInterface
     public const SERVICE_EVENTS = 'events';
     public const SERVICE_LISTENERS = 'listeners';
 
-    public const SERVICES = [
-        self::DEPENDENCY_BIND,
-        self::DEPENDENCY_SINGLETON,
-        self::SERVICE_COMMANDS,
-        self::SERVICE_QUERIES,
-        self::SERVICE_EVENTS,
-        self::SERVICE_LISTENERS,
+    public const INITIAL_SERVICES = [
+        self::DEPENDENCY_BIND => [],
+        self::DEPENDENCY_SINGLETON => [],
+        self::SERVICE_COMMANDS => [],
+        self::SERVICE_QUERIES => [],
+        self::SERVICE_EVENTS => [],
+        self::SERVICE_LISTENERS => [],
     ];
 
     public function getId(): string;

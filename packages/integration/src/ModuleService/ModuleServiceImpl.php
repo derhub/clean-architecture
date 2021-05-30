@@ -2,7 +2,6 @@
 
 namespace Derhub\Integration\ModuleService;
 
-use Derhub\Integration\MessageType;
 use Derhub\Shared\Container\ContainerInterface;
 use Derhub\Shared\Message\Command\CommandListenerProvider;
 use Derhub\Shared\Message\Event\EventListenerProvider;
@@ -13,7 +12,6 @@ use Derhub\Shared\ModuleInterface;
 class ModuleServiceImpl implements ModuleService
 {
     private bool $isStarted;
-    private MessageNameResolver $messageNameResolver;
 
     public function __construct(
         private ContainerInterface $container,
@@ -23,7 +21,6 @@ class ModuleServiceImpl implements ModuleService
         private EventListenerProvider $eventListener,
     ) {
         $this->isStarted = false;
-        $this->messageNameResolver = new MessageNameResolver();
     }
 
     /**
@@ -70,13 +67,13 @@ class ModuleServiceImpl implements ModuleService
     private function registerDependencies(ModuleInterface $module): void
     {
         $services = $module->services();
-        $binds = $services[$module::DEPENDENCY_BIND];
+        $binds = $services[$module::DEPENDENCY_BIND] ?? [];
 
         foreach ($binds as $class => $abstract) {
             $this->container->bind($class, $abstract);
         }
 
-        $binds = $services[$module::DEPENDENCY_SINGLETON];
+        $binds = $services[$module::DEPENDENCY_SINGLETON] ?? [];
 
         foreach ($binds as $class => $abstract) {
             $this->container->singleton($class, $abstract);
@@ -89,22 +86,22 @@ class ModuleServiceImpl implements ModuleService
 
         $this->registerMessage(
             $this->commandListener,
-            $module->getId(),
-            MessageType::COMMAND,
+            $module,
+            $module::SERVICE_COMMANDS,
             $services[$module::SERVICE_COMMANDS],
         );
 
         $this->registerMessage(
             $this->queryListener,
-            $module->getId(),
-            MessageType::QUERY,
+            $module,
+            $module::SERVICE_QUERIES,
             $services[$module::SERVICE_QUERIES],
         );
 
         $this->registerMessage(
             $this->eventListener,
-            $module->getId(),
-            MessageType::EVENT,
+            $module,
+            $module::SERVICE_EVENTS,
             $services[$module::SERVICE_EVENTS],
         );
 
@@ -116,17 +113,17 @@ class ModuleServiceImpl implements ModuleService
 
     private function registerMessage(
         ListenerProviderInterface $provider,
-        string $moduleName,
+        ModuleInterface $module,
         string $messageType,
         array $messages,
     ): void {
         foreach ($messages as $key => $value) {
             $className = null;
             $handler = [];
-            if ($messageType === MessageType::EVENT) {
+            if ($messageType === $module::SERVICE_EVENTS) {
                 $className = $value;
-            } elseif ($messageType === MessageType::COMMAND
-                || $messageType === MessageType::QUERY) {
+            } elseif ($messageType === $module::SERVICE_COMMANDS
+                || $messageType === $module::SERVICE_QUERIES) {
                 $className = $key;
                 $handler = $value;
             }
@@ -135,21 +132,19 @@ class ModuleServiceImpl implements ModuleService
                 continue;
             }
 
-            $messageName = $this->getMessageNameFromClassName($className);
-            $name =
-                "{$moduleName}.{$messageType}.{$messageName}";
+            $messageName =
+                \Derhub\Shared\Capabilities\MessageName::for(
+                    $module->getId(),
+                    $messageType,
+                    $className
+                );
 
             $provider->addHandler(
-                $name,
+                $messageName,
                 $className,
                 $handler
             );
         }
-    }
-
-    public function getMessageNameFromClassName(string $messageClass): string
-    {
-        return ($this->messageNameResolver)($messageClass);
     }
 
     private function registerListeners(

@@ -11,6 +11,7 @@ use Derhub\Shared\Query\Filters\SortFilter;
 interface QueryFilterFactory
 {
     public function create(
+        mixed $id,
         QueryFilter $filter
     ): mixed;
 }

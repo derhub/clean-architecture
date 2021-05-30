@@ -2,7 +2,9 @@
 
 namespace Derhub\Shared\Infrastructure\FakeSpecification;
 
-abstract class FakeSpecification
+use Derhub\Shared\Specification\SpecificationInterface;
+
+abstract class FakeSpecification implements SpecificationInterface
 {
     public function __construct(private bool $result)
     {

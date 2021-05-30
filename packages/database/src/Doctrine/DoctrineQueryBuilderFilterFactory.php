@@ -38,8 +38,10 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
         return $this->queryBuilder;
     }
 
-    public function create(QueryFilter $filter): QueryBuilder
+    public function create(mixed $id, QueryFilter $filter): QueryBuilder
     {
+        $this->loopKey = $id;
+
         return match (true) {
             $filter instanceof SearchFilter => $this->createForSearch(
                 $this->queryBuilder,
@@ -68,15 +70,6 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
             default => $this->queryBuilder,
         };
     }
-
-    public function createWithLoopKey(
-        int $key,
-        QueryFilter $filter
-    ): QueryBuilder {
-        $this->loopKey = $key;
-        return $this->create($filter);
-    }
-
     public function createForInArray(
         QueryBuilder $queryBuilder,
         InArrayFilter $filter

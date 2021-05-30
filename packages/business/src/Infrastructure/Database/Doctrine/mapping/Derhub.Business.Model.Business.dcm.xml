@@ -12,7 +12,7 @@
             <index columns="status"/>
         </indexes>
 
-        <id type="business_id" name="aggregateRootId" column="id">
+        <id type="business_id" name="aggregateRootId" column="uuid">
             <generator strategy="NONE"/>
         </id>
         <field type="business_slug" name="slug" column="slug" nullable="true"/>

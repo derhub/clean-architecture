@@ -7,16 +7,14 @@ use Derhub\Shared\Utils\Assert;
 
 class SortFilter implements QueryFilter
 {
-    public const OPERATIONS = [
-        'asc',
-        'desc',
-    ];
+    public const ASC = 'asc';
+    public const DESC = 'desc';
 
     public function __construct(
         private string $field,
         private string $value
     ) {
-        Assert::inArray($this->value, self::OPERATIONS);
+        Assert::inArray($this->value, [self::ASC, self::DESC]);
     }
 
     public function field(): string

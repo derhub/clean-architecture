@@ -4,6 +4,7 @@ namespace Derhub\Shared\Database\Doctrine;
 
 use Derhub\Shared\Query\FailedQueryException;
 use Derhub\Shared\Query\QueryItemMapper;
+use Derhub\Shared\Query\QueryRepositoryFilterCapabilities;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -21,17 +22,11 @@ use Derhub\Shared\Query\QueryRepository;
  */
 abstract class DoctrineQueryRepository implements QueryRepository
 {
+    use QueryRepositoryFilterCapabilities;
     /**
      * @return \Doctrine\ORM\EntityRepository<T>
      */
     protected EntityRepository $doctrineRepo;
-
-    /**
-     * @var QueryFilter[]
-     */
-    protected array $filters;
-
-    protected ?PaginationFilter $paginationFilter;
 
     /**
      * DoctrineQueryBusinessRepository constructor.
@@ -42,8 +37,7 @@ abstract class DoctrineQueryRepository implements QueryRepository
         protected QueryItemMapper $mapper,
     ) {
         $this->doctrineRepo = $this->getRepository();
-        $this->filters = [];
-        $this->paginationFilter = null;
+        $this->setFilterFactory(new DoctrineQueryBuilderFilterFactory($this->doctrineRepo));
     }
 
     /**
@@ -56,47 +50,6 @@ abstract class DoctrineQueryRepository implements QueryRepository
     protected function mapResult(array $data): mixed
     {
         return $this->mapper->fromArray($data);
-    }
-
-    public function addFilters(array $filters): self
-    {
-        foreach ($filters as $filter) {
-            $this->addFilter($filter);
-        }
-
-        return $this;
-    }
-
-    public function addFilter(QueryFilter $filter): self
-    {
-        if ($filter instanceof PaginationFilter) {
-            $this->paginationFilter = $filter;
-        } else {
-            $this->filters[] = $filter;
-        }
-
-        return $this;
-    }
-
-    protected function createQueryBuilderFilterFactory(
-    ): DoctrineQueryBuilderFilterFactory
-    {
-        return new DoctrineQueryBuilderFilterFactory($this->doctrineRepo);
-    }
-
-    public function applyFilters(): QueryBuilder
-    {
-        $filterFactory = $this->createQueryBuilderFilterFactory();
-
-        if ($this->paginationFilter !== null) {
-            $filterFactory->create($this->paginationFilter);
-        }
-
-        foreach ($this->filters as $key => $filter) {
-            $filterFactory->createWithLoopKey($key, $filter);
-        }
-
-        return $filterFactory->getQueryBuilder();
     }
 
     public function results(): array

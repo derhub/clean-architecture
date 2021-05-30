@@ -10,6 +10,15 @@ class CountryLookup
     public const KEY_CURRENCY = 'currency';
     public const KEY_NAME = 'name';
 
+    /**
+     * Override country data set
+     * @param array $countries
+     */
+    public static function setCountries(array $countries): void
+    {
+        self::$countries = $countries;
+    }
+
     public static function isValidKey(string $key): bool
     {
         return isset(self::$countries[$key]);

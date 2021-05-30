@@ -3,20 +3,23 @@
 namespace Derhub\Shared\Query\Filters;
 
 use Derhub\Shared\Query\QueryFilter;
+use Derhub\Shared\Utils\Assert;
 
 class RangeFilter implements QueryFilter
 {
-    public const OPERATION = [
-        'equal' => '=',
-        'none' => '',
-    ];
+    public const EQUAL = '=';
+    public const NONE = '';
 
     public function __construct(
         private string $field,
         private mixed $minValue,
         private mixed $maxValue,
-        private string $operation = 'none',
+        private string $operation = self::NONE,
     ) {
+        Assert::inArray(
+            $this->operation,
+            [self::NONE, self::EQUAL]
+        );
     }
 
     public function field(): string
@@ -46,7 +49,7 @@ class RangeFilter implements QueryFilter
 
     public function operationSymbol(): ?string
     {
-        return self::OPERATION[$this->operation] ?? '';
+        return $this->operation;
     }
 
 }

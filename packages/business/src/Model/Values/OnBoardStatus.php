@@ -92,4 +92,14 @@ class OnBoardStatus implements
     {
         return self::init(self::ONBOARD_OWNER);
     }
+
+    public static function none(): self
+    {
+        return self::init(self::NONE);
+    }
+
+    public function isNone(): bool
+    {
+        return $this->value === self::NONE;
+    }
 }

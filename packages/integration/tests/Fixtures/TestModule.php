@@ -14,7 +14,7 @@ use Tests\Integration\Fixtures\MessageWithFactory\CmdMessageWithFactoryTestFacto
 use Tests\Integration\Fixtures\Query\QueryMessageFixture;
 use Tests\Integration\Fixtures\Query\QueryMessageFixtureHandler;
 
-class TestModule implements ModuleInterface
+class TestModule extends \Derhub\Shared\AbstractModule
 {
     public const ID = 'test_module';
 
@@ -38,16 +38,18 @@ class TestModule implements ModuleInterface
             'events' => [
                 EventMessageFixture::class,
             ],
-            'listeners' => [
-                self::ID.'.event.EventMessageFixture' => [
-                    EventMessageFixtureHandlerOne::class,
-                    EventMessageFixtureHandlerTwo::class,
-                ],
-            ],
+            'listeners' => [],
         ];
     }
 
     public function start(): void
     {
+        $this->addEventListener(
+            EventMessageFixture::class,
+            [
+                EventMessageFixtureHandlerOne::class,
+                EventMessageFixtureHandlerTwo::class,
+            ]
+        );
     }
 }

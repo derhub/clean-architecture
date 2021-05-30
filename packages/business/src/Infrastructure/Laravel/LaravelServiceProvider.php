@@ -17,7 +17,7 @@ class LaravelServiceProvider extends ServiceProvider
                 __DIR__.'/../Database/Doctrine/mapping' =>
                     $this->app->databasePath('doctrine_mapping'),
             ],
-            'eb_doctrine_mapping'
+            'doctrine_mapping'
         );
     }
 
