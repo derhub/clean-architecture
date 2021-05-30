@@ -9,7 +9,7 @@ interface ModuleList
     /**
      * @throws \Derhub\Integration\ModuleService\ModuleAlreadyRegistered
      */
-    public function register(ModuleInterface $module): void;
+    public function register(ModuleInterface ...$module): void;
 
     public function all(): array;
 

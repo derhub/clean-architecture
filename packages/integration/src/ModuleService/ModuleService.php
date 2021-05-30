@@ -8,7 +8,7 @@ interface ModuleService
 {
     public function list(): ModuleList;
 
-    public function register(ModuleInterface $module): void;
+    public function register(ModuleInterface ...$module): void;
 
     /**
      * Start all the registered module

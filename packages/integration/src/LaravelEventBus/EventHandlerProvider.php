@@ -1,12 +1,32 @@
 <?php
 
-namespace Derhub\Integration\LaravelEventBus\Locator;
+namespace Derhub\Integration\LaravelEventBus;
 
 use Derhub\Integration\AbstractListenerProvider;
 use Derhub\Integration\MissingHandlerException;
+use Derhub\Integration\UseListenerProviderHandlerRegistry;
+use Derhub\Shared\Message\Event\EventListenerProvider;
 
-abstract class BaseListenerProvider extends AbstractListenerProvider
+use function class_exists;
+
+class EventHandlerProvider extends AbstractListenerProvider
+    implements EventListenerProvider
 {
+    use UseListenerProviderHandlerRegistry;
+
+    public function addHandler(
+        string $name,
+        string $message,
+        mixed $handler,
+    ): void {
+        $this->addMultiHandler(
+            name: $name,
+            message: $message,
+            handlerKey: $name,
+            handler: $handler,
+        );
+    }
+
     /**
      * @param string $message
      * @return class-string|class-string[]

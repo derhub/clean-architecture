@@ -6,8 +6,7 @@ use Derhub\Shared\MessageOutbox\MessageOutboxObjectWrapper;
 use Derhub\Shared\MessageOutbox\MessageOutboxObjectWrapperFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Derhub\Integration\LaravelEventBus\EventLaravelBus;
-use Derhub\Integration\LaravelEventBus\Locator\EventHandlerProvider;
-use Derhub\Integration\LaravelEventBus\ConsumeOutboxMessage;
+use Derhub\Integration\LaravelEventBus\EventHandlerProvider;
 use Derhub\Integration\Mapper\SimpleMapper;
 use Derhub\Integration\MessageBus\MessageAssembler;
 use Derhub\Integration\MessageBus\MessageAssemblerImpl;
@@ -143,14 +142,6 @@ class LaravelServiceProvider extends ServiceProvider
 
     private function registerEvent(): void
     {
-        $this->booting(
-            function () {
-                \Bus::pipeThrough(
-                    [$this->app->make(ConsumeOutboxMessage::class)]
-                );
-            }
-        );
-
         $this->app->singleton(
             EventBus::class,
             static function ($app) {

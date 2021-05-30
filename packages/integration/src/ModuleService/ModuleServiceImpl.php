@@ -26,9 +26,9 @@ class ModuleServiceImpl implements ModuleService
     /**
      * @throws \Derhub\Integration\ModuleService\ModuleAlreadyRegistered
      */
-    public function register(ModuleInterface $module): void
+    public function register(ModuleInterface ...$module): void
     {
-        $this->manager->register($module);
+        $this->manager->register(...$module);
     }
 
     /**
@@ -66,8 +66,7 @@ class ModuleServiceImpl implements ModuleService
 
     private function registerDependencies(ModuleInterface $module): void
     {
-        $services = $module->services();
-        $binds = $services[$module::DEPENDENCY_BIND] ?? [];
+        $binds = $module->services()[$module::DEPENDENCY_BIND] ?? [];
 
         foreach ($binds as $class => $abstract) {
             $this->container->bind($class, $abstract);
@@ -88,26 +87,23 @@ class ModuleServiceImpl implements ModuleService
             $this->commandListener,
             $module,
             $module::SERVICE_COMMANDS,
-            $services[$module::SERVICE_COMMANDS],
         );
 
         $this->registerMessage(
             $this->queryListener,
             $module,
             $module::SERVICE_QUERIES,
-            $services[$module::SERVICE_QUERIES],
         );
 
         $this->registerMessage(
             $this->eventListener,
             $module,
             $module::SERVICE_EVENTS,
-            $services[$module::SERVICE_EVENTS],
         );
 
         $this->registerListeners(
             $this->eventListener,
-            $services[$module::SERVICE_LISTENERS],
+            $services[$module::SERVICE_LISTENERS] ?? [],
         );
     }
 
@@ -115,8 +111,8 @@ class ModuleServiceImpl implements ModuleService
         ListenerProviderInterface $provider,
         ModuleInterface $module,
         string $messageType,
-        array $messages,
     ): void {
+        $messages = $module->services()[$messageType] ?? [];
         foreach ($messages as $key => $value) {
             $className = null;
             $handler = [];

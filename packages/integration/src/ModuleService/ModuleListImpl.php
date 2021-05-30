@@ -18,13 +18,15 @@ class ModuleListImpl implements ModuleList
         $this->modules = [];
     }
 
-    public function register(ModuleInterface $module): void
+    public function register(ModuleInterface ...$modules): void
     {
-        if ($this->has($module->getId())) {
-            throw ModuleAlreadyRegistered::withModule($module);
-        }
+        foreach ($modules as $module) {
+            if ($this->has($module->getId())) {
+                throw ModuleAlreadyRegistered::withModule($module);
+            }
 
-        $this->modules[$module->getId()] = $module;
+            $this->modules[$module->getId()] = $module;
+        }
     }
 
     public function all(): array
