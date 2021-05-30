@@ -3,12 +3,12 @@
 namespace Derhub\Shared\Query;
 
 /**
- * @template T
+ * @template T as QueryItem
  */
 interface QueryItemMapper
 {
     /**
      * @return T
      */
-    public function fromArray(array $data): mixed;
+    public function fromArray(array $data): QueryItem;
 }

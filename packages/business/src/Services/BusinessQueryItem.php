@@ -2,7 +2,9 @@
 
 namespace Derhub\Business\Services;
 
-class BusinessQueryItem
+use Derhub\Shared\Query\QueryItem;
+
+class BusinessQueryItem implements QueryItem
 {
     public function __construct(
         private string $aggregateRootId,

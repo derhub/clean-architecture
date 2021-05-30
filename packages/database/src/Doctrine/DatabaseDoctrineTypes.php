@@ -7,7 +7,7 @@ use Derhub\Shared\Database\Doctrine\Types\EmailType;
 use Derhub\Shared\Database\Doctrine\Types\UserIdType;
 use Doctrine\DBAL\Types\Type;
 
-class SharedDoctrineTypes
+class DatabaseDoctrineTypes
 {
     public static function register(): void
     {

@@ -10,7 +10,7 @@ use Derhub\Business\Infrastructure\Database\Doctrine\Type\BusinessOwnerIdType;
 use Derhub\Business\Infrastructure\Database\Doctrine\Type\BusinessSlugType;
 use Derhub\Business\Infrastructure\Database\Doctrine\Type\BusinessStatusType;
 
-class DoctrineTypes
+class BusinessDoctrineTypes
 {
     public static function register(): void
     {

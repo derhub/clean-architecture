@@ -34,11 +34,11 @@ final class Module implements ModuleInterface
             Infrastructure\Database\Doctrine\DoctrineQueryBusinessRepository::class,
         );
         $this->addDependency(
-            Model\Specification\UniqueSlug::class,
+            Model\Specification\UniqueSlugSpec::class,
             Infrastructure\Specifications\QueryUniqueSlugSpec::class,
         );
         $this->addDependency(
-            Model\Specification\UniqueName::class,
+            Model\Specification\UniqueNameSpec::class,
             Infrastructure\Specifications\QueryUniqueNameSpec::class,
         );
 
