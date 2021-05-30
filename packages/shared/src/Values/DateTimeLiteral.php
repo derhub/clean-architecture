@@ -110,6 +110,15 @@ class DateTimeLiteral implements ValueObjectStr
         return $this->value?->format($format) ?? null;
     }
 
+    /**
+     * Create date with empty value
+     * @return $this
+     */
+    public static function createEmpty(): self
+    {
+        return new self();
+    }
+
     public function isEmpty(): bool
     {
         return empty($this->value);

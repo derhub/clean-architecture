@@ -1,20 +1,14 @@
 <?php
 
-declare(strict_types=1);
+namespace Derhub\Template\Model;
 
-namespace EB\Template\Model;
-
-use EB\Template\Model\ValueObject\TemplateId;
-use EB\Shared\Model\AggregateRepository;
+use Derhub\Template\Model\Values\TemplateId;
+use Derhub\Shared\Model\AggregateRepository;
 
 /**
- * @template-extends AggregateRepository<TemplateId, Template>
+ * @template-extends AggregateRepository<\Derhub\Template\Model\Business>
  */
 interface TemplateRepository extends AggregateRepository
 {
-    public function getNextId(): TemplateId;
 
-    public function save(Template $aggregateRoot): void;
-
-    public function get(TemplateId $aggregateAggregateId): ?Template;
 }

@@ -1,13 +1,10 @@
 <?php
 
-namespace EB\Template\Services;
+namespace Derhub\Template\Services;
 
-use EB\Template\Module;
+use Derhub\Shared\Message\Command\AbstractCommandResponse;
 
-class CommonCommandResponse extends \EB\Shared\Message\Command\AbstractCommandResponse
+class CommonCommandResponse extends AbstractCommandResponse
 {
-    public function aggregate(): string
-    {
-        return Module::ID;
-    }
+
 }

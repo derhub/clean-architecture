@@ -2,12 +2,12 @@
 
 namespace Tests\Template;
 
-use EB\Integration\TestUtils\ModuleIntegrationTestCaseCase;
-use EB\Template\Module;
+use Derhub\Integration\TestUtils\ModuleIntegrationTestCaseCase;
+use Derhub\Template\Module;
 
 class ModuleIntegrationTest extends ModuleIntegrationTestCaseCase
 {
-    protected function getModule(): \EB\Shared\ModuleInterface
+    protected function getModule(): \Derhub\Shared\ModuleInterface
     {
         return new Module();
     }

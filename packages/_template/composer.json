@@ -1,5 +1,5 @@
 {
-  "name": "earlybird/package-name",
+  "name": "derhub/template",
   "description": "",
   "type": "template",
   "authors": [
@@ -10,11 +10,12 @@
   ],
   "require": {
     "php": "^8.0",
-    "earlybird/shared": "dev-master"
+    "derhub/shared": "dev-master",
+    "derhub/shared-database": "dev-master"
   },
   "autoload": {
     "psr-4": {
-      "EB\\Template\\": "src"
+      "Derhub\\Template\\": "src"
     }
   },
   "autoload-dev": {
@@ -34,7 +35,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require-dev": {
-    "earlybird/integration": "dev-master",
+    "derhub/integration": "dev-master",
     "phpunit/phpunit": "^9.5"
   }
 }
