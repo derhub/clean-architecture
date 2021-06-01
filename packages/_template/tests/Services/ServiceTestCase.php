@@ -3,21 +3,16 @@
 namespace Tests\Template\Services;
 
 use Derhub\Integration\TestUtils\MessageTestCase;
-use Derhub\Shared\ModuleInterface;
-use Derhub\Template\Infrastructure\Database\InMemoryRepository;
-use Derhub\Template\Model\Values\TemplateId;
-use Derhub\Template\Module;
+use Derhub\Template\AggregateExample\Infrastructure\Database\InMemoryRepository;
+use Derhub\Template\AggregateExample\Model\Values\TemplateId;
+use Tests\Template\GetModule;
 use Tests\Template\Stub\QueryRepositoryStub;
 
 abstract class ServiceTestCase extends MessageTestCase
 {
-    /**
-     * @var \Derhub\Template\Model\Values\TemplateId
-     */
+    use GetModule;
+
     protected ?TemplateId $lastId;
-    /**
-     * @var \Tests\Template\Stub\QueryRepositoryStub
-     */
     protected QueryRepositoryStub $queryRepo;
 
     public function setUp(): void
@@ -34,11 +29,6 @@ abstract class ServiceTestCase extends MessageTestCase
     }
 
     abstract protected function getHandler(): object;
-
-    protected function getModule(): ModuleInterface
-    {
-        return new Module();
-    }
 
     protected function createId(): object
     {

@@ -3,7 +3,7 @@
 namespace Tests\Template\Stub;
 
 use Derhub\Shared\Query\QueryFilter;
-use Derhub\Template\Infrastructure\Database\TemplateQueryRepository;
+use Derhub\Template\AggregateExample\Infrastructure\Database\TemplateQueryRepository;
 
 class QueryRepositoryStub implements TemplateQueryRepository
 {

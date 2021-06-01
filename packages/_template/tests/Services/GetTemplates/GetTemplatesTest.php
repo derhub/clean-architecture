@@ -2,10 +2,11 @@
 
 namespace Tests\Template\Services\GetTemplates;
 
-use Derhub\Template\Model\Template;
-use Derhub\Template\Services\GetTemplates\GetTemplates;
-use Derhub\Template\Services\GetTemplates\GetTemplatesHandler;
-use Derhub\Template\Services\GetTemplates\GetTemplatesResponse;
+use Derhub\Template\AggregateExample\Model\Template;
+use Derhub\Template\AggregateExample\Services\GetTemplates\GetTemplates;
+use Derhub\Template\AggregateExample\Services\GetTemplates\GetTemplatesHandler;
+use Derhub\Template\AggregateExample\Services\GetTemplates\GetTemplatesResponse;
+use Derhub\Template\AggregateExample\Services\QueryResponse;
 use Tests\Template\Services\ServiceTestCase;
 
 class GetTemplatesTest extends ServiceTestCase
@@ -29,7 +30,7 @@ class GetTemplatesTest extends ServiceTestCase
                     'test'
                 )
             )
-            ->then(GetTemplatesResponse::class)
+            ->then(QueryResponse::class)
         ;
     }
 }

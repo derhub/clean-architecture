@@ -3,17 +3,17 @@
 namespace Tests\Template\Services\ChangeName;
 
 use Derhub\Shared\Message\Command\CommandResponse;
-use Derhub\Template\Model\Exception\InvalidName;
-use Derhub\Template\Model\Specification\UniqueNameSpec;
-use Derhub\Template\Model\Template;
-use Derhub\Template\Services\ChangeName\ChangeTemplateName;
-use Derhub\Template\Services\ChangeName\ChangeTemplateNameHandler;
+use Derhub\Template\AggregateExample\Model\Exception\InvalidName;
+use Derhub\Template\AggregateExample\Model\Specification\UniqueNameSpec;
+use Derhub\Template\AggregateExample\Model\Template;
+use Derhub\Template\AggregateExample\Services\ChangeName\ChangeTemplateName;
+use Derhub\Template\AggregateExample\Services\ChangeName\ChangeTemplateNameHandler;
 use Tests\Template\Services\ServiceTestCase;
 
 class ChangeTemplateNameTest extends ServiceTestCase
 {
     /**
-     * @var \Derhub\Template\Model\Specification\UniqueNameSpec|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Derhub\Template\AggregateExample\Model\Specification\UniqueNameSpec|\PHPUnit\Framework\MockObject\MockObject
      */
     private UniqueNameSpec|\PHPUnit\Framework\MockObject\MockObject $nameSpecMock;
 
@@ -62,6 +62,8 @@ class ChangeTemplateNameTest extends ServiceTestCase
             ->willReturn(false)
         ;
 
+        $this->expectException(InvalidName::class);
+
         $this->givenExisting(Template::class)
             ->when(
                 new ChangeTemplateName(
@@ -69,7 +71,6 @@ class ChangeTemplateNameTest extends ServiceTestCase
                     'test'
                 )
             )
-            ->expectExceptionErrors(InvalidName::class)
             ->then(CommandResponse::class)
         ;
     }

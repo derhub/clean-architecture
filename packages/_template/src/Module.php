@@ -2,18 +2,18 @@
 
 namespace Derhub\Template;
 
-use Derhub\Template\Infrastructure;
-use Derhub\Template\Model;
-use Derhub\Template\Process\AlwaysPublishWhenTemplateNameChange;
-use Derhub\Template\Services;
 use Derhub\Shared\Capabilities\ModuleCapabilities;
 use Derhub\Shared\ModuleInterface;
+use Derhub\Template\AggregateExample\Infrastructure;
+use Derhub\Template\AggregateExample\Listeners\PublishWhenTemplateNameChangedHandler;
+use Derhub\Template\AggregateExample\Model;
+use Derhub\Template\AggregateExample\Services;
 
 final class Module implements ModuleInterface
 {
     use ModuleCapabilities;
 
-    public const ID = 'business';
+    public const ID = 'template';
 
     public function getId(): string
     {
@@ -23,8 +23,8 @@ final class Module implements ModuleInterface
     public function start(): void
     {
         $this->addDependency(
-            Services\BusinessQueryItemMapper::class,
-            Services\BusinessItemMapperDoctrine::class
+            Services\TemplateQueryItemMapper::class,
+            Services\TemplateItemMapperImpl::class
         );
         $this->addDependency(
             Model\TemplateRepository::class,
@@ -74,13 +74,13 @@ final class Module implements ModuleInterface
         $this->addEvent(
             Model\Event\TemplateRestored::class,
             Model\Event\TemplateNameChanged::class,
-            Model\Event\TemplatePublished::class,
+            Model\Event\TemplateStatusChanged::class,
         );
 
         // if the event is from this module you can register using class name
         $this->addEventListener(
             Model\Event\TemplateNameChanged::class,
-            [AlwaysPublishWhenTemplateNameChange::class]
+            [PublishWhenTemplateNameChangedHandler::class]
         );
 
 //        // if the event is from outside you should register by name
