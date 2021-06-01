@@ -11,7 +11,7 @@ interface AggregateRepository
 
     /**
      * @throw \EB\Shared\Model\Exceptions\AggregateNotFoundException
-     * @return T;
+     * @return T
      */
     public function get(AggregateRootId $id): mixed;
 

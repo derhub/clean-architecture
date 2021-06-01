@@ -8,7 +8,7 @@ interface CommandBus extends DispatcherInterface
 {
     /**
      * @param \Derhub\Shared\Message\Command\Command ...$message
-     * @return \Derhub\Shared\Message\Command\CommandResponse|\Derhub\Shared\Message\Command\CommandResponse[]
+     * @return \Derhub\Shared\Message\Command\CommandResponse|array|null
      */
-    public function dispatch(Command ...$message): CommandResponse|array;
+    public function dispatch(Command ...$message): null|CommandResponse|array;
 }

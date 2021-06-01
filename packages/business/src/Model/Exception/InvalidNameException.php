@@ -2,10 +2,9 @@
 
 namespace Derhub\Business\Model\Exception;
 
-use Derhub\Business\Model\Values\Name;
 use Derhub\Shared\Exceptions\DomainException;
 
-class InvalidNameException extends \Exception implements DomainException
+final class InvalidNameException extends \Exception implements DomainException
 {
     public static function fromOnboard(): self
     {

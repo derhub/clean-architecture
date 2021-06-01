@@ -8,7 +8,7 @@ use Derhub\Shared\Message\Command\CommandResponse;
 
 final class TacticianCommandBus extends BaseMessageBus implements CommandBus
 {
-    public function dispatch(object ...$messages): CommandResponse|array
+    public function dispatch(object ...$messages): null|CommandResponse|array
     {
         if (isset($messages[1])) {
             return $this->handle(new MultipleMessageWrapper($messages));

@@ -2,10 +2,8 @@
 
 namespace Derhub\Business\Services\Disable;
 
-use Derhub\Business\Model\Business;
 use Derhub\Business\Model\BusinessRepository;
 use Derhub\Business\Model\Values\BusinessId;
-use Derhub\Business\Services\Exception\BusinessNotFound;
 use Derhub\Shared\Exceptions\ApplicationException;
 use Derhub\Shared\Exceptions\DomainException;
 

@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Derhub\Business\Services\TransferOwnership;
 
-use Derhub\Business\Model\Business;
 use Derhub\Business\Model\BusinessRepository;
 use Derhub\Business\Model\Values\BusinessId;
 use Derhub\Business\Model\Values\OwnerId;
-use Derhub\Business\Services\Exception\BusinessNotFound;
 use Derhub\Shared\Exceptions\ApplicationException;
 use Derhub\Shared\Exceptions\DomainException;
 

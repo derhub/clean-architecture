@@ -8,7 +8,7 @@ interface QueryBus extends DispatcherInterface
 {
     /**
      * @param \Derhub\Shared\Message\Query\Query ...$message
-     * @return \Derhub\Shared\Message\Query\QueryResponse[]|\Derhub\Shared\Message\Query\QueryResponse
+     * @return \Derhub\Shared\Message\Query\QueryResponse|array|null
      */
-    public function dispatch(Query ...$message): QueryResponse|array;
+    public function dispatch(Query ...$message): null|QueryResponse|array;
 }
