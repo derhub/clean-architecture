@@ -95,6 +95,7 @@ abstract class DoctrineQueryRepository implements QueryRepository
 
     public function iterableResult(): \Generator
     {
+        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->applyFilters();
         $raw = $queryBuilder->getQuery()->getResult(Query::HYDRATE_ARRAY);
         foreach ($raw as $result) {

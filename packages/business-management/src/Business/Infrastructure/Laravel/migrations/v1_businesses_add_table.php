@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 return new class() extends Migration {
     public function down(): void
     {
-        Schema::dropIfExists('business-management');
+        Schema::dropIfExists(SharedValues::TABLE_NAME);
     }
     public function up(): void
     {

@@ -14,5 +14,5 @@ class SharedValues
     public const COL_SLUG = 'slug';
     public const COL_STATUS = 'status';
     public const COL_UPDATED_AT = 'updatedAt';
-    public const TABLE_NAME = 'business-management';
+    public const TABLE_NAME = 'business';
 }
