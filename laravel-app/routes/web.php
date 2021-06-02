@@ -2,6 +2,7 @@
 
 include_once __DIR__.'/business_management/api.php';
 
+use App\Actions\BusinessManagement\OnBoardBusinessAction;
 use Derhub\Shared\Message\Command\CommandBus;
 use Illuminate\Support\Facades\Route;
 
@@ -44,3 +45,5 @@ Route::get(
         ];
     }
 );
+
+Route::get('/business-generate-action', OnBoardBusinessAction::class);

@@ -32,9 +32,20 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             EntityManagerInterface::class,
             static function ($app) {
-                return DoctrineFactory::createEntityManager(
-                    $app['config']->get('database.doctrine_orm')
+                $entityManager = DoctrineFactory::createEntityManager(
+                    $app['config']->get('database.doctrine_orm'),
+                    $app['cache.psr6']
                 );
+
+                if ($app->has('doctrine_debug_stack')) {
+                    $entityManager
+                        ->getConnection()
+                        ->getConfiguration()
+                        ->setSQLLogger($app->get('doctrine_debug_stack'))
+                    ;
+                }
+
+                return $entityManager;
             }
         );
 
@@ -58,7 +69,6 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * @throws \DebugBar\DebugBarException
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     private function registerDebugBar(): void
     {
@@ -67,14 +77,14 @@ class AppServiceProvider extends ServiceProvider
 
             $loader = AliasLoader::getInstance();
             $loader->alias('Debugbar', \Barryvdh\Debugbar\Facade::class);
-            $debugStack = new \Doctrine\DBAL\Logging\DebugStack();
-            $this->app->make(EntityManagerInterface::class)
-                ->getConnection()
-                ->getConfiguration()
-                ->setSQLLogger($debugStack)
-            ;
+            $this->app->singleton(
+                'doctrine_debug_stack',
+                fn () => new \Doctrine\DBAL\Logging\DebugStack()
+            );
             \Debugbar::addCollector(
-                new \DebugBar\Bridge\DoctrineCollector($debugStack)
+                new \DebugBar\Bridge\DoctrineCollector(
+                    $this->app->get('doctrine_debug_stack')
+                )
             );
         }
     }

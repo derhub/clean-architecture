@@ -13,8 +13,8 @@
     "derhub/integration": "dev-master",
     "derhub/shared": "dev-master",
     "derhub/shared-database": "dev-master",
-    "doctrine/orm": "^2.9",
     "doctrine/cache": "^1.1",
+    "doctrine/orm": "^2.9",
     "fideloper/proxy": "^4.4",
     "fruitcake/laravel-cors": "^2.0",
     "guzzlehttp/guzzle": "^7.0.1",
@@ -23,7 +23,8 @@
     "laravel/octane": "^1.0",
     "laravel/tinker": "^2.5",
     "predis/predis": "^1.1",
-    "spiral/roadrunner": "^2.0"
+    "spiral/roadrunner": "^2.0",
+    "symfony/cache": "^5.3"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "dev-master",
@@ -34,7 +35,8 @@
     "mockery/mockery": "^1.4.2",
     "nunomaduro/collision": "^5.0",
     "phpunit/phpunit": "^9.3.3",
-    "roave/security-advisories": "dev-latest"
+    "roave/security-advisories": "dev-latest",
+    "wulfheart/laravel-actions-ide-helper": "dev-main"
   },
   "autoload": {
     "psr-4": {
