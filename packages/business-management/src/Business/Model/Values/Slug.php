@@ -13,9 +13,14 @@ class Slug implements ValueObjectStr
 {
     private ?string $value;
 
-    public function __construct()
+    public static function createFromString(string $string): self
     {
-        $this->value = null;
+        return self::init(Str::slug($string));
+    }
+
+    public static function fromString(string $value): self
+    {
+        return self::init($value);
     }
 
     private static function init(string $value): self
@@ -26,22 +31,6 @@ class Slug implements ValueObjectStr
         $self->value = $value;
 
         return $self;
-    }
-
-    public function __toString()
-    {
-        return sprintf('business-management slug %s', $this->toString());
-    }
-
-    public function sameAs(ValueObject $other): bool
-    {
-        return $other instanceof self
-            && $other->toString() === $this->toString();
-    }
-
-    public static function fromString(string $value): self
-    {
-        return self::init($value);
     }
 
     public static function validate(string|array $value): bool
@@ -55,9 +44,14 @@ class Slug implements ValueObjectStr
         return true;
     }
 
-    public function toString(): ?string
+    public function __construct()
     {
-        return $this->value;
+        $this->value = null;
+    }
+
+    public function __toString()
+    {
+        return sprintf('business-management slug %s', $this->toString());
     }
 
     public function isEmpty(): bool
@@ -65,8 +59,14 @@ class Slug implements ValueObjectStr
         return empty($this->value);
     }
 
-    public static function createFromString(string $string): self
+    public function sameAs(ValueObject $other): bool
     {
-        return self::init(Str::slug($string));
+        return $other instanceof self
+            && $other->toString() === $this->toString();
+    }
+
+    public function toString(): ?string
+    {
+        return $this->value;
     }
 }

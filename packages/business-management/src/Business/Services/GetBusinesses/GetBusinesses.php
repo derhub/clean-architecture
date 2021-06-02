@@ -9,11 +9,6 @@ final class GetBusinesses extends BaseMessage implements Query
 {
     private int $version = 1;
 
-    public function version(): int
-    {
-        return $this->version;
-    }
-
     public function __construct(
         private int $page,
         private int $perPage,
@@ -22,6 +17,21 @@ final class GetBusinesses extends BaseMessage implements Query
         private null|bool|int $enabled = null,
         private null|string|int|array $onBoardType = null,
     ) {
+    }
+
+    public function aggregateIds(): ?array
+    {
+        return $this->aggregateIds;
+    }
+
+    public function enabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function onBoardType(): null|string|int|array
+    {
+        return $this->onBoardType;
     }
 
     public function page(): int
@@ -34,23 +44,13 @@ final class GetBusinesses extends BaseMessage implements Query
         return $this->perPage;
     }
 
-    public function aggregateIds(): ?array
-    {
-        return $this->aggregateIds;
-    }
-
     public function slugs(): ?array
     {
         return $this->slugs;
     }
 
-    public function enabled(): ?bool
+    public function version(): int
     {
-        return $this->enabled;
-    }
-
-    public function onBoardType(): null|string|int|array
-    {
-        return $this->onBoardType;
+        return $this->version;
     }
 }

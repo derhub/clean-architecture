@@ -4,20 +4,14 @@ namespace Tests\Integration\Fixtures;
 
 class MessageFixture
 {
-    public function aggregateRootId(): ?string
-    {
-        return null;
-    }
-
-    public function version(): int
-    {
-        return 1;
-    }
-
     public function __construct(
         private SimpleValueObjFixture $param1,
         private string $param2,
     ) {
+    }
+    public function aggregateRootId(): ?string
+    {
+        return null;
     }
 
     public function param1(): SimpleValueObjFixture
@@ -28,5 +22,10 @@ class MessageFixture
     public function param2(): string
     {
         return $this->param2;
+    }
+
+    public function version(): int
+    {
+        return 1;
     }
 }

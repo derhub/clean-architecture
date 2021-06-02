@@ -11,9 +11,9 @@ class OnBoardStatus implements
     ValueObjectStr,
     ValueObjectInt
 {
+    public const NONE = 0;
     public const ONBOARD_OWNER = 2;
     public const ONBOARD_SALES = 1;
-    public const NONE = 0;
 
     public const STATUES = [
         self::NONE => 'none',
@@ -23,25 +23,19 @@ class OnBoardStatus implements
 
     private int $value;
 
-    public function __construct()
+    public static function byOwner(): self
     {
-        $this->value = self::NONE;
+        return self::init(self::ONBOARD_OWNER);
     }
 
-    private static function init(int $value): self
+    public static function bySales(): self
     {
-        Assert::keyExists(self::STATUES, $value);
-
-        $self = new self();
-        $self->value = $value;
-
-        return $self;
+        return self::init(self::ONBOARD_SALES);
     }
 
-    public function sameAs(ValueObject $other): bool
+    public static function fromInt(int $value): self
     {
-        return $other instanceof self
-            && $other->toInt() === $this->toInt();
+        return self::init($value);
     }
 
     public static function fromString(string $value): self
@@ -54,44 +48,14 @@ class OnBoardStatus implements
         return self::init($intVal);
     }
 
-    public function toString(): string
+    private static function init(int $value): self
     {
-        return self::STATUES[$this->value];
-    }
+        Assert::keyExists(self::STATUES, $value);
 
-    public function __toString()
-    {
-        return sprintf('business-management on-boarding status %s', $this->toString());
-    }
+        $self = new self();
+        $self->value = $value;
 
-    public static function fromInt(int $value): self
-    {
-        return self::init($value);
-    }
-
-    public function toInt(): int
-    {
-        return $this->value;
-    }
-
-    public function isSales(): bool
-    {
-        return $this->value === self::ONBOARD_SALES;
-    }
-
-    public static function bySales(): self
-    {
-        return self::init(self::ONBOARD_SALES);
-    }
-
-    public function isOwner(): bool
-    {
-        return $this->value === self::ONBOARD_OWNER;
-    }
-
-    public static function byOwner(): self
-    {
-        return self::init(self::ONBOARD_OWNER);
+        return $self;
     }
 
     public static function none(): self
@@ -99,8 +63,44 @@ class OnBoardStatus implements
         return self::init(self::NONE);
     }
 
+    public function __construct()
+    {
+        $this->value = self::NONE;
+    }
+
+    public function __toString()
+    {
+        return sprintf('business-management on-boarding status %s', $this->toString());
+    }
+
     public function isNone(): bool
     {
         return $this->value === self::NONE;
+    }
+
+    public function isOwner(): bool
+    {
+        return $this->value === self::ONBOARD_OWNER;
+    }
+
+    public function isSales(): bool
+    {
+        return $this->value === self::ONBOARD_SALES;
+    }
+
+    public function sameAs(ValueObject $other): bool
+    {
+        return $other instanceof self
+            && $other->toInt() === $this->toInt();
+    }
+
+    public function toInt(): int
+    {
+        return $this->value;
+    }
+
+    public function toString(): string
+    {
+        return self::STATUES[$this->value];
     }
 }

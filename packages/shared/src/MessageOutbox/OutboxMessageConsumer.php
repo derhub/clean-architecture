@@ -11,18 +11,17 @@ namespace Derhub\Shared\MessageOutbox;
 interface OutboxMessageConsumer
 {
     /**
-     * @return iterable<OutboxMessage>
-     *
-     * @throws \Derhub\Shared\MessageOutbox\Exceptions\FailedToRetrieve
-     */
-    public function getUnConsumed(): iterable;
-
-    public function eraseConsumedMessage(): void;
-
-    /**
      * @param \Derhub\Shared\MessageOutbox\OutboxMessage ...$message
      *
      * @throws \Derhub\Shared\MessageOutbox\Exceptions\FailedToConsume
      */
     public function consume(OutboxMessage ...$message): void;
+
+    public function eraseConsumedMessage(): void;
+    /**
+     * @return iterable<OutboxMessage>
+     *
+     * @throws \Derhub\Shared\MessageOutbox\Exceptions\FailedToRetrieve
+     */
+    public function getUnConsumed(): iterable;
 }

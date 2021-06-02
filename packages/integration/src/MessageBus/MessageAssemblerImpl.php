@@ -18,14 +18,14 @@ class MessageAssemblerImpl implements MessageAssembler
         $this->factories[$className] = $mapper;
     }
 
-    public function has(string $className): bool
-    {
-        return isset($this->factories[$className]);
-    }
-
     public function get(string $className): mixed
     {
         return $this->factories[$className] ?? null;
+    }
+
+    public function has(string $className): bool
+    {
+        return isset($this->factories[$className]);
     }
 
     /**

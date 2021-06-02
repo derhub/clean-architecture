@@ -19,13 +19,13 @@ class EventMessageFixture implements Event
         return Uuid::generate()->toString();
     }
 
-    public function version(): int
-    {
-        return $this->version;
-    }
-
     public function value(): string
     {
         return $this->value;
+    }
+
+    public function version(): int
+    {
+        return $this->version;
     }
 }

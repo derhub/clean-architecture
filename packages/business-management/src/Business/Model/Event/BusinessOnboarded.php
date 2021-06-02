@@ -24,29 +24,9 @@ final class BusinessOnboarded implements DomainEvent
         return $this->aggregateRootId;
     }
 
-    public function name(): string
+    public function boardingStatus(): int
     {
-        return $this->name;
-    }
-
-    public function createdAt(): string
-    {
-        return $this->createdAt;
-    }
-
-    public function ownerId(): string
-    {
-        return $this->ownerId;
-    }
-
-    public function version(): int
-    {
-        return $this->version;
-    }
-
-    public function slug(): string
-    {
-        return $this->slug;
+        return $this->boardingStatus;
     }
 
     public function country(): string
@@ -54,8 +34,28 @@ final class BusinessOnboarded implements DomainEvent
         return $this->country;
     }
 
-    public function boardingStatus(): int
+    public function createdAt(): string
     {
-        return $this->boardingStatus;
+        return $this->createdAt;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function ownerId(): string
+    {
+        return $this->ownerId;
+    }
+
+    public function slug(): string
+    {
+        return $this->slug;
+    }
+
+    public function version(): int
+    {
+        return $this->version;
     }
 }

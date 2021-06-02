@@ -10,7 +10,7 @@ interface InMemoryRepositoryInterface extends AggregateRepository
 {
     public function createId(): object;
 
-    public function persist(object $object): void;
-
     public function findById(mixed $id): mixed;
+
+    public function persist(object $object): void;
 }

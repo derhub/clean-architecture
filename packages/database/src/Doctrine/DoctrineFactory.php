@@ -8,10 +8,6 @@ use Doctrine\ORM\Tools\Setup;
 
 class DoctrineFactory
 {
-    public static function registerDefaultTypes(): void
-    {
-    }
-
     /**
      * @throws \Doctrine\ORM\ORMException
      * config:
@@ -45,5 +41,8 @@ class DoctrineFactory
             $config['connection'],
             $setup
         );
+    }
+    public static function registerDefaultTypes(): void
+    {
     }
 }

@@ -6,16 +6,6 @@ use Derhub\Shared\Exceptions\DomainException;
 
 class InvalidOwnerIdException extends \Exception implements DomainException
 {
-    public static function fromOnboard(): self
-    {
-        return new self('owner id is required when on-boarding business-management');
-    }
-
-    public static function fromHandOver(): self
-    {
-        return new self('owner id is required when handing business-management');
-    }
-
     public static function fromException(DomainException|\Exception $e): self
     {
         return new self(
@@ -23,5 +13,14 @@ class InvalidOwnerIdException extends \Exception implements DomainException
             $e->getCode(),
             $e,
         );
+    }
+
+    public static function fromHandOver(): self
+    {
+        return new self('owner id is required when handing business-management');
+    }
+    public static function fromOnboard(): self
+    {
+        return new self('owner id is required when on-boarding business-management');
     }
 }

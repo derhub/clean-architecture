@@ -8,19 +8,18 @@ namespace Derhub\Shared\Persistence;
 interface DatabasePersistenceRepository
 {
     /**
-     * @param class-string<T> $className
+     * @param string|int $aggregateRootId
+     * @return T
      */
-    public function setAggregateClass(string $className): void;
+    public function findById(string|int $aggregateRootId): mixed;
 
     /**
      * @psalm-param T $aggregateRoot
      * @param object $aggregateRoot
      */
     public function persist(object $aggregateRoot): void;
-
     /**
-     * @param string|int $aggregateRootId
-     * @return T
+     * @param class-string<T> $className
      */
-    public function findById(string|int $aggregateRootId): mixed;
+    public function setAggregateClass(string $className): void;
 }

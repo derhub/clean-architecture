@@ -27,19 +27,14 @@ class RangeFilter implements QueryFilter
         return $this->field;
     }
 
-    public function value(): array
+    public function maxValue(): mixed
     {
-        return [$this->minValue(), $this->maxValue()];
+        return $this->maxValue;
     }
 
     public function minValue(): mixed
     {
         return $this->minValue;
-    }
-
-    public function maxValue(): mixed
-    {
-        return $this->maxValue;
     }
 
     public function operation(): string
@@ -50,5 +45,10 @@ class RangeFilter implements QueryFilter
     public function operationSymbol(): ?string
     {
         return $this->operation;
+    }
+
+    public function value(): array
+    {
+        return [$this->minValue(), $this->maxValue()];
     }
 }

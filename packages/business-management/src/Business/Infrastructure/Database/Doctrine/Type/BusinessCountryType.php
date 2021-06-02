@@ -12,9 +12,9 @@ class BusinessCountryType extends StringType
 
     public const NAME = 'business_country';
 
-    public function defineName(): string
+    public function convertFromRaw(mixed $value): Country
     {
-        return self::NAME;
+        return Country::fromString($value);
     }
 
     public function convertToRaw(mixed $value): mixed
@@ -22,9 +22,9 @@ class BusinessCountryType extends StringType
         return $value->toString();
     }
 
-    public function convertFromRaw(mixed $value): Country
+    public function defineClass(): string
     {
-        return Country::fromString($value);
+        return Country::class;
     }
 
     public function defineEmptyValueForPHP(mixed $value): Country
@@ -32,8 +32,8 @@ class BusinessCountryType extends StringType
         return new Country();
     }
 
-    public function defineClass(): string
+    public function defineName(): string
     {
-        return Country::class;
+        return self::NAME;
     }
 }

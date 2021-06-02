@@ -55,25 +55,52 @@ class BusinessTest extends ModuleTestCase
         DateTimeLiteral::unFreeze();
     }
 
-    protected function givenRepository(): InMemoryBusinessRepository
+    /**
+     * @param array<class-string> $actual
+     * @param \Derhub\Shared\Model\DomainEvent[] $events
+     */
+    private function assertEvents(array $actual, array $events): void
     {
-        return new InMemoryBusinessRepository();
+        $classStringEvents =
+            array_map(static fn (DomainEvent $e) => $e::class, $events);
+        self::assertEquals($actual, $classStringEvents);
     }
 
-    public function test_transfer_ownership(): void
+    private function createModel(): Business
     {
-        $ownerId = OwnerId::generate();
+        $this->lastId = BusinessId::fromString((string)Uuid::generate());
 
+        return new Business($this->lastId);
+    }
+
+    public function test_change_country(): void
+    {
+        $country = Country::fromString('DK');
         $model = $this->createModel();
-        $model->transferOwnership($ownerId);
+        $model->changeCountry($country);
         $this->assertEvents(
-            [BusinessOwnershipTransferred::class],
+            [BusinessCountryChanged::class],
             $model->pullEvents()
         );
+    }
 
+    public function test_change_name(): void
+    {
+        $name = Name::fromString('test-c-f95jfgjas');
+        $model = $this->createModel();
+        $model->changeName(
+            IsUniqueName::yes(),
+            $name
+        );
 
-        $this->expectException(InvalidOwnerIdException::class);
-        $model->transferOwnership(new OwnerId());
+        $this->assertEvents([BusinessNameChanged::class], $model->pullEvents());
+
+        $this->expectException(NameAlreadyExist::class);
+        $model = $this->createModel();
+        $model->changeName(
+            IsUniqueName::no(),
+            $name
+        );
     }
 
     public function test_change_slug(): void
@@ -95,23 +122,18 @@ class BusinessTest extends ModuleTestCase
         );
     }
 
-    public function test_change_name(): void
+    public function test_disabled(): void
     {
-        $name = Name::fromString('test-c-f95jfgjas');
         $model = $this->createModel();
-        $model->changeName(
-            IsUniqueName::yes(),
-            $name
-        );
+        $model->disable();
+        $this->assertEvents([BusinessDisabled::class], $model->pullEvents());
+    }
 
-        $this->assertEvents([BusinessNameChanged::class], $model->pullEvents());
-
-        $this->expectException(NameAlreadyExist::class);
+    public function test_enabled(): void
+    {
         $model = $this->createModel();
-        $model->changeName(
-            IsUniqueName::no(),
-            $name
-        );
+        $model->enable();
+        $this->assertEvents([BusinessEnabled::class], $model->pullEvents());
     }
 
     public function test_on_board(): void
@@ -138,46 +160,24 @@ class BusinessTest extends ModuleTestCase
         );
     }
 
-    private function createModel(): Business
+    public function test_transfer_ownership(): void
     {
-        $this->lastId = BusinessId::fromString((string)Uuid::generate());
+        $ownerId = OwnerId::generate();
 
-        return new Business($this->lastId);
-    }
-
-    public function test_disabled(): void
-    {
         $model = $this->createModel();
-        $model->disable();
-        $this->assertEvents([BusinessDisabled::class], $model->pullEvents());
-    }
-
-    public function test_enabled(): void
-    {
-        $model = $this->createModel();
-        $model->enable();
-        $this->assertEvents([BusinessEnabled::class], $model->pullEvents());
-    }
-
-    /**
-     * @param array<class-string> $actual
-     * @param \Derhub\Shared\Model\DomainEvent[] $events
-     */
-    private function assertEvents(array $actual, array $events): void
-    {
-        $classStringEvents =
-            array_map(static fn (DomainEvent $e) => $e::class, $events);
-        self::assertEquals($actual, $classStringEvents);
-    }
-
-    public function test_change_country(): void
-    {
-        $country = Country::fromString('DK');
-        $model = $this->createModel();
-        $model->changeCountry($country);
+        $model->transferOwnership($ownerId);
         $this->assertEvents(
-            [BusinessCountryChanged::class],
+            [BusinessOwnershipTransferred::class],
             $model->pullEvents()
         );
+
+
+        $this->expectException(InvalidOwnerIdException::class);
+        $model->transferOwnership(new OwnerId());
+    }
+
+    protected function givenRepository(): InMemoryBusinessRepository
+    {
+        return new InMemoryBusinessRepository();
     }
 }

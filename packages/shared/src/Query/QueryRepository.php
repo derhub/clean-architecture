@@ -4,30 +4,18 @@ namespace Derhub\Shared\Query;
 
 interface QueryRepository
 {
+    public function addFilter(QueryFilter $filters): self;
     /**
      * @param QueryFilter[] $filters
      */
     public function addFilters(array $filters): self;
-
-    public function addFilter(QueryFilter $filters): self;
 
     public function applyFilters(): mixed;
 
     /**
      * @throw FailedQueryException
      */
-    public function results(): array;
-
-    /**
-     * @throw FailedQueryException
-     */
-    public function iterableResult(): iterable;
-
-    /**
-     * @throw NotSingleResultException
-     * @throw FailedQueryException
-     */
-    public function singleResult(): mixed;
+    public function exists(string $field, mixed $value): ?bool;
 
     /**
      * @throw FailedQueryException
@@ -43,5 +31,16 @@ interface QueryRepository
     /**
      * @throw FailedQueryException
      */
-    public function exists(string $field, mixed $value): ?bool;
+    public function iterableResult(): iterable;
+
+    /**
+     * @throw FailedQueryException
+     */
+    public function results(): array;
+
+    /**
+     * @throw NotSingleResultException
+     * @throw FailedQueryException
+     */
+    public function singleResult(): mixed;
 }

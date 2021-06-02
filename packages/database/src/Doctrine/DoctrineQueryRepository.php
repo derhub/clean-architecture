@@ -38,51 +38,30 @@ abstract class DoctrineQueryRepository implements QueryRepository
     }
 
     /**
-     * @return \Doctrine\ORM\EntityRepository<T>
+     * @throws \Derhub\Shared\Query\FailedQueryException
      */
-    abstract protected function getRepository(): EntityRepository;
-
-    abstract protected function getTableName(): string;
-
-    protected function mapResult(array $data): mixed
+    public function exists(string $field, mixed $value): bool
     {
-        return $this->mapper->fromArray($data);
-    }
+        $connection = $this->entityManager->getConnection();
+        $expr = $connection->getExpressionBuilder();
+        $query = $connection->createQueryBuilder()
+            ->select(['1'])
+            ->from(sprintf('`%s`', $this->getTableName()), 'b')
+            ->where($expr->eq('b.'.$field, '?'))
+        ;
 
-    public function results(): array
-    {
-        return iterator_to_array($this->iterableResult());
-    }
-
-    public function iterableResult(): \Generator
-    {
-        $queryBuilder = $this->applyFilters();
-        $raw = $queryBuilder->getQuery()->getResult(Query::HYDRATE_ARRAY);
-        foreach ($raw as $result) {
-            yield $this->mapResult($result);
-        }
-    }
-
-    /**
-     * @throws \Derhub\Shared\Query\NotSingleResultException
-     */
-    public function singleResult(): mixed
-    {
         try {
-            $queryBuilder = $this->applyFilters();
-            $find = $queryBuilder
-                ->getQuery()
-                ->getOneOrNullResult(Query::HYDRATE_ARRAY)
+            $result = $connection->createQueryBuilder()
+                ->select('EXISTS('.$query->getSQL().')')
+                ->setParameter(1, $value)
+                ->execute()
+                ->fetchOne()
             ;
-
-            if ($find === null) {
-                return null;
-            }
-
-            return $this->mapResult($find);
-        } catch (NonUniqueResultException $e) {
-            throw NotSingleResultException::fromThrowable($e);
+        } catch (\Doctrine\DBAL\Exception | Exception $e) {
+            throw FailedQueryException::fromThrowable($e);
         }
+
+        return $result === '0';
     }
 
     public function findBy(string $field, mixed $value): array
@@ -114,30 +93,51 @@ abstract class DoctrineQueryRepository implements QueryRepository
         }
     }
 
-    /**
-     * @throws \Derhub\Shared\Query\FailedQueryException
-     */
-    public function exists(string $field, mixed $value): bool
+    public function iterableResult(): \Generator
     {
-        $connection = $this->entityManager->getConnection();
-        $expr = $connection->getExpressionBuilder();
-        $query = $connection->createQueryBuilder()
-            ->select(['1'])
-            ->from(sprintf('`%s`', $this->getTableName()), 'b')
-            ->where($expr->eq('b.'.$field, '?'))
-        ;
-
-        try {
-            $result = $connection->createQueryBuilder()
-                ->select('EXISTS('.$query->getSQL().')')
-                ->setParameter(1, $value)
-                ->execute()
-                ->fetchOne()
-            ;
-        } catch (\Doctrine\DBAL\Exception | Exception $e) {
-            throw FailedQueryException::fromThrowable($e);
+        $queryBuilder = $this->applyFilters();
+        $raw = $queryBuilder->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        foreach ($raw as $result) {
+            yield $this->mapResult($result);
         }
+    }
 
-        return $result === '0';
+    public function results(): array
+    {
+        return iterator_to_array($this->iterableResult());
+    }
+
+    /**
+     * @throws \Derhub\Shared\Query\NotSingleResultException
+     */
+    public function singleResult(): mixed
+    {
+        try {
+            $queryBuilder = $this->applyFilters();
+            $find = $queryBuilder
+                ->getQuery()
+                ->getOneOrNullResult(Query::HYDRATE_ARRAY)
+            ;
+
+            if ($find === null) {
+                return null;
+            }
+
+            return $this->mapResult($find);
+        } catch (NonUniqueResultException $e) {
+            throw NotSingleResultException::fromThrowable($e);
+        }
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityRepository<T>
+     */
+    abstract protected function getRepository(): EntityRepository;
+
+    abstract protected function getTableName(): string;
+
+    protected function mapResult(array $data): mixed
+    {
+        return $this->mapper->fromArray($data);
     }
 }

@@ -10,6 +10,43 @@ use Tests\Integration\TestCase;
 
 class SimpleMapperTest extends TestCase
 {
+    public function test_extract(): void
+    {
+        $mapper = new SimpleMapper();
+        $extract = $mapper->extract(
+            new PlainTestClass(1, '2', 3),
+        );
+
+        self::assertEquals(
+            [
+                'test' => 1,
+                'test2' => '2',
+                'test3' => 3,
+            ],
+            $extract,
+        );
+    }
+
+    public function test_extract_with_property_name_converter(): void
+    {
+        $mapper = new SimpleMapper();
+        $transform = $mapper->extract(
+            new ObjectWithCamelCaseParameter(
+                TestDefineResolver::fromInt(1),
+                TestDefineResolver::fromString('1'),
+                [1]
+            ),
+        );
+
+        self::assertEquals(
+            [
+                'camel_case' => TestDefineResolver::fromInt(1),
+                'test_dummy' => TestDefineResolver::fromString('1'),
+                'test_param' => [1],
+            ],
+            $transform,
+        );
+    }
     public function test_transform(): void
     {
         $mapper = new SimpleMapper();
@@ -46,44 +83,6 @@ class SimpleMapperTest extends TestCase
                 TestDefineResolver::fromString('1'),
                 [1]
             ),
-            $transform,
-        );
-    }
-
-    public function test_extract(): void
-    {
-        $mapper = new SimpleMapper();
-        $extract = $mapper->extract(
-            new PlainTestClass(1, '2', 3),
-        );
-
-        self::assertEquals(
-            [
-                'test' => 1,
-                'test2' => '2',
-                'test3' => 3,
-            ],
-            $extract,
-        );
-    }
-
-    public function test_extract_with_property_name_converter(): void
-    {
-        $mapper = new SimpleMapper();
-        $transform = $mapper->extract(
-            new ObjectWithCamelCaseParameter(
-                TestDefineResolver::fromInt(1),
-                TestDefineResolver::fromString('1'),
-                [1]
-            ),
-        );
-
-        self::assertEquals(
-            [
-                'camel_case' => TestDefineResolver::fromInt(1),
-                'test_dummy' => TestDefineResolver::fromString('1'),
-                'test_param' => [1],
-            ],
             $transform,
         );
     }

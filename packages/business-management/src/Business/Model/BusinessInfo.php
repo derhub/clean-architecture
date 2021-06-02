@@ -10,15 +10,45 @@ use Derhub\Shared\Utils\Assert;
 
 class BusinessInfo implements Entity
 {
+    private Country $country;
     private Name $name;
     private OwnerId $ownerId;
-    private Country $country;
+
+    public static function fromArray(array $values): self
+    {
+        Assert::keyExists($values, 'name');
+        Assert::keyExists($values, 'owner_id');
+
+        $self = new self();
+        $self->name = Name::fromString($values['name']);
+        $self->ownerId = OwnerId::fromString($values['owner_id']);
+
+        return $self;
+    }
 
     public function __construct()
     {
         $this->name = new Name();
         $this->ownerId = new OwnerId();
         $this->country = new Country();
+    }
+
+    public function country(): Country
+    {
+        return $this->country;
+    }
+
+    public function name(): Name
+    {
+        return $this->name;
+    }
+
+    public function newCountry(Country $country): self
+    {
+        $self = clone $this;
+        $self->country = $country;
+
+        return $self;
     }
 
     public function newName(Name $name): self
@@ -37,24 +67,15 @@ class BusinessInfo implements Entity
         return $self;
     }
 
-    public function newCountry(Country $country): self
+    public function ownerId(): OwnerId
     {
-        $self = clone $this;
-        $self->country = $country;
-
-        return $self;
+        return $this->ownerId;
     }
 
-    public static function fromArray(array $values): self
+    public function sameAs(Entity $other): bool
     {
-        Assert::keyExists($values, 'name');
-        Assert::keyExists($values, 'owner_id');
-
-        $self = new self();
-        $self->name = Name::fromString($values['name']);
-        $self->ownerId = OwnerId::fromString($values['owner_id']);
-
-        return $self;
+        return $other instanceof self
+            && $other->ownerId() === $this->ownerId();
     }
 
     public function toArray(): array
@@ -64,26 +85,5 @@ class BusinessInfo implements Entity
             'owner_id' => $this->ownerId()->toString(),
             'country' => $this->country()->toString(),
         ];
-    }
-
-    public function sameAs(Entity $other): bool
-    {
-        return $other instanceof self
-            && $other->ownerId() === $this->ownerId();
-    }
-
-    public function name(): Name
-    {
-        return $this->name;
-    }
-
-    public function ownerId(): OwnerId
-    {
-        return $this->ownerId;
-    }
-
-    public function country(): Country
-    {
-        return $this->country;
     }
 }

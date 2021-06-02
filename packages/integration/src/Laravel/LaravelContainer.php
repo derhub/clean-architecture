@@ -16,6 +16,11 @@ class LaravelContainer implements ContainerInterface
         $this->laravel = $laravel;
     }
 
+    public function bind(string $class, mixed $abstract): mixed
+    {
+        return ($this->laravel)()->bind($class, $abstract);
+    }
+
     public function get(string $id): mixed
     {
         return ($this->laravel)()->get($id);
@@ -29,11 +34,6 @@ class LaravelContainer implements ContainerInterface
     public function resolve(string $class): mixed
     {
         return ($this->laravel)()->make($class);
-    }
-
-    public function bind(string $class, mixed $abstract): mixed
-    {
-        return ($this->laravel)()->bind($class, $abstract);
     }
 
     public function singleton(string $class, mixed $abstract): mixed

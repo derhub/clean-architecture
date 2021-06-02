@@ -17,14 +17,14 @@ class BusinessPersistenceRepository implements BusinessRepository
         $this->persistence->setAggregateClass(Business::class);
     }
 
-    public function getNextId(): BusinessId
-    {
-        return BusinessId::generate();
-    }
-
     public function get(AggregateRootId $id): Business
     {
         return $this->persistence->findById($id->toString());
+    }
+
+    public function getNextId(): BusinessId
+    {
+        return BusinessId::generate();
     }
 
     public function save(AggregateRoot $aggregateRoot): void

@@ -10,11 +10,6 @@ use Tests\Template\Services\ServiceTestCase;
 
 class GetTemplatesTest extends ServiceTestCase
 {
-    protected function getHandler(): object
-    {
-        return new GetTemplatesHandler($this->queryRepo);
-    }
-
     /**
      * @test
      */
@@ -31,5 +26,9 @@ class GetTemplatesTest extends ServiceTestCase
             )
             ->then(QueryResponse::class)
         ;
+    }
+    protected function getHandler(): object
+    {
+        return new GetTemplatesHandler($this->queryRepo);
     }
 }

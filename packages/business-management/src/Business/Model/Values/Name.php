@@ -14,9 +14,9 @@ class Name implements ValueObjectStr
 
     private ?string $value;
 
-    public function __construct()
+    public static function fromString(string $value): self
     {
-        $this->value = null;
+        return self::init($value);
     }
 
     private static function init(string $value): self
@@ -34,14 +34,19 @@ class Name implements ValueObjectStr
         }
     }
 
+    public function __construct()
+    {
+        $this->value = null;
+    }
+
     public function __toString(): string
     {
         return 'business-management name '.$this->value ?? '';
     }
 
-    public function value(): ?string
+    public function isEmpty(): bool
     {
-        return $this->value;
+        return empty($this->value);
     }
 
     public function sameAs(ValueObject $other): bool
@@ -50,18 +55,13 @@ class Name implements ValueObjectStr
             && $other->toString() === $this->toString();
     }
 
-    public static function fromString(string $value): self
-    {
-        return self::init($value);
-    }
-
     public function toString(): ?string
     {
         return $this->value;
     }
 
-    public function isEmpty(): bool
+    public function value(): ?string
     {
-        return empty($this->value);
+        return $this->value;
     }
 }

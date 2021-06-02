@@ -14,16 +14,16 @@ abstract class AbstractCommandResponse extends AbstractMessageResponse implement
         $this->aggregateRootId = $aggregateRootId;
     }
 
+    public function aggregateRootId(): ?string
+    {
+        return $this->aggregateRootId;
+    }
+
     /**
      * @param string $aggregateRootId
      */
     public function setAggregateRootId(string $aggregateRootId): void
     {
         $this->aggregateRootId = $aggregateRootId;
-    }
-
-    public function aggregateRootId(): ?string
-    {
-        return $this->aggregateRootId;
     }
 }

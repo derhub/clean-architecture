@@ -26,18 +26,6 @@ class MessageBusFactory
         );
     }
 
-    public static function createQueryBus(
-        QueryListenerProvider $locator,
-        array $middlewares = [],
-    ): QueryBus {
-        return new TacticianQueryBus(
-            [
-                ...$middlewares,
-                self::createMiddlewareHandler($locator),
-            ]
-        );
-    }
-
     public static function createEventBus(
         EventListenerProvider $locator,
         array $middlewares = [],
@@ -49,7 +37,6 @@ class MessageBusFactory
             ]
         );
     }
-
     private static function createMiddlewareHandler(
         ListenerProviderInterface $locator
     ): MultipleMessageHandler {
@@ -58,6 +45,18 @@ class MessageBusFactory
         return new MultipleMessageHandler(
             $locator,
             $inflector,
+        );
+    }
+
+    public static function createQueryBus(
+        QueryListenerProvider $locator,
+        array $middlewares = [],
+    ): QueryBus {
+        return new TacticianQueryBus(
+            [
+                ...$middlewares,
+                self::createMiddlewareHandler($locator),
+            ]
         );
     }
 }

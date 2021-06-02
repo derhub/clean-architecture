@@ -12,58 +12,24 @@ class DateTimeLiteral implements ValueObjectStr
      * format: ISO8601
      */
     public static string $defaultFormat = 'Y-m-d\TH:i:sO';
-    private static string $tz = 'utc';
 
     private static ?DateTimeLiteral $freeze = null;
+    private static string $tz = 'utc';
 
     private ?DateTimeImmutable $value;
 
-    public function __construct()
+    /**
+     * Create date with empty value
+     * @return $this
+     */
+    public static function createEmpty(): self
     {
-        $this->value = null;
-    }
-
-    private static function init(DateTimeImmutable $datetime): static
-    {
-        $self = new static();
-        $self->value = static::$freeze?->rawValue() ?? $datetime;
-
-        return $self;
-    }
-
-    public function rawValue(): ?DateTimeImmutable
-    {
-        return $this->value;
+        return new self();
     }
 
     public static function freezeAt(DateTimeLiteral $dateTime): void
     {
         static::$freeze = $dateTime;
-    }
-
-    public static function unFreeze(): void
-    {
-        static::$freeze = null;
-    }
-
-    public static function now(): DateTimeLiteral
-    {
-        return static::init(
-            new DateTimeImmutable(
-                date(self::$defaultFormat),
-                new DateTimeZone(self::$tz)
-            )
-        );
-    }
-
-    public static function fromTimestamp(int $timestamp): self
-    {
-        return static::init(new DateTimeImmutable('@'.$timestamp));
-    }
-
-    public static function fromString(string $value): self
-    {
-        return self::fromFormat(self::$defaultFormat, $value);
     }
 
     public static function fromFormat(string $format, string $value): self|null
@@ -76,6 +42,24 @@ class DateTimeLiteral implements ValueObjectStr
         return static::init($date);
     }
 
+    public static function fromString(string $value): self
+    {
+        return self::fromFormat(self::$defaultFormat, $value);
+    }
+
+    public static function fromTimestamp(int $timestamp): self
+    {
+        return static::init(new DateTimeImmutable('@'.$timestamp));
+    }
+
+    private static function init(DateTimeImmutable $datetime): static
+    {
+        $self = new static();
+        $self->value = static::$freeze?->rawValue() ?? $datetime;
+
+        return $self;
+    }
+
     public static function isValidWithFormat(
         string $value,
         ?string $format = null,
@@ -86,15 +70,24 @@ class DateTimeLiteral implements ValueObjectStr
         return $dateTime !== false && $value === $dateTime->format($format);
     }
 
-    public function timestamp(): int
+    public static function now(): DateTimeLiteral
     {
-        return $this->value->getTimestamp();
+        return static::init(
+            new DateTimeImmutable(
+                date(self::$defaultFormat),
+                new DateTimeZone(self::$tz)
+            )
+        );
     }
 
-    public function sameAs(ValueObject $other): bool
+    public static function unFreeze(): void
     {
-        return $other instanceof static &&
-            $this->rawValue() === $other->rawValue();
+        static::$freeze = null;
+    }
+
+    public function __construct()
+    {
+        $this->value = null;
     }
 
     public function __toString(): string
@@ -111,15 +104,6 @@ class DateTimeLiteral implements ValueObjectStr
         return $this->value?->format($format) ?? null;
     }
 
-    /**
-     * Create date with empty value
-     * @return $this
-     */
-    public static function createEmpty(): self
-    {
-        return new self();
-    }
-
     public function isEmpty(): bool
     {
         return empty($this->value);
@@ -128,6 +112,22 @@ class DateTimeLiteral implements ValueObjectStr
     public function iso8601(): ?string
     {
         return $this->format(self::$defaultFormat);
+    }
+
+    public function rawValue(): ?DateTimeImmutable
+    {
+        return $this->value;
+    }
+
+    public function sameAs(ValueObject $other): bool
+    {
+        return $other instanceof static &&
+            $this->rawValue() === $other->rawValue();
+    }
+
+    public function timestamp(): int
+    {
+        return $this->value->getTimestamp();
     }
 
     public function toString(): ?string

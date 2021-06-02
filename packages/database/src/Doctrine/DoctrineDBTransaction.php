@@ -11,11 +11,6 @@ class DoctrineDBTransaction implements DBTransaction
     {
     }
 
-    public function transaction(callable $callback): mixed
-    {
-        return $this->entityManager->transactional($callback);
-    }
-
     public function begin(): void
     {
         $this->entityManager->beginTransaction();
@@ -29,5 +24,10 @@ class DoctrineDBTransaction implements DBTransaction
     public function rollback(): void
     {
         $this->entityManager->rollback();
+    }
+
+    public function transaction(callable $callback): mixed
+    {
+        return $this->entityManager->transactional($callback);
     }
 }

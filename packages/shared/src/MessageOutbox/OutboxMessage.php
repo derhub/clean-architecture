@@ -16,9 +16,14 @@ class OutboxMessage
     ) {
     }
 
-    public function name(): string
+    public function id(): string
     {
-        return $this->name;
+        return $this->id;
+    }
+
+    public function isConsume(): bool
+    {
+        return $this->isConsume;
     }
 
     public function message(): Message
@@ -31,23 +36,18 @@ class OutboxMessage
         return $this->messageType;
     }
 
-    public function id(): string
-    {
-        return $this->id;
-    }
-
     public function meta(): array
     {
         return $this->meta;
     }
 
+    public function name(): string
+    {
+        return $this->name;
+    }
+
     public function version(): int
     {
         return $this->message->version();
-    }
-
-    public function isConsume(): bool
-    {
-        return $this->isConsume;
     }
 }

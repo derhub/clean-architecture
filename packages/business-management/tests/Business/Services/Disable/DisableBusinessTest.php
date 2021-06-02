@@ -10,11 +10,6 @@ use Tests\BusinessManagement\Business\Services\BaseServiceTestCase;
 
 class DisableBusinessTest extends BaseServiceTestCase
 {
-    protected function getHandler(): object
-    {
-        return new DisableBusinessHandler($this->repository);
-    }
-
     /**
      * @test
      */
@@ -24,5 +19,9 @@ class DisableBusinessTest extends BaseServiceTestCase
             ->when(new DisableBusiness($this->lastId->toString()))
             ->then(DisableBusinessResponse::class)
         ;
+    }
+    protected function getHandler(): object
+    {
+        return new DisableBusinessHandler($this->repository);
     }
 }

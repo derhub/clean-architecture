@@ -4,6 +4,32 @@ namespace Derhub\Integration;
 
 trait UseListenerProviderHandlerRegistry
 {
+    protected function addMultiHandler(
+        string $name,
+        string $message,
+        string $handlerKey,
+        mixed $handler
+    ): void {
+        $this->registerLookups(
+            $name,
+            $message
+        );
+
+        $this->registerMultipleHandler($handlerKey, $handler ?? []);
+    }
+
+    protected function addSingleHandler(
+        string $name,
+        string $message,
+        string $handlerKey,
+        mixed $handler,
+    ): void {
+        $this->registerLookups(
+            $name,
+            $message
+        );
+        $this->registerSingleHandler($handlerKey, $handler);
+    }
     protected function registerLookups(
         string $name,
         string $message,
@@ -30,32 +56,5 @@ trait UseListenerProviderHandlerRegistry
         } else {
             $this->handlers[$key] = $handler;
         }
-    }
-
-    protected function addSingleHandler(
-        string $name,
-        string $message,
-        string $handlerKey,
-        mixed $handler,
-    ): void {
-        $this->registerLookups(
-            $name,
-            $message
-        );
-        $this->registerSingleHandler($handlerKey, $handler);
-    }
-
-    protected function addMultiHandler(
-        string $name,
-        string $message,
-        string $handlerKey,
-        mixed $handler
-    ): void {
-        $this->registerLookups(
-            $name,
-            $message
-        );
-
-        $this->registerMultipleHandler($handlerKey, $handler ?? []);
     }
 }

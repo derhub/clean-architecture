@@ -17,14 +17,14 @@ class TemplatePersistenceRepository implements TemplateRepository
         $this->persistence->setAggregateClass(Template::class);
     }
 
-    public function getNextId(): TemplateId
-    {
-        return TemplateId::generate();
-    }
-
     public function get(AggregateRootId $id): Template
     {
         return $this->persistence->findById($id->toString());
+    }
+
+    public function getNextId(): TemplateId
+    {
+        return TemplateId::generate();
     }
 
     public function save(AggregateRoot $aggregateRoot): void

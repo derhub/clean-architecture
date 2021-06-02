@@ -13,14 +13,14 @@ use Derhub\Shared\ModuleInterface;
 
 abstract class MessageTestCase extends ModuleTestCase
 {
-    protected AggregateRepository $repository;
-    protected ?AggregateRoot $lastAr;
     protected array $events;
     protected array $expectedExceptionErrors = [];
     protected array $extraExceptions = [];
+    protected ?array $fakeData;
+    protected ?AggregateRoot $lastAr;
     protected mixed $messageResponse;
     protected mixed $messageResponseType;
-    protected ?array $fakeData;
+    protected AggregateRepository $repository;
 
     public function setUp(): void
     {
@@ -46,112 +46,10 @@ abstract class MessageTestCase extends ModuleTestCase
         $this->moduleService->start();
     }
 
-    abstract protected function getModule(): ModuleInterface;
-
-    abstract protected function createId(): object;
-
-    abstract protected function getRepository(): mixed;
-
-    protected function givenData($data): self
-    {
-        $this->fakeData = array_merge($this->fakeData ?? [], $data);
-
-        return $this;
-    }
-
 
     public function createAggregateRoot($class)
     {
         return new $class($this->createId());
-    }
-
-    public function given(string $aggregateRoot): self
-    {
-        $this->lastAr = $this->createAggregateRoot($aggregateRoot);
-
-        return $this;
-    }
-
-    public function givenExisting(string $aggregateRoot): self
-    {
-        $this->given($aggregateRoot);
-        $this->repository->save($this->lastAr);
-
-        return $this;
-    }
-
-    public function givenAggregateRoot(AggregateRoot $aggregateRoot): self
-    {
-        $this->lastAr = $aggregateRoot;
-
-        // make sure no events
-        $aggregateRoot->pullEvents();
-
-        return $this;
-    }
-
-    public function givenExistingAggregateRoot(
-        AggregateRoot $aggregateRoot
-    ): self {
-        $this->repository->save($aggregateRoot);
-        $this->lastAr = $aggregateRoot;
-
-        // make sure no events
-        $aggregateRoot->pullEvents();
-
-        return $this;
-    }
-
-    protected function getDataFor($object): ?array
-    {
-        if ($this->fakeData === null && is_string($object)) {
-            throw new \Exception(
-                'No given data. '.
-                'Its required when `when` param is string '.
-                'You can set it using givenData(array $data) method'
-            );
-        }
-
-        return $this->fakeData;
-    }
-
-    protected function createMessageFromData(string $str): object
-    {
-        $mapper = new ObjectMapper();
-
-        return $mapper->transform($this->getDataFor($str), $str);
-    }
-
-    public function when(object ...$messages): self
-    {
-        foreach ($messages as $message) {
-            $object = $message;
-
-            // create message with given data
-            if (is_string($message) && class_exists($message)) {
-                $object = $this->createMessageFromData($message);
-            }
-
-            if ($message instanceof Event) {
-                $this->eventBus->dispatch($object);
-                $this->messageResponse = null;
-            } elseif ($message instanceof Command) {
-                $this->messageResponse =
-                    $this->commandBus->dispatch($object);
-            } else {
-                $this->messageResponse =
-                    $this->queryBus->dispatch($object);
-            }
-
-            if (is_object($this->messageResponse)) {
-                $this->messageResponseType =
-                    $this->messageResponse::class;
-            } else {
-                $this->messageResponseType = $this->messageResponse;
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -168,6 +66,43 @@ abstract class MessageTestCase extends ModuleTestCase
     public function expectExceptionErrors(string ...$errors): self
     {
         $this->expectedExceptionErrors = $errors;
+
+        return $this;
+    }
+
+    public function given(string $aggregateRoot): self
+    {
+        $this->lastAr = $this->createAggregateRoot($aggregateRoot);
+
+        return $this;
+    }
+
+    public function givenAggregateRoot(AggregateRoot $aggregateRoot): self
+    {
+        $this->lastAr = $aggregateRoot;
+
+        // make sure no events
+        $aggregateRoot->pullEvents();
+
+        return $this;
+    }
+
+    public function givenExisting(string $aggregateRoot): self
+    {
+        $this->given($aggregateRoot);
+        $this->repository->save($this->lastAr);
+
+        return $this;
+    }
+
+    public function givenExistingAggregateRoot(
+        AggregateRoot $aggregateRoot
+    ): self {
+        $this->repository->save($aggregateRoot);
+        $this->lastAr = $aggregateRoot;
+
+        // make sure no events
+        $aggregateRoot->pullEvents();
 
         return $this;
     }
@@ -207,5 +142,70 @@ abstract class MessageTestCase extends ModuleTestCase
                 )
             );
         }
+    }
+
+    public function when(object ...$messages): self
+    {
+        foreach ($messages as $message) {
+            $object = $message;
+
+            // create message with given data
+            if (is_string($message) && class_exists($message)) {
+                $object = $this->createMessageFromData($message);
+            }
+
+            if ($message instanceof Event) {
+                $this->eventBus->dispatch($object);
+                $this->messageResponse = null;
+            } elseif ($message instanceof Command) {
+                $this->messageResponse =
+                    $this->commandBus->dispatch($object);
+            } else {
+                $this->messageResponse =
+                    $this->queryBus->dispatch($object);
+            }
+
+            if (is_object($this->messageResponse)) {
+                $this->messageResponseType =
+                    $this->messageResponse::class;
+            } else {
+                $this->messageResponseType = $this->messageResponse;
+            }
+        }
+
+        return $this;
+    }
+
+    abstract protected function createId(): object;
+
+    protected function createMessageFromData(string $str): object
+    {
+        $mapper = new ObjectMapper();
+
+        return $mapper->transform($this->getDataFor($str), $str);
+    }
+
+    protected function getDataFor($object): ?array
+    {
+        if ($this->fakeData === null && is_string($object)) {
+            throw new \Exception(
+                'No given data. '.
+                'Its required when `when` param is string '.
+                'You can set it using givenData(array $data) method'
+            );
+        }
+
+        return $this->fakeData;
+    }
+
+    abstract protected function getModule(): ModuleInterface;
+
+    abstract protected function getRepository(): mixed;
+
+    protected function givenData($data): self
+    {
+        $this->fakeData = array_merge($this->fakeData ?? [], $data);
+
+        return $this;
     }
 }

@@ -10,10 +10,6 @@ use Tests\Integration\Fixtures\TestModule;
 
 class ModuleServiceTest extends ModuleIntegrationTestCaseCase
 {
-    protected function getModule(): ModuleInterface
-    {
-        return new TestModule();
-    }
 //
 //    /**
 //     * @test
@@ -75,5 +71,9 @@ class ModuleServiceTest extends ModuleIntegrationTestCaseCase
     public function it_return_null_no_module(): void
     {
         self::assertNull($this->moduleList->get('test'));
+    }
+    protected function getModule(): ModuleInterface
+    {
+        return new TestModule();
     }
 }

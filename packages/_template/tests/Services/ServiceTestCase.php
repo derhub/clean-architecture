@@ -28,12 +28,12 @@ abstract class ServiceTestCase extends MessageTestCase
         $this->lastId = null;
     }
 
-    abstract protected function getHandler(): object;
-
     protected function createId(): object
     {
         return $this->lastId = TemplateId::generate();
     }
+
+    abstract protected function getHandler(): object;
 
     protected function getRepository(): InMemoryRepository
     {

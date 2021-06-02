@@ -47,15 +47,6 @@ class GetBusinessesHandler
         return $response;
     }
 
-    private function createInFilter($field, $values): InArrayFilter
-    {
-        return new InArrayFilter(
-            $field,
-            $values,
-            InArrayFilter::OPERATION_IN
-        );
-    }
-
     private function addFilterForAggregateId(
         array $prevFilters,
         string|array|null $aggregateIds,
@@ -117,5 +108,14 @@ class GetBusinessesHandler
             );
 
         return $prevFilters;
+    }
+
+    private function createInFilter($field, $values): InArrayFilter
+    {
+        return new InArrayFilter(
+            $field,
+            $values,
+            InArrayFilter::OPERATION_IN
+        );
     }
 }

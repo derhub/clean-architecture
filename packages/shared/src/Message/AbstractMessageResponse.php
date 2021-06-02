@@ -13,11 +13,6 @@ abstract class AbstractMessageResponse implements MessageResponse
         $this->warnings = [];
     }
 
-    public function errors(): array
-    {
-        return $this->errors;
-    }
-
     public function addError(
         string $type,
         string $message,
@@ -54,9 +49,14 @@ abstract class AbstractMessageResponse implements MessageResponse
         return $this;
     }
 
-    public function warning(): array
+    public function errors(): array
     {
-        return $this->warnings;
+        return $this->errors;
+    }
+
+    public function isFailed(): bool
+    {
+        return ! $this->isSuccess();
     }
 
     public function isSuccess(): bool
@@ -64,8 +64,8 @@ abstract class AbstractMessageResponse implements MessageResponse
         return empty($this->errors());
     }
 
-    public function isFailed(): bool
+    public function warning(): array
     {
-        return ! $this->isSuccess();
+        return $this->warnings;
     }
 }

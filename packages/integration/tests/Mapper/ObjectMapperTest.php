@@ -23,6 +23,85 @@ class ObjectMapperTest extends TestCase
         $this->mapper = new ObjectMapper();
     }
 
+    public function test_it_accept_array(): void
+    {
+        $result = $this->mapper->transform(
+            [
+                'test' => 1,
+                'test2' => 2,
+                'test6' => 2,
+                'test8' => 2,
+                'test9' => 2,
+            ],
+            PlainTestClass::class
+        );
+
+        self::assertEquals(new PlainTestClass(1, 2), $result);
+    }
+
+    public function test_it_accept_resolver_in_array_format(): void
+    {
+        $this->mapper->mapMetaData(
+            name: 'test',
+            property: 'test',
+            resolver: 'test_resolver'
+        );
+
+        $this->mapper->defineResolver(
+            'test_resolver',
+            [TestDefineResolver::class, 'fromString']
+        );
+
+        $result = $this->mapper->transform(
+            [
+                'test' => '1',
+                'test2' => 2,
+                'test3' => 3,
+            ],
+            PlainTestClass::class
+        );
+
+        self::assertEquals(
+            new PlainTestClass(TestDefineResolver::fromString('1'), 2, 3),
+            $result
+        );
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function test_it_automatically_resolve(): void
+    {
+        $objectVal = TestDefineResolver::fromObject(new stdClass());
+        $result = $this->mapper->transform(
+            [
+                'string' => '1',
+                'int' => 2,
+                'bool' => true,
+                'array' => [1, 2, 3, 4, 5],
+                'object' => new stdClass(),
+                'sameObjectValue' => $objectVal,
+            ],
+            TestWithClassParam::class
+        );
+
+        self::assertEquals(
+            new TestWithClassParam(
+                TestDefineResolver::fromString('1'),
+                TestDefineResolver::fromInt(2),
+                TestDefineResolver::fromInt(3),
+                TestDefineResolver::fromArray([1, 2, 3, 4, 5]),
+                TestDefineResolver::fromObject(new stdClass()),
+                $objectVal,
+                0,
+                null
+            ),
+            $result
+        );
+
+        self::assertSame($objectVal, $result->sameObjectValue);
+    }
+
     public function test_it_construct_object_from_array(): void
     {
         $result = $this->mapper->transform(
@@ -35,6 +114,98 @@ class ObjectMapperTest extends TestCase
         );
 
         self::assertEquals(new PlainTestClass(1, 2, 3), $result);
+    }
+
+    public function test_it_extract_data_from_class(): void
+    {
+        $this->mapper = new ObjectMapper();
+        $this->mapper->mapMetaData(
+            name: 'test_test',
+            property: 'test',
+            resolver: 'test_resolver'
+        );
+
+        $this->mapper->defineResolver('test_resolver', fn ($val) => 2);
+
+        $result = $this->mapper->extract(new PlainTestClass(1, 2, 3));
+        self::assertEquals(
+            [
+                'test_test' => 1,
+                'test2' => 2,
+                'test3' => 3,
+            ],
+            $result
+        );
+    }
+
+    public function test_it_fails_when(): void
+    {
+        $this->expectException(InvalidTypeException::class);
+        $this->mapper->transform([], stdClass::class);
+    }
+
+    public function test_it_fails_when_map_field_with_undefined_resolver(): void
+    {
+        $this->expectException(InvalidTypeException::class);
+        $this->mapper->mapMetaData(
+            name: 'test_1',
+            property: 'test',
+            resolver: 'invalid_resolver'
+        );
+        $this->mapper->transform(
+            [
+                'test_1' => 1,
+                'test2' => 2,
+                'test6' => 2,
+                'test8' => 2,
+                'test9' => 2,
+            ],
+            PlainTestClass::class
+        );
+    }
+
+    public function test_it_fails_when_object_does_not_have_constructor(): void
+    {
+        $this->expectException(InvalidTypeException::class);
+        $this->mapper->transform([], stdClass::class);
+    }
+
+    public function test_it_fails_when_object_is_not_instantiable(): void
+    {
+        $this->expectException(ReflectionException::class);
+        $this->mapper->transform([], 'test');
+    }
+
+    public function test_it_get_field_name_using_callback(): void
+    {
+        $mapper = new ObjectMapper(
+            static function ($propertyName) {
+                return Str::snakeCase($propertyName);
+            }
+        );
+
+        $result = $mapper->transform(
+            [
+                'camel_case' => 1,
+                'test_dummy' => true,
+                'test_param' => [1, 2, 3],
+            ],
+            ObjectWithCamelCaseParameter::class,
+        );
+
+        $actualParam = [
+            'camel_case' => TestDefineResolver::fromInt(1),
+            'test_dummy' => TestDefineResolver::fromBoolean(true),
+            'test_param' => [1, 2, 3],
+        ];
+        $actual = new ObjectWithCamelCaseParameter(...array_values($actualParam));
+        self::assertEquals(
+            $actual,
+            $result
+        );
+
+        $extract = $mapper->extract($actual);
+        self::assertEquals($actualParam, $extract);
     }
 
     public function test_it_resolve_by_defined_resolver(): void
@@ -115,176 +286,5 @@ class ObjectMapperTest extends TestCase
             new TestClassHelper(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
             $result
         );
-    }
-
-    public function test_it_accept_array(): void
-    {
-        $result = $this->mapper->transform(
-            [
-                'test' => 1,
-                'test2' => 2,
-                'test6' => 2,
-                'test8' => 2,
-                'test9' => 2,
-            ],
-            PlainTestClass::class
-        );
-
-        self::assertEquals(new PlainTestClass(1, 2), $result);
-    }
-
-    public function test_it_extract_data_from_class(): void
-    {
-        $this->mapper = new ObjectMapper();
-        $this->mapper->mapMetaData(
-            name: 'test_test',
-            property: 'test',
-            resolver: 'test_resolver'
-        );
-
-        $this->mapper->defineResolver('test_resolver', fn ($val) => 2);
-
-        $result = $this->mapper->extract(new PlainTestClass(1, 2, 3));
-        self::assertEquals(
-            [
-                'test_test' => 1,
-                'test2' => 2,
-                'test3' => 3,
-            ],
-            $result
-        );
-    }
-
-    public function test_it_fails_when_object_is_not_instantiable(): void
-    {
-        $this->expectException(ReflectionException::class);
-        $this->mapper->transform([], 'test');
-    }
-
-    public function test_it_fails_when_object_does_not_have_constructor(): void
-    {
-        $this->expectException(InvalidTypeException::class);
-        $this->mapper->transform([], stdClass::class);
-    }
-
-    public function test_it_fails_when(): void
-    {
-        $this->expectException(InvalidTypeException::class);
-        $this->mapper->transform([], stdClass::class);
-    }
-
-    public function test_it_fails_when_map_field_with_undefined_resolver(): void
-    {
-        $this->expectException(InvalidTypeException::class);
-        $this->mapper->mapMetaData(
-            name: 'test_1',
-            property: 'test',
-            resolver: 'invalid_resolver'
-        );
-        $this->mapper->transform(
-            [
-                'test_1' => 1,
-                'test2' => 2,
-                'test6' => 2,
-                'test8' => 2,
-                'test9' => 2,
-            ],
-            PlainTestClass::class
-        );
-    }
-
-    public function test_it_accept_resolver_in_array_format(): void
-    {
-        $this->mapper->mapMetaData(
-            name: 'test',
-            property: 'test',
-            resolver: 'test_resolver'
-        );
-
-        $this->mapper->defineResolver(
-            'test_resolver',
-            [TestDefineResolver::class, 'fromString']
-        );
-
-        $result = $this->mapper->transform(
-            [
-                'test' => '1',
-                'test2' => 2,
-                'test3' => 3,
-            ],
-            PlainTestClass::class
-        );
-
-        self::assertEquals(
-            new PlainTestClass(TestDefineResolver::fromString('1'), 2, 3),
-            $result
-        );
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    public function test_it_automatically_resolve(): void
-    {
-        $objectVal = TestDefineResolver::fromObject(new stdClass());
-        $result = $this->mapper->transform(
-            [
-                'string' => '1',
-                'int' => 2,
-                'bool' => true,
-                'array' => [1, 2, 3, 4, 5],
-                'object' => new stdClass(),
-                'sameObjectValue' => $objectVal,
-            ],
-            TestWithClassParam::class
-        );
-
-        self::assertEquals(
-            new TestWithClassParam(
-                TestDefineResolver::fromString('1'),
-                TestDefineResolver::fromInt(2),
-                TestDefineResolver::fromInt(3),
-                TestDefineResolver::fromArray([1, 2, 3, 4, 5]),
-                TestDefineResolver::fromObject(new stdClass()),
-                $objectVal,
-                0,
-                null
-            ),
-            $result
-        );
-
-        self::assertSame($objectVal, $result->sameObjectValue);
-    }
-
-    public function test_it_get_field_name_using_callback(): void
-    {
-        $mapper = new ObjectMapper(
-            static function ($propertyName) {
-                return Str::snakeCase($propertyName);
-            }
-        );
-
-        $result = $mapper->transform(
-            [
-                'camel_case' => 1,
-                'test_dummy' => true,
-                'test_param' => [1, 2, 3],
-            ],
-            ObjectWithCamelCaseParameter::class,
-        );
-
-        $actualParam = [
-            'camel_case' => TestDefineResolver::fromInt(1),
-            'test_dummy' => TestDefineResolver::fromBoolean(true),
-            'test_param' => [1, 2, 3],
-        ];
-        $actual = new ObjectWithCamelCaseParameter(...array_values($actualParam));
-        self::assertEquals(
-            $actual,
-            $result
-        );
-
-        $extract = $mapper->extract($actual);
-        self::assertEquals($actualParam, $extract);
     }
 }

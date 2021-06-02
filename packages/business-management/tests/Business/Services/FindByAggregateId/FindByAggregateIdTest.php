@@ -12,22 +12,6 @@ use Tests\BusinessManagement\Business\Services\BaseServiceTestCase;
 
 class FindByAggregateIdTest extends BaseServiceTestCase
 {
-    protected function getHandler(): object
-    {
-        return new GetByAggregateIdHandler($this->queryRepo);
-    }
-
-    /**
-     * @test
-     */
-    public function it_return_business_list(): void
-    {
-        $this->givenExisting(Business::class)
-            ->when(new GetByAggregateId(Uuid::generate()->toString()))
-            ->then(QueryResponse::class)
-        ;
-    }
-
     /**
      * @test
      */
@@ -40,5 +24,19 @@ class FindByAggregateIdTest extends BaseServiceTestCase
             )
             ->then(GetByAggregateIdResponse::class)
         ;
+    }
+    /**
+     * @test
+     */
+    public function it_return_business_list(): void
+    {
+        $this->givenExisting(Business::class)
+            ->when(new GetByAggregateId(Uuid::generate()->toString()))
+            ->then(QueryResponse::class)
+        ;
+    }
+    protected function getHandler(): object
+    {
+        return new GetByAggregateIdHandler($this->queryRepo);
     }
 }

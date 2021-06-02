@@ -19,13 +19,13 @@ class BusinessCountryChanged implements DomainEvent
         return $this->aggregateRootId;
     }
 
-    public function version(): int
-    {
-        return $this->version;
-    }
-
     public function country(): ?string
     {
         return $this->country;
+    }
+
+    public function version(): int
+    {
+        return $this->version;
     }
 }

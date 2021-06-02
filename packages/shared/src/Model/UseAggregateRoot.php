@@ -10,13 +10,12 @@ use Derhub\Shared\Values\DateTimeLiteral;
 
 trait UseAggregateRoot
 {
-    protected int $versions = 0;
-
     /**
      * Holds the domain events
      * @var DomainEvent[]
      */
     protected array $events = [];
+    protected int $versions = 0;
 
     private bool $isInCreateState = false;
 
@@ -31,14 +30,6 @@ trait UseAggregateRoot
         return $events;
     }
 
-    protected function record(DomainEvent $event): void
-    {
-        $this->events[] = $event;
-        $this->applyTimestamps();
-
-        ++$this->versions;
-    }
-
 
     protected function applyTimestamps(): void
     {
@@ -51,5 +42,13 @@ trait UseAggregateRoot
         } else {
             $this->updatedAt = DateTimeLiteral::now();
         }
+    }
+
+    protected function record(DomainEvent $event): void
+    {
+        $this->events[] = $event;
+        $this->applyTimestamps();
+
+        ++$this->versions;
     }
 }

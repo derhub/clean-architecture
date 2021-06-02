@@ -15,14 +15,13 @@ use Derhub\Shared\Model\AggregateRootId;
 class InMemoryBusinessRepository extends InMemoryPersistenceRepository implements
     BusinessRepository
 {
-    public function getNextId(): BusinessId
-    {
-        return $this->createId();
-    }
-
     public function get(AggregateRootId $id): ?Business
     {
         return $this->findById($id);
+    }
+    public function getNextId(): BusinessId
+    {
+        return $this->createId();
     }
 
     public function save(AggregateRoot $aggregateRoot): void

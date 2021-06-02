@@ -9,14 +9,6 @@ use Derhub\Shared\Model\AggregateRoot;
 
 class BusinessAlreadyExist extends \Exception implements DomainException
 {
-    public static function withName(
-        Name $name
-    ): self {
-        return new self(
-            sprintf('business-management `%s` already exist', (string)$name)
-        );
-    }
-
     public static function fromSlug(
         AggregateRoot $aggregateRoot,
         Slug $slug
@@ -27,5 +19,12 @@ class BusinessAlreadyExist extends \Exception implements DomainException
         $self->aggregateRoot = $aggregateRoot;
 
         return $self;
+    }
+    public static function withName(
+        Name $name
+    ): self {
+        return new self(
+            sprintf('business-management `%s` already exist', (string)$name)
+        );
     }
 }

@@ -16,6 +16,31 @@ class TemplateQueryItem implements QueryItem
     ) {
     }
 
+    public function aggregateRootId(): string
+    {
+        return $this->aggregateRootId;
+    }
+
+    public function createdAt(): ?string
+    {
+        return $this->createdAt;
+    }
+
+    public function deletedAt(): ?string
+    {
+        return $this->deletedAt;
+    }
+
+    public function name(): ?string
+    {
+        return $this->name;
+    }
+
+    public function status(): string
+    {
+        return $this->status;
+    }
+
     public function toArray(): array
     {
         return [
@@ -28,33 +53,8 @@ class TemplateQueryItem implements QueryItem
         ];
     }
 
-    public function aggregateRootId(): string
-    {
-        return $this->aggregateRootId;
-    }
-
-    public function name(): ?string
-    {
-        return $this->name;
-    }
-
-    public function createdAt(): ?string
-    {
-        return $this->createdAt;
-    }
-
     public function updatedAt(): ?string
     {
         return $this->updatedAt;
-    }
-
-    public function deletedAt(): ?string
-    {
-        return $this->deletedAt;
-    }
-
-    public function status(): string
-    {
-        return $this->status;
     }
 }

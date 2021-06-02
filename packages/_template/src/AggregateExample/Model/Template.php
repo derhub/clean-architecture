@@ -25,10 +25,10 @@ use Derhub\Template\AggregateExample\Model\Values\TemplateId;
  */
 final class Template implements AggregateRoot
 {
-    use UseTimestampsWithSoftDelete;
     use UseAggregateRoot {
         UseAggregateRoot::record as private _record;
     }
+    use UseTimestampsWithSoftDelete;
 
     private TemplateId $aggregateRootId;
     private Name $name;
@@ -42,22 +42,23 @@ final class Template implements AggregateRoot
         $this->initTimestamps();
     }
 
-    public function aggregateRootId(): TemplateId
-    {
-        return $this->aggregateRootId;
-    }
-
     /**
      * @throws \Derhub\Template\AggregateExample\Model\Exception\ChangesNotAllowed
      */
-    public function restore(): self
+    private function disallowChangesWhenDisabled(DomainEvent $e): void
     {
-        $this->deletedAt = DateTimeLiteral::createEmpty();
-        $this->record(
-            new TemplateRestored($this->aggregateRootId->toString())
-        );
+        if ($e instanceof TemplateRestored) {
+            return;
+        }
 
-        return $this;
+        if (! $this->deletedAt->isEmpty()) {
+            throw ChangesNotAllowed::whenDeleted();
+        }
+    }
+
+    public function aggregateRootId(): TemplateId
+    {
+        return $this->aggregateRootId;
     }
 
     /**
@@ -84,30 +85,6 @@ final class Template implements AggregateRoot
     /**
      * @throws \Derhub\Template\AggregateExample\Model\Exception\ChangesNotAllowed
      */
-    protected function record(DomainEvent $e): void
-    {
-        $this->disallowChangesWhenDisabled($e);
-
-        $this->_record($e);
-    }
-
-    /**
-     * @throws \Derhub\Template\AggregateExample\Model\Exception\ChangesNotAllowed
-     */
-    private function disallowChangesWhenDisabled(DomainEvent $e): void
-    {
-        if ($e instanceof TemplateRestored) {
-            return;
-        }
-
-        if (! $this->deletedAt->isEmpty()) {
-            throw ChangesNotAllowed::whenDeleted();
-        }
-    }
-
-    /**
-     * @throws \Derhub\Template\AggregateExample\Model\Exception\ChangesNotAllowed
-     */
     public function publish(): self
     {
         $this->status = Status::publish();
@@ -116,6 +93,19 @@ final class Template implements AggregateRoot
                 $this->aggregateRootId->toString(),
                 $this->status->toString()
             ),
+        );
+
+        return $this;
+    }
+
+    /**
+     * @throws \Derhub\Template\AggregateExample\Model\Exception\ChangesNotAllowed
+     */
+    public function restore(): self
+    {
+        $this->deletedAt = DateTimeLiteral::createEmpty();
+        $this->record(
+            new TemplateRestored($this->aggregateRootId->toString())
         );
 
         return $this;
@@ -135,5 +125,15 @@ final class Template implements AggregateRoot
         );
 
         return $this;
+    }
+
+    /**
+     * @throws \Derhub\Template\AggregateExample\Model\Exception\ChangesNotAllowed
+     */
+    protected function record(DomainEvent $e): void
+    {
+        $this->disallowChangesWhenDisabled($e);
+
+        $this->_record($e);
     }
 }

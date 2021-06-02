@@ -10,10 +10,6 @@ use Ramsey\Uuid\Uuid as BaseUuid;
 
 final class Uuid
 {
-    protected function __construct(protected string $value)
-    {
-    }
-
     public static function fromString(string $value): self
     {
         Assert::uuid($value);
@@ -25,15 +21,18 @@ final class Uuid
     {
         return new self(BaseUuid::uuid4()->toString());
     }
-
-    public function toString(): string
+    protected function __construct(protected string $value)
     {
-        return $this->value;
     }
 
     public function __toString(): string
     {
         return $this->toString();
+    }
+
+    public function toString(): string
+    {
+        return $this->value;
     }
 
     public function value(): string

@@ -19,6 +19,46 @@ class BusinessQueryItem implements QueryItem
     ) {
     }
 
+    public function aggregateRootId(): string
+    {
+        return $this->aggregateRootId;
+    }
+
+    public function country(): ?string
+    {
+        return $this->country;
+    }
+
+    public function createdAt(): ?string
+    {
+        return $this->createdAt;
+    }
+
+    public function name(): ?string
+    {
+        return $this->name;
+    }
+
+    public function onBoardStatus(): string
+    {
+        return $this->onBoardStatus;
+    }
+
+    public function ownerId(): ?string
+    {
+        return $this->ownerId;
+    }
+
+    public function slug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function status(): string
+    {
+        return $this->status;
+    }
+
     public function toArray(): array
     {
         return [
@@ -34,48 +74,8 @@ class BusinessQueryItem implements QueryItem
         ];
     }
 
-    public function aggregateRootId(): string
-    {
-        return $this->aggregateRootId;
-    }
-
-    public function ownerId(): ?string
-    {
-        return $this->ownerId;
-    }
-
-    public function slug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function name(): ?string
-    {
-        return $this->name;
-    }
-
-    public function status(): string
-    {
-        return $this->status;
-    }
-
-    public function onBoardStatus(): string
-    {
-        return $this->onBoardStatus;
-    }
-
-    public function createdAt(): ?string
-    {
-        return $this->createdAt;
-    }
-
     public function updatedAt(): ?string
     {
         return $this->updatedAt;
-    }
-
-    public function country(): ?string
-    {
-        return $this->country;
     }
 }

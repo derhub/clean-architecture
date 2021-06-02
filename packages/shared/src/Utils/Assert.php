@@ -14,6 +14,14 @@ class Assert extends BaseAssertion
 {
     protected static $exceptionClass = AssertionFailedException::class;
 
+    public static function country(
+        string $alpha2,
+        ?string $message = null,
+        string $propertyPath = null
+    ): void {
+        self::inArray($alpha2, CountryLookup::keys(), $message, $propertyPath);
+    }
+
     public static function phone(
         string $value,
         ?string $countryCode = null,
@@ -92,13 +100,5 @@ class Assert extends BaseAssertion
                 );
             }
         }
-    }
-
-    public static function country(
-        string $alpha2,
-        ?string $message = null,
-        string $propertyPath = null
-    ): void {
-        self::inArray($alpha2, CountryLookup::keys(), $message, $propertyPath);
     }
 }

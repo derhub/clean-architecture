@@ -6,31 +6,6 @@ use Derhub\Shared\ModuleInterface;
 
 abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
 {
-    abstract protected function getModule(): ModuleInterface;
-
-    public function test_module_id(): void
-    {
-        self::assertIsString($this->getModule()->getId());
-    }
-
-    public function test_module_service_values(): void
-    {
-        $services = $this->getModule()->services();
-        $servicesNames = array_keys($services);
-        $requiredArrayKeys = array_keys(ModuleInterface::INITIAL_SERVICES);
-
-        foreach ($requiredArrayKeys as $name) {
-            self::assertContains(
-                $name,
-                $servicesNames,
-                'missing module '.$name
-            );
-
-            self::assertIsArray($services[$name]);
-            $this->testServiceMessageValue($name, $services[$name]);
-        }
-    }
-
     private function testClassExist($name, array $classes): void
     {
         foreach ($classes as $className) {
@@ -109,6 +84,10 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
         }
 
         $this->testClassHandler($name, $handlers);
+    }
+    public function test_module_id(): void
+    {
+        self::assertIsString($this->getModule()->getId());
     }
 
     public function test_module_service_registry(): void
@@ -193,4 +172,23 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
             );
         }
     }
+
+    public function test_module_service_values(): void
+    {
+        $services = $this->getModule()->services();
+        $servicesNames = array_keys($services);
+        $requiredArrayKeys = array_keys(ModuleInterface::INITIAL_SERVICES);
+
+        foreach ($requiredArrayKeys as $name) {
+            self::assertContains(
+                $name,
+                $servicesNames,
+                'missing module '.$name
+            );
+
+            self::assertIsArray($services[$name]);
+            $this->testServiceMessageValue($name, $services[$name]);
+        }
+    }
+    abstract protected function getModule(): ModuleInterface;
 }

@@ -9,16 +9,19 @@ class QueryRepositoryStub implements TemplateQueryRepository
 {
     private mixed $results;
 
-    public function setResults(mixed $data): self
-    {
-        $this->results = $data;
-
-        return $this;
-    }
-
     public function __construct()
     {
         $this->results = null;
+    }
+
+    public function addFilter(QueryFilter $filters): self
+    {
+        return $this;
+    }
+
+    public function addFilterId(array|string $id): self
+    {
+        return $this;
     }
 
     public function addFilters(array $filters): self
@@ -26,7 +29,12 @@ class QueryRepositoryStub implements TemplateQueryRepository
         return $this;
     }
 
-    public function addFilter(QueryFilter $filters): self
+    public function addFilterSlug(array|string $slug): self
+    {
+        return $this;
+    }
+
+    public function addFilterStatus(array|int $status): self
     {
         return $this;
     }
@@ -36,19 +44,7 @@ class QueryRepositoryStub implements TemplateQueryRepository
         return $this;
     }
 
-    public function results(): array
-    {
-        return $this->results;
-    }
-
-    public function iterableResult(): iterable
-    {
-        foreach ($this->results as $result) {
-            yield $result;
-        }
-    }
-
-    public function singleResult(): ?array
+    public function exists(string $field, mixed $value): ?bool
     {
         return $this->results;
     }
@@ -63,23 +59,27 @@ class QueryRepositoryStub implements TemplateQueryRepository
         return $this->results;
     }
 
-    public function exists(string $field, mixed $value): ?bool
+    public function iterableResult(): iterable
+    {
+        foreach ($this->results as $result) {
+            yield $result;
+        }
+    }
+
+    public function results(): array
     {
         return $this->results;
     }
 
-    public function addFilterSlug(array|string $slug): self
+    public function setResults(mixed $data): self
     {
+        $this->results = $data;
+
         return $this;
     }
 
-    public function addFilterId(array|string $id): self
+    public function singleResult(): ?array
     {
-        return $this;
-    }
-
-    public function addFilterStatus(array|int $status): self
-    {
-        return $this;
+        return $this->results;
     }
 }

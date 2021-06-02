@@ -12,14 +12,9 @@ class BusinessOwnerIdType extends StringType
 
     public const NAME = 'business_owner_id';
 
-    public function defineName(): string
+    public function convertFromRaw(mixed $value): OwnerId
     {
-        return self::NAME;
-    }
-
-    public function defineClass(): string
-    {
-        return OwnerId::class;
+        return OwnerId::fromString($value);
     }
 
     public function convertToRaw(mixed $value): string
@@ -27,13 +22,18 @@ class BusinessOwnerIdType extends StringType
         return $value->toString();
     }
 
+    public function defineClass(): string
+    {
+        return OwnerId::class;
+    }
+
     public function defineEmptyValueForPHP(mixed $value): mixed
     {
         return null;
     }
 
-    public function convertFromRaw(mixed $value): OwnerId
+    public function defineName(): string
     {
-        return OwnerId::fromString($value);
+        return self::NAME;
     }
 }

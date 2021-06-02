@@ -18,17 +18,6 @@ class ModuleListImpl implements ModuleList
         $this->modules = [];
     }
 
-    public function register(ModuleInterface ...$modules): void
-    {
-        foreach ($modules as $module) {
-            if ($this->has($module->getId())) {
-                throw ModuleAlreadyRegistered::withModule($module);
-            }
-
-            $this->modules[$module->getId()] = $module;
-        }
-    }
-
     public function all(): array
     {
         return $this->modules;
@@ -46,5 +35,16 @@ class ModuleListImpl implements ModuleList
     public function has(string $id): bool
     {
         return isset($this->modules[$id]);
+    }
+
+    public function register(ModuleInterface ...$modules): void
+    {
+        foreach ($modules as $module) {
+            if ($this->has($module->getId())) {
+                throw ModuleAlreadyRegistered::withModule($module);
+            }
+
+            $this->modules[$module->getId()] = $module;
+        }
     }
 }

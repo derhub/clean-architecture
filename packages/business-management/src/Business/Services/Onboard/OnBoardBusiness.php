@@ -17,9 +17,19 @@ class OnBoardBusiness implements Command
     ) {
     }
 
+    public function country(): string
+    {
+        return $this->country;
+    }
+
     public function name(): string
     {
         return $this->name;
+    }
+
+    public function onboardStatus(): string
+    {
+        return $this->onboardStatus;
     }
 
     public function ownerId(): string
@@ -30,16 +40,6 @@ class OnBoardBusiness implements Command
     public function slug(): string
     {
         return $this->slug;
-    }
-
-    public function country(): string
-    {
-        return $this->country;
-    }
-
-    public function onboardStatus(): string
-    {
-        return $this->onboardStatus;
     }
 
     public function version(): int

@@ -18,6 +18,11 @@ class TestClassHelper
     ) {
     }
 
+    public function test0(): string
+    {
+        return $this->test0;
+    }
+
     public function test1(): string
     {
         return $this->test1;
@@ -61,10 +66,5 @@ class TestClassHelper
     public function test9(): string
     {
         return $this->test9;
-    }
-
-    public function test0(): string
-    {
-        return $this->test0;
     }
 }

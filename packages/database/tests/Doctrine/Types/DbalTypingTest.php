@@ -11,14 +11,9 @@ class DummyClass
 {
     use DbalTyping;
 
-    public function defineClass(): string
+    public function convertFromRaw(mixed $value): Email
     {
-        return Email::class;
-    }
-
-    public function defineName(): string
-    {
-        return 'email';
+        return Email::fromString($value);
     }
 
     public function convertToRaw(mixed $value): string
@@ -26,14 +21,19 @@ class DummyClass
         return $value->toString();
     }
 
+    public function defineClass(): string
+    {
+        return Email::class;
+    }
+
     public function defineEmptyValueForPHP(mixed $value): Email
     {
         return new Email();
     }
 
-    public function convertFromRaw(mixed $value): Email
+    public function defineName(): string
     {
-        return Email::fromString($value);
+        return 'email';
     }
 }
 
@@ -44,19 +44,6 @@ class DbalTypingTest extends TestCase
     protected function setUp(): void
     {
         $this->testClass = new DummyClass();
-    }
-
-    public function test_it_will_return_value_of_same_instance(): void
-    {
-        $testClass = $this->testClass;
-        $platform = $this->getMockForAbstractClass(AbstractPlatform::class);
-
-        $email = Email::fromString('test@test.com');
-        $result = $testClass->convertToPHPValue(
-            $email,
-            $platform
-        );
-        self::assertEquals($email, $result);
     }
 
     public function test_it_convert_value_to_php(): void
@@ -82,5 +69,18 @@ class DbalTypingTest extends TestCase
 
         $result2 = $testClass->convertToPHPValue('', $platform);
         self::assertInstanceOf(Email::class, $result2);
+    }
+
+    public function test_it_will_return_value_of_same_instance(): void
+    {
+        $testClass = $this->testClass;
+        $platform = $this->getMockForAbstractClass(AbstractPlatform::class);
+
+        $email = Email::fromString('test@test.com');
+        $result = $testClass->convertToPHPValue(
+            $email,
+            $platform
+        );
+        self::assertEquals($email, $result);
     }
 }

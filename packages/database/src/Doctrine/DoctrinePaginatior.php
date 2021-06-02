@@ -12,6 +12,12 @@ class DoctrinePaginatior implements PaginatorInterface
     {
     }
 
+    public function getCount(): int
+    {
+        return $this->count = $this->count
+            ?? $this->paginator->getIterator()->count();
+    }
+
     public function getCurrentPage(): int
     {
         return $this->currentPage ??= ($this->paginator->getQuery()
@@ -26,20 +32,14 @@ class DoctrinePaginatior implements PaginatorInterface
         );
     }
 
-    public function getTotal(): int
-    {
-        return $this->total ??= count($this->paginator);
-    }
-
-    public function getCount(): int
-    {
-        return $this->count = $this->count
-            ?? $this->paginator->getIterator()->count();
-    }
-
     public function getPerPage(): int
     {
         return $this->paginator->getQuery()->getMaxResults();
+    }
+
+    public function getTotal(): int
+    {
+        return $this->total ??= count($this->paginator);
     }
 
     public function getUrl($page)

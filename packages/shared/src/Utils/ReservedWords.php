@@ -4,11 +4,6 @@ namespace Derhub\Shared\Utils;
 
 class ReservedWords
 {
-    public static function isReserved(string $value): bool
-    {
-        return in_array($value, static::WORDS, true);
-    }
-
     public const WORDS = [
         'facebook',
         'google',
@@ -487,4 +482,8 @@ class ReservedWords
         'xml',
         'xxx',
     ];
+    public static function isReserved(string $value): bool
+    {
+        return in_array($value, static::WORDS, true);
+    }
 }

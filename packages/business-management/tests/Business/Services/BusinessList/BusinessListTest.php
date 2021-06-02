@@ -10,11 +10,6 @@ use Tests\BusinessManagement\Business\Services\BaseServiceTestCase;
 
 class BusinessListTest extends BaseServiceTestCase
 {
-    protected function getHandler(): object
-    {
-        return new GetBusinessesHandler($this->queryRepo);
-    }
-
     /**
      * @test
      */
@@ -24,5 +19,9 @@ class BusinessListTest extends BaseServiceTestCase
             ->when(new GetBusinesses(1, 100))
             ->then(GetBusinessesResponse::class)
         ;
+    }
+    protected function getHandler(): object
+    {
+        return new GetBusinessesHandler($this->queryRepo);
     }
 }

@@ -11,14 +11,9 @@ class UserIdType extends GuidType
 
     public const NAME = 'user_id';
 
-    public function defineClass(): string
+    public function convertFromRaw(mixed $value): UserId
     {
-        return UserId::class;
-    }
-
-    public function defineName(): string
-    {
-        return self::NAME;
+        return UserId::fromString($value);
     }
 
     public function convertToRaw(mixed $value): string
@@ -26,13 +21,18 @@ class UserIdType extends GuidType
         return $value->toString();
     }
 
+    public function defineClass(): string
+    {
+        return UserId::class;
+    }
+
     public function defineEmptyValueForPHP(mixed $value): mixed
     {
         return new UserId();
     }
 
-    public function convertFromRaw(mixed $value): UserId
+    public function defineName(): string
     {
-        return UserId::fromString($value);
+        return self::NAME;
     }
 }

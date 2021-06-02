@@ -8,11 +8,6 @@ final class BusinessEnabled implements DomainEvent
 {
     private int $version = 1;
 
-    public function version(): int
-    {
-        return $this->version;
-    }
-
     public function __construct(
         private string $aggregateRootId,
     ) {
@@ -21,5 +16,10 @@ final class BusinessEnabled implements DomainEvent
     public function aggregateRootId(): string
     {
         return $this->aggregateRootId;
+    }
+
+    public function version(): int
+    {
+        return $this->version;
     }
 }

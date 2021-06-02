@@ -8,11 +8,6 @@ class BusinessHanded implements DomainEvent
 {
     private int $version = 1;
 
-    public function version(): int
-    {
-        return $this->version;
-    }
-
     public function __construct(
         private string $aggregateRootId,
         private string $ownerId,
@@ -27,9 +22,9 @@ class BusinessHanded implements DomainEvent
         return $this->aggregateRootId;
     }
 
-    public function ownerId(): string
+    public function country(): string
     {
-        return $this->ownerId;
+        return $this->country;
     }
 
     public function name(): string
@@ -37,13 +32,18 @@ class BusinessHanded implements DomainEvent
         return $this->name;
     }
 
+    public function ownerId(): string
+    {
+        return $this->ownerId;
+    }
+
     public function slug(): string
     {
         return $this->slug;
     }
 
-    public function country(): string
+    public function version(): int
     {
-        return $this->country;
+        return $this->version;
     }
 }

@@ -9,25 +9,6 @@ trait UuidValueObject
 {
     private ?string $value;
 
-    public function __construct()
-    {
-        $this->value = null;
-    }
-
-    private static function init(string|\Stringable $value): static
-    {
-        $self = new static();
-        $self->value = (string)$value;
-
-        return $self;
-    }
-
-    public function sameAs(ValueObject $other): bool
-    {
-        return $other instanceof static
-            && $other->toString() === $this->toString();
-    }
-
     public static function fromString(string $value): self
     {
         Assert::uuid($value);
@@ -40,6 +21,14 @@ trait UuidValueObject
         return self::init(Uuid::generate());
     }
 
+    private static function init(string|\Stringable $value): static
+    {
+        $self = new static();
+        $self->value = (string)$value;
+
+        return $self;
+    }
+
     public static function validate(array|string $values): bool
     {
         Assert::allUuid((array)$values);
@@ -47,13 +36,24 @@ trait UuidValueObject
         return true;
     }
 
-    public function toString(): ?string
+    public function __construct()
     {
-        return $this->value;
+        $this->value = null;
     }
 
     public function isEmpty(): bool
     {
         return empty($this->value);
+    }
+
+    public function sameAs(ValueObject $other): bool
+    {
+        return $other instanceof static
+            && $other->toString() === $this->toString();
+    }
+
+    public function toString(): ?string
+    {
+        return $this->value;
     }
 }

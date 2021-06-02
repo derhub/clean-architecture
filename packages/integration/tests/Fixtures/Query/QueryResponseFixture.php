@@ -17,9 +17,9 @@ class QueryResponseFixture extends AbstractQueryResponse implements QueryRespons
         return 'test';
     }
 
-    public function result(): iterable
+    public function errors(): array
     {
-        yield 'test';
+        return [];
     }
 
     public function getMessage(): mixed
@@ -27,8 +27,8 @@ class QueryResponseFixture extends AbstractQueryResponse implements QueryRespons
         return $this->msg;
     }
 
-    public function errors(): array
+    public function result(): iterable
     {
-        return [];
+        yield 'test';
     }
 }

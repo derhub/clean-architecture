@@ -9,8 +9,8 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class EventConsumer implements ShouldQueue
 {
-    use Queueable;
     use InteractsWithQueue;
+    use Queueable;
 
     private string $handler;
     private object $message;

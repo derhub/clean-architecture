@@ -20,11 +20,6 @@ abstract class InMemoryPersistenceRepository implements InMemoryRepositoryInterf
         $this->saved = [];
     }
 
-    public function setCreatorId(callable $createId): void
-    {
-        $this->idCreator = $createId;
-    }
-
     /**
      * @return TAggregateRootId
      */
@@ -33,13 +28,18 @@ abstract class InMemoryPersistenceRepository implements InMemoryRepositoryInterf
         return ($this->idCreator)();
     }
 
+    public function findById(mixed $id): mixed
+    {
+        return $this->saved[$id->toString()] ?? null;
+    }
+
     public function persist(object $object): void
     {
         $this->saved[$object->aggregateRootId()->toString()] = $object;
     }
 
-    public function findById(mixed $id): mixed
+    public function setCreatorId(callable $createId): void
     {
-        return $this->saved[$id->toString()] ?? null;
+        $this->idCreator = $createId;
     }
 }

@@ -8,9 +8,8 @@ namespace Derhub\Shared\Specification;
  */
 interface CompositeSpecification extends SpecificationInterface
 {
-    public function or(SpecificationInterface $other): SpecificationInterface;
-
     public function and(SpecificationInterface $other): SpecificationInterface;
 
     public function not(SpecificationInterface $other): SpecificationInterface;
+    public function or(SpecificationInterface $other): SpecificationInterface;
 }

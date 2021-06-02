@@ -12,9 +12,9 @@ class BusinessSlugType extends StringType
 
     public const NAME = 'business_slug';
 
-    public function defineName(): string
+    public function convertFromRaw(mixed $value): Slug
     {
-        return self::NAME;
+        return Slug::fromString($value);
     }
 
     public function convertToRaw(mixed $value): string
@@ -22,18 +22,18 @@ class BusinessSlugType extends StringType
         return $value->toString();
     }
 
-    public function defineEmptyValueForPHP(mixed $value): Slug
-    {
-        return new Slug();
-    }
-
     public function defineClass(): string
     {
         return Slug::class;
     }
 
-    public function convertFromRaw(mixed $value): Slug
+    public function defineEmptyValueForPHP(mixed $value): Slug
     {
-        return Slug::fromString($value);
+        return new Slug();
+    }
+
+    public function defineName(): string
+    {
+        return self::NAME;
     }
 }

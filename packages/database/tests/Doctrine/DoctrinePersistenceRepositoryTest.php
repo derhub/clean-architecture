@@ -15,13 +15,13 @@ use Tests\Database\Fixtures\AggregateRootIdFixture;
 class DoctrinePersistenceRepositoryTest extends TestCase
 {
     /**
-     * @var \Derhub\Shared\Database\Doctrine\DoctrinePersistenceRepository
-     */
-    private DoctrinePersistenceRepository $repo;
-    /**
      * @var \Doctrine\ORM\EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject $entityMock;
+    /**
+     * @var \Derhub\Shared\Database\Doctrine\DoctrinePersistenceRepository
+     */
+    private DoctrinePersistenceRepository $repo;
     /**
      * @var \Doctrine\ORM\EntityRepository|\PHPUnit\Framework\MockObject\MockObject
      */
@@ -44,25 +44,6 @@ class DoctrinePersistenceRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function it_fails_when_class_name_is_missing(): void
-    {
-        $this->expectException(MissingAggregateClassNameException::class);
-        $this->repo->findById('test');
-    }
-
-    /**
-     * @test
-     */
-    public function it_throw_exception_when_entity_not_found(): void
-    {
-        $this->expectException(AggregateNotFound::class);
-        $this->repo->setAggregateClass(AggregateRootFixture::class);
-        $this->repo->findById('test');
-    }
-
-    /**
-     * @test
-     */
     public function it_can_find_by_id(): void
     {
         $this->repo->setAggregateClass(AggregateRootFixture::class);
@@ -75,6 +56,15 @@ class DoctrinePersistenceRepositoryTest extends TestCase
         ;
         $result = $this->repo->findById('test');
         self::assertEquals($model, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function it_fails_when_class_name_is_missing(): void
+    {
+        $this->expectException(MissingAggregateClassNameException::class);
+        $this->repo->findById('test');
     }
 
     /**
@@ -95,5 +85,15 @@ class DoctrinePersistenceRepositoryTest extends TestCase
         ;
 
         $this->repo->persist($model);
+    }
+
+    /**
+     * @test
+     */
+    public function it_throw_exception_when_entity_not_found(): void
+    {
+        $this->expectException(AggregateNotFound::class);
+        $this->repo->setAggregateClass(AggregateRootFixture::class);
+        $this->repo->findById('test');
     }
 }

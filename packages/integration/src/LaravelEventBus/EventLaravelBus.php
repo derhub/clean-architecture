@@ -13,13 +13,6 @@ final class EventLaravelBus implements EventBus
     ) {
     }
 
-    public function dispatch(object ...$messages): void
-    {
-        foreach ($messages as $message) {
-            $this->handle($message);
-        }
-    }
-
     private function handle(object $object): void
     {
         $message = $object;
@@ -50,5 +43,12 @@ final class EventLaravelBus implements EventBus
         \Bus::dispatch(
             new EventConsumer($handler, $messageName, $message)
         );
+    }
+
+    public function dispatch(object ...$messages): void
+    {
+        foreach ($messages as $message) {
+            $this->handle($message);
+        }
     }
 }

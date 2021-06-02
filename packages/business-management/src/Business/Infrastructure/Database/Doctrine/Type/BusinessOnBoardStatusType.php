@@ -12,19 +12,9 @@ class BusinessOnBoardStatusType extends IntegerType
 
     public const NAME = 'business_onboard_status';
 
-    public function defineName(): string
+    public function convertFromRaw(mixed $value): OnBoardStatus
     {
-        return self::NAME;
-    }
-
-    public function defineEmptyValueForPHP(mixed $value): OnBoardStatus
-    {
-        return OnBoardStatus::notHanded();
-    }
-
-    public function defineClass(): string
-    {
-        return OnBoardStatus::class;
+        return OnBoardStatus::fromInt($value);
     }
 
     public function convertToRaw(mixed $value): int
@@ -32,8 +22,18 @@ class BusinessOnBoardStatusType extends IntegerType
         return $value->toInt();
     }
 
-    public function convertFromRaw(mixed $value): OnBoardStatus
+    public function defineClass(): string
     {
-        return OnBoardStatus::fromInt($value);
+        return OnBoardStatus::class;
+    }
+
+    public function defineEmptyValueForPHP(mixed $value): OnBoardStatus
+    {
+        return OnBoardStatus::notHanded();
+    }
+
+    public function defineName(): string
+    {
+        return self::NAME;
     }
 }

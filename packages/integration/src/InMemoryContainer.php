@@ -13,14 +13,14 @@ class InMemoryContainer implements ContainerInterface
         $this->container = [];
     }
 
-    public function resolve(string $class): mixed
-    {
-        return ($this->get($class))($this);
-    }
-
     public function add($id, callable $classBuilder): void
     {
         $this->container[$id] = $classBuilder;
+    }
+
+    public function bind(string $class, mixed $abstract): self
+    {
+        return $this;
     }
 
     public function get(string $id)
@@ -37,9 +37,9 @@ class InMemoryContainer implements ContainerInterface
         return isset($this->container[$id]);
     }
 
-    public function bind(string $class, mixed $abstract): self
+    public function resolve(string $class): mixed
     {
-        return $this;
+        return ($this->get($class))($this);
     }
 
     public function singleton(string $class, mixed $abstract): self

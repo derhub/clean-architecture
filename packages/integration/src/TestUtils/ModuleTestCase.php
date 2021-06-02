@@ -31,21 +31,21 @@ use PHPUnit\Framework\TestCase;
 
 class ModuleTestCase extends TestCase
 {
-    protected ContainerInterface $container;
-    protected CommandListenerProvider $commandProvider;
-    protected QueryListenerProvider $queryProvider;
-    protected CommandBus $commandBus;
-    protected QueryBus $queryBus;
-    protected SimpleMapper $mapper;
     protected MessageAssemblerImpl $assembler;
+    protected CommandBus $commandBus;
+    protected CommandListenerProvider $commandProvider;
+    protected ContainerInterface $container;
+    protected EventBus $eventBus;
+    protected EventListenerProvider $eventProvider;
+    protected SimpleMapper $mapper;
+    protected MessageNameResolver $messageNameResolver;
     protected ModuleListImpl $moduleList;
     protected ModuleService $moduleService;
-    protected MessageNameResolver $messageNameResolver;
-    protected MessageSerializer $serializer;
     protected OutboxMessageConsumer|OutboxMessageRecorder $outboxRepo;
-    protected EventListenerProvider $eventProvider;
-    protected EventBus $eventBus;
     protected \Derhub\Shared\MessageOutbox\MessageOutboxWrapperFactory $outboxWrapper;
+    protected QueryBus $queryBus;
+    protected QueryListenerProvider $queryProvider;
+    protected MessageSerializer $serializer;
 
     protected function setUp(): void
     {
@@ -80,6 +80,17 @@ class ModuleTestCase extends TestCase
         $this->moduleService = $this->createModuleService();
     }
 
+    private function createModuleService(): ModuleService
+    {
+        return new ModuleServiceImpl(
+            $this->container,
+            $this->moduleList,
+            $this->commandProvider,
+            $this->queryProvider,
+            $this->eventProvider
+        );
+    }
+
     public function checkObjectPropertyValues(
         object $object,
         array $values
@@ -101,14 +112,20 @@ class ModuleTestCase extends TestCase
         }
     }
 
+    protected function createCommandBus(
+        CommandListenerProvider $provider
+    ): CommandBus {
+        return MessageBusFactory::createCommandBus($provider);
+    }
+
     protected function createCommandProvider(): CommandListenerProvider
     {
         return new CmdLocator($this->container);
     }
 
-    protected function createQueryProvider(): QueryListenerProvider
+    protected function createEventBus(): EventBus
     {
-        return new QueryLocator($this->container);
+        return MessageBusFactory::createEventBus($this->eventProvider);
     }
 
     protected function createEventProvider(): EventListenerProvider
@@ -122,25 +139,8 @@ class ModuleTestCase extends TestCase
         return MessageBusFactory::createQueryBus($provider);
     }
 
-    protected function createCommandBus(
-        CommandListenerProvider $provider
-    ): CommandBus {
-        return MessageBusFactory::createCommandBus($provider);
-    }
-
-    protected function createEventBus(): EventBus
+    protected function createQueryProvider(): QueryListenerProvider
     {
-        return MessageBusFactory::createEventBus($this->eventProvider);
-    }
-
-    private function createModuleService(): ModuleService
-    {
-        return new ModuleServiceImpl(
-            $this->container,
-            $this->moduleList,
-            $this->commandProvider,
-            $this->queryProvider,
-            $this->eventProvider
-        );
+        return new QueryLocator($this->container);
     }
 }

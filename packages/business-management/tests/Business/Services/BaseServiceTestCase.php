@@ -16,11 +16,11 @@ use Tests\BusinessManagement\Business\Fixtures\Services\QueryRepositoryStub;
 
 abstract class BaseServiceTestCase extends MessageTestCase
 {
-    protected BusinessQueryItemMapper $queryMapper;
     protected BusinessId $lastId;
-    protected QueryBusinessRepository|QueryRepositoryStub $queryRepo;
     protected \PHPUnit\Framework\MockObject\MockObject|UniqueNameSpec $mockUniqueNameSpec;
     protected UniqueSlugSpec|\PHPUnit\Framework\MockObject\MockObject $mockUniqueSlugSpec;
+    protected BusinessQueryItemMapper $queryMapper;
+    protected QueryBusinessRepository|QueryRepositoryStub $queryRepo;
 
     public function setUp(): void
     {
@@ -39,8 +39,6 @@ abstract class BaseServiceTestCase extends MessageTestCase
         );
     }
 
-    abstract protected function getHandler(): object;
-
     public function createQueryItemObject(): BusinessQueryItem
     {
         return new BusinessQueryItem(
@@ -56,14 +54,16 @@ abstract class BaseServiceTestCase extends MessageTestCase
         );
     }
 
-    protected function getModule(): ModuleInterface
-    {
-        return new Module();
-    }
-
     protected function createId(): BusinessId
     {
         return $this->lastId = BusinessId::generate();
+    }
+
+    abstract protected function getHandler(): object;
+
+    protected function getModule(): ModuleInterface
+    {
+        return new Module();
     }
 
     protected function getRepository(): InMemoryBusinessRepository

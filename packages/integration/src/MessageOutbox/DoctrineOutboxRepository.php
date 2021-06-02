@@ -16,10 +16,9 @@ use Generator;
 
 class DoctrineOutboxRepository implements OutboxMessageConsumer, OutboxMessageRecorder
 {
-    private const TABLE_NAME = 'outbox_messages';
-
     private const IS_CONSUME = 1;
     private const NOT_CONSUME = 0;
+    private const TABLE_NAME = 'outbox_messages';
 
     /**
      * DoctrineOutboxRepository constructor.
@@ -34,68 +33,14 @@ class DoctrineOutboxRepository implements OutboxMessageConsumer, OutboxMessageRe
     ) {
     }
 
-    private function getConnection(): Connection
-    {
-        return $this->entityManager->getConnection();
-    }
-
     private function createQueryBuilder(): \Doctrine\DBAL\Query\QueryBuilder
     {
         return $this->getConnection()->createQueryBuilder();
     }
 
-    public function recordFromEvent(Event ...$events): void
+    private function getConnection(): Connection
     {
-        foreach ($events as $event) {
-            $message = $this->factory->create($event);
-            $this->record($message);
-        }
-    }
-
-    public function record(OutboxMessage ...$messages): void
-    {
-        $queryBuilder = $this->createQueryBuilder();
-
-        try {
-            foreach ($messages as $message) {
-                $queryBuilder
-                    ->insert(self::TABLE_NAME)
-                    ->values(
-                        [
-                            'message_id' => $message->id(),
-                            'message_type' => $message->messageType(),
-                            'message_name' => $message->name(),
-                            'consume_status' => $message->isConsume()
-                                ? self::IS_CONSUME : self::NOT_CONSUME,
-                            'version' => $message->version(),
-                            'payload' => json_encode(
-                                $this->serializer->serialize($message)
-                            ),
-                        ]
-                    )->execute()
-                ;
-            }
-        } catch (Exception $e) {
-            throw DoctrineFailedToSaveMessageException::fromThrowable($e);
-        }
-    }
-
-    public function getUnConsumed(): Generator
-    {
-        $tableName = self::TABLE_NAME;
-        $consumed = self::NOT_CONSUME;
-        $sql =
-            "SELECT `id`, `payload` FROM `{$tableName}` WHERE `consumed` = {$consumed} ORDER BY `id` ASC LIMIT 5";
-
-        try {
-            $queryBuilder = $this->getConnection()->executeQuery($sql);
-
-            while (($row = $queryBuilder->iterateAssociative()) !== false) {
-                yield $this->serializer->unSerialize($row['payload']);
-            }
-        } catch (Exception $e) {
-            throw DoctrineFailedToRetrieveMessageException::fromThrowable($e);
-        }
+        return $this->entityManager->getConnection();
     }
 
     public function consume(OutboxMessage ...$messages): void
@@ -137,6 +82,60 @@ class DoctrineOutboxRepository implements OutboxMessageConsumer, OutboxMessageRe
             $this->getConnection()->executeQuery($sqlStatement);
         } catch (Exception $e) {
             throw DoctrineFailedToRetrieveMessageException::fromThrowable($e);
+        }
+    }
+
+    public function getUnConsumed(): Generator
+    {
+        $tableName = self::TABLE_NAME;
+        $consumed = self::NOT_CONSUME;
+        $sql =
+            "SELECT `id`, `payload` FROM `{$tableName}` WHERE `consumed` = {$consumed} ORDER BY `id` ASC LIMIT 5";
+
+        try {
+            $queryBuilder = $this->getConnection()->executeQuery($sql);
+
+            while (($row = $queryBuilder->iterateAssociative()) !== false) {
+                yield $this->serializer->unSerialize($row['payload']);
+            }
+        } catch (Exception $e) {
+            throw DoctrineFailedToRetrieveMessageException::fromThrowable($e);
+        }
+    }
+
+    public function record(OutboxMessage ...$messages): void
+    {
+        $queryBuilder = $this->createQueryBuilder();
+
+        try {
+            foreach ($messages as $message) {
+                $queryBuilder
+                    ->insert(self::TABLE_NAME)
+                    ->values(
+                        [
+                            'message_id' => $message->id(),
+                            'message_type' => $message->messageType(),
+                            'message_name' => $message->name(),
+                            'consume_status' => $message->isConsume()
+                                ? self::IS_CONSUME : self::NOT_CONSUME,
+                            'version' => $message->version(),
+                            'payload' => json_encode(
+                                $this->serializer->serialize($message)
+                            ),
+                        ]
+                    )->execute()
+                ;
+            }
+        } catch (Exception $e) {
+            throw DoctrineFailedToSaveMessageException::fromThrowable($e);
+        }
+    }
+
+    public function recordFromEvent(Event ...$events): void
+    {
+        foreach ($events as $event) {
+            $message = $this->factory->create($event);
+            $this->record($message);
         }
     }
 }

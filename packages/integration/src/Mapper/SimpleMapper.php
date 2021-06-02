@@ -31,6 +31,13 @@ class SimpleMapper implements ObjectMapperInterface
         );
     }
 
+    public function extract(object $object): array
+    {
+        $extractor = new ObjectPropertyExtractor($this->converter);
+
+        return $extractor->extract($object);
+    }
+
     public function transform(object|array $data, string $object): mixed
     {
         if (is_object($data) && $data::class === $object) {
@@ -45,12 +52,5 @@ class SimpleMapper implements ObjectMapperInterface
 
 
         return new $object(...$converted);
-    }
-
-    public function extract(object $object): array
-    {
-        $extractor = new ObjectPropertyExtractor($this->converter);
-
-        return $extractor->extract($object);
     }
 }

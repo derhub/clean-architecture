@@ -22,19 +22,6 @@ class EventLocator extends ContainerLocator implements EventListenerProvider
         );
     }
 
-    public function getListenersForEvent(string $message): \Generator
-    {
-        $className = $this->nameLookup[$message] ?? $message;
-        $handlerClasses = $this->handlers[$className] ?? null;
-        if (! $handlerClasses) {
-            return;
-        }
-
-        foreach ($handlerClasses as $class) {
-            yield $this->resolveClass($class);
-        }
-    }
-
     public function addHandlerByName(string $name, mixed $handler): void
     {
         if (! $this->hasName($name)) {
@@ -49,5 +36,18 @@ class EventLocator extends ContainerLocator implements EventListenerProvider
 
         $this->handlers[$className] =
             array_merge($this->handlers[$className], $handler);
+    }
+
+    public function getListenersForEvent(string $message): \Generator
+    {
+        $className = $this->nameLookup[$message] ?? $message;
+        $handlerClasses = $this->handlers[$className] ?? null;
+        if (! $handlerClasses) {
+            return;
+        }
+
+        foreach ($handlerClasses as $class) {
+            yield $this->resolveClass($class);
+        }
     }
 }

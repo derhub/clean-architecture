@@ -15,14 +15,13 @@ use Derhub\Template\AggregateExample\Model\Values\TemplateId;
 class InMemoryRepository extends InMemoryPersistenceRepository implements
     TemplateRepository
 {
-    public function getNextId(): TemplateId
-    {
-        return $this->createId();
-    }
-
     public function get(AggregateRootId $id): ?Template
     {
         return $this->findById($id);
+    }
+    public function getNextId(): TemplateId
+    {
+        return $this->createId();
     }
 
     public function save(AggregateRoot $aggregateRoot): void

@@ -8,9 +8,9 @@ class Email implements ValueObjectStr
 {
     private ?string $value;
 
-    public function __construct()
+    public static function fromString(string $value): self
     {
-        $this->value = null;
+        return static::init($value);
     }
 
     private static function init(string $value): static
@@ -22,9 +22,9 @@ class Email implements ValueObjectStr
         return $self;
     }
 
-    public static function fromString(string $value): self
+    public function __construct()
     {
-        return static::init($value);
+        $this->value = null;
     }
 
     public function __toString()

@@ -22,13 +22,13 @@ class DoctrineQueryBusinessRepository extends DoctrineQueryRepository implements
         parent::__construct($entityManager, $mapper);
     }
 
-    protected function getTableName(): string
-    {
-        return SharedValues::TABLE_NAME;
-    }
-
     protected function getRepository(): EntityRepository
     {
         return $this->entityManager->getRepository(Business::class);
+    }
+
+    protected function getTableName(): string
+    {
+        return SharedValues::TABLE_NAME;
     }
 }

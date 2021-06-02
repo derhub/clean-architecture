@@ -12,6 +12,15 @@ use function Symfony\Component\String\u;
 
 class Str
 {
+    public static function camelCase(string $str): string
+    {
+        return u($str)->camel()->toString();
+    }
+
+    public static function lower(string $str): string
+    {
+        return u($str)->lower()->toString();
+    }
     public static function slug(string $name, string $locale = null): string
     {
         $slugger = new AsciiSlugger();
@@ -26,15 +35,5 @@ class Str
     public static function snakeCase(string $str): string
     {
         return u($str)->snake()->toString();
-    }
-
-    public static function lower(string $str): string
-    {
-        return u($str)->lower()->toString();
-    }
-
-    public static function camelCase(string $str): string
-    {
-        return u($str)->camel()->toString();
     }
 }

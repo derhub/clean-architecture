@@ -33,29 +33,6 @@ class DoctrinePersistenceRepository implements DatabasePersistenceRepository
     }
 
     /**
-     * @param class-string<T> $className
-     * @throws \Exception
-     */
-    public function setAggregateClass(string $className): void
-    {
-        $this->aggregateClassName = $className;
-        $this->doctrineRepo = $this->entityManager->getRepository($className);
-    }
-
-    /**
-     * @return \Doctrine\ORM\EntityRepository
-     * @throws \Derhub\Shared\Database\Doctrine\MissingAggregateClassNameException
-     */
-    protected function getDoctrineRepo(): EntityRepository
-    {
-        if ($this->aggregateClassName === null) {
-            throw MissingAggregateClassNameException::notProvided();
-        }
-
-        return $this->doctrineRepo;
-    }
-
-    /**
      * @param string|int $aggregateRootId
      * @return object
      * @throws \Derhub\Shared\Database\Exceptions\AggregateNotFound
@@ -85,5 +62,28 @@ class DoctrinePersistenceRepository implements DatabasePersistenceRepository
                 $e
             );
         }
+    }
+
+    /**
+     * @param class-string<T> $className
+     * @throws \Exception
+     */
+    public function setAggregateClass(string $className): void
+    {
+        $this->aggregateClassName = $className;
+        $this->doctrineRepo = $this->entityManager->getRepository($className);
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityRepository
+     * @throws \Derhub\Shared\Database\Doctrine\MissingAggregateClassNameException
+     */
+    protected function getDoctrineRepo(): EntityRepository
+    {
+        if ($this->aggregateClassName === null) {
+            throw MissingAggregateClassNameException::notProvided();
+        }
+
+        return $this->doctrineRepo;
     }
 }

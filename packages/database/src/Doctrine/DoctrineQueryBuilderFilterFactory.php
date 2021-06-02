@@ -18,10 +18,9 @@ use Doctrine\Persistence\ObjectRepository;
  */
 class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
 {
-    private QueryBuilder $queryBuilder;
-
     private const ALIAS = 'b';
     private int $loopKey;
+    private QueryBuilder $queryBuilder;
 
     /**
      * @param \Doctrine\Persistence\ObjectRepository<T> $model
@@ -65,6 +64,11 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
             default => $this->queryBuilder,
         };
     }
+
+    public function createField(QueryFilter $filter): string
+    {
+        return self::ALIAS.'.'.$filter->field();
+    }
     public function createForInArray(
         QueryBuilder $queryBuilder,
         InArrayFilter $filter
@@ -80,23 +84,6 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
                 $lookupField,
                 $filter->value(),
 //                \Doctrine\DBAL\Connection::PARAM_STR_ARRAY
-            )
-            ;
-    }
-
-    public function createForSearch(
-        QueryBuilder $queryBuilder,
-        SearchFilter $filter
-    ): QueryBuilder {
-        $lookupField = $this->createLookupField($filter);
-
-        return $queryBuilder
-            ->where(
-                "{$this->createField($filter)} LIKE :$lookupField"
-            )
-            ->setParameter(
-                $lookupField,
-                "%{$filter->value()}%"
             )
             ;
     }
@@ -151,6 +138,23 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
             ;
     }
 
+    public function createForSearch(
+        QueryBuilder $queryBuilder,
+        SearchFilter $filter
+    ): QueryBuilder {
+        $lookupField = $this->createLookupField($filter);
+
+        return $queryBuilder
+            ->where(
+                "{$this->createField($filter)} LIKE :$lookupField"
+            )
+            ->setParameter(
+                $lookupField,
+                "%{$filter->value()}%"
+            )
+            ;
+    }
+
     public function createForSort(
         QueryBuilder $queryBuilder,
         SortFilter $filter
@@ -158,11 +162,6 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
         return $queryBuilder
             ->addOrderBy($this->createField($filter), $filter->value())
         ;
-    }
-
-    public function createField(QueryFilter $filter): string
-    {
-        return self::ALIAS.'.'.$filter->field();
     }
 
     public function createLookupField(

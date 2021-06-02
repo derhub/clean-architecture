@@ -26,39 +26,6 @@ class InMemoryOutboxRepository implements
         $this->messages = [];
     }
 
-    public function recordFromEvent(Event ...$events): void
-    {
-        foreach ($events as $event) {
-            $message = $this->factory->create($event);
-            $this->messages[$message->id()] =
-                $this->serializer->serialize($message);
-        }
-    }
-
-    public function record(OutboxMessage ...$messages): void
-    {
-        foreach ($messages as $message) {
-            $this->messages[$message->id()] =
-                $this->serializer->serialize($message);
-        }
-    }
-
-    /**
-     * @return \Generator<\Derhub\Shared\MessageOutbox\OutboxMessage>
-     */
-    public function getUnConsumed(): Generator
-    {
-        foreach ($this->messages as $message) {
-            $data = $this->serializer->unSerialize($message);
-
-            if ($data->isConsume()) {
-                continue;
-            }
-
-            yield $data;
-        }
-    }
-
     public function consume(OutboxMessage ...$messages): void
     {
         foreach ($messages as $message) {
@@ -82,6 +49,39 @@ class InMemoryOutboxRepository implements
             if ($data->isConsume()) {
                 unset($this->messages[$key]);
             }
+        }
+    }
+
+    /**
+     * @return \Generator<\Derhub\Shared\MessageOutbox\OutboxMessage>
+     */
+    public function getUnConsumed(): Generator
+    {
+        foreach ($this->messages as $message) {
+            $data = $this->serializer->unSerialize($message);
+
+            if ($data->isConsume()) {
+                continue;
+            }
+
+            yield $data;
+        }
+    }
+
+    public function record(OutboxMessage ...$messages): void
+    {
+        foreach ($messages as $message) {
+            $this->messages[$message->id()] =
+                $this->serializer->serialize($message);
+        }
+    }
+
+    public function recordFromEvent(Event ...$events): void
+    {
+        foreach ($events as $event) {
+            $message = $this->factory->create($event);
+            $this->messages[$message->id()] =
+                $this->serializer->serialize($message);
         }
     }
 }

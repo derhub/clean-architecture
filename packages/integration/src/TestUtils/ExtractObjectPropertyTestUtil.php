@@ -22,11 +22,6 @@ class ExtractObjectPropertyTestUtil
         $this->extractor->setAllowPrivateProtectedAccess(true);
     }
 
-    public function setAggregateRoot(object $aggregate): void
-    {
-        $this->aggregateRoot = $aggregate;
-    }
-
     public function getProperties(): array
     {
         if ($this->cache) {
@@ -35,5 +30,10 @@ class ExtractObjectPropertyTestUtil
 
 
         return $this->cache = $this->extractor->extract($this->aggregateRoot);
+    }
+
+    public function setAggregateRoot(object $aggregate): void
+    {
+        $this->aggregateRoot = $aggregate;
     }
 }

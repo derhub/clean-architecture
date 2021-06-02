@@ -9,6 +9,14 @@ class SimpleValueObjFixture implements ValueObjectStr
 {
     private ?string $value;
 
+    public static function fromString(string $value): self
+    {
+        $self = new self();
+        $self->value = $value;
+
+        return $self;
+    }
+
     public function __construct()
     {
         $this->value = null;
@@ -23,14 +31,6 @@ class SimpleValueObjFixture implements ValueObjectStr
     {
         return $other instanceof self
             && $other->toString() && $this->toString();
-    }
-
-    public static function fromString(string $value): self
-    {
-        $self = new self();
-        $self->value = $value;
-
-        return $self;
     }
 
     public function toString(): ?string

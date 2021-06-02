@@ -29,11 +29,6 @@ use ReflectionUnionType;
  */
 class ObjectMapper implements ObjectMapperInterface
 {
-    protected array $resolver = [];
-    protected array $fieldResolvers = [];
-    protected array $fieldNames = [];
-    private ExtractorCacheHelper $getFieldName;
-
     private const GENERIC_TYPE_METHODS = [
         'string' => 'fromString',
         'integer' => 'fromInt',
@@ -46,6 +41,10 @@ class ObjectMapper implements ObjectMapperInterface
         'unknown type' => null,
         'resource (closed)' => null,
     ];
+    protected array $fieldNames = [];
+    protected array $fieldResolvers = [];
+    protected array $resolver = [];
+    private ExtractorCacheHelper $getFieldName;
     /**
      * @var callable|null
      */
@@ -62,37 +61,6 @@ class ObjectMapper implements ObjectMapperInterface
         $this->propNameMapper = $this->createPropertyExtractor();
     }
 
-    public function mapMetaData(
-        string $name,
-        string $property,
-        string|callable $resolver = null
-    ): void {
-        $this->fieldNames[$property] = $name;
-        if ($resolver !== null) {
-            $this->fieldResolvers[$property] = $resolver;
-        }
-    }
-
-    /**
-     * @param class-string $name
-     * @param array|string|callable $resolver
-     */
-    public function defineResolver(
-        string $name,
-        array|string|callable $resolver
-    ): void {
-        $this->resolver[$name] = $resolver;
-    }
-
-    public function defineResolverWithSameMethod(
-        string $method,
-        array $classNames,
-    ): void {
-        foreach ($classNames as $className) {
-            $this->defineResolver($className, [$className, $method]);
-        }
-    }
-
     private function createPropertyExtractor(): ExtractorCacheHelper
     {
         return new ExtractorCacheHelper(
@@ -106,64 +74,32 @@ class ObjectMapper implements ObjectMapperInterface
         );
     }
 
-    /**
-     * @throws \ReflectionException
-     */
-    public function transform(object|array $data, string $object): mixed
+    private function dataHasValue(object|array $data, string $key): bool
     {
-        $params = [];
-        $props = $this->extractConstructorParameter($object);
+        return is_array($data) ? isset($data[$key]) : isset($data->{$key});
+    }
 
-        foreach ($props as $param) {
-            $propertyName = $param->getName();
-            $name = $this->propNameMapper->extract($propertyName);
-            $hasValue = $this->dataHasValue($data, $name);
-            if (! $hasValue) {
-                // for required parameter maybe we should throw exception
-                // but for now just let the class handle that
-                continue;
+    /**
+     * @return iterable<string>
+     */
+    private function extractParamTypes(
+        null|ReflectionType|ReflectionUnionType $paramType
+    ): iterable {
+        if (! $paramType) {
+            yield null;
+        }
+
+        if ($paramType instanceof ReflectionUnionType) {
+            foreach ($paramType->getTypes() as $type) {
+                yield (string)$type;
             }
-
-            $params[$propertyName] = $this->resolveFieldValue(
-                $param,
-                $data,
-                $name,
-                $propertyName,
-            );
         }
 
-        return new $object(...$params);
-    }
-
-    /**
-     * Extract public, private and protected property
-     * Getter method is required for protected and private property
-     * Static and cons are ignored
-     *
-     * @param object $object
-     * @return array
-     */
-    public function extract(object $object): array
-    {
-        $extractor = new ObjectPropertyExtractor($this->propNameMapper);
-
-        return $extractor->extract($object);
-    }
-
-    /**
-     * @return \ReflectionParameter[]
-     * @throws \ReflectionException
-     */
-    final public function extractConstructorParameter(
-        string $object
-    ): array {
-        $refClass = $this->getClassReflection($object);
-        $constructor = $refClass->getConstructor();
-        if (! $constructor || $constructor->getNumberOfParameters() === 0) {
-            throw InvalidTypeException::missingConstructor($object);
+        if ($paramType instanceof ReflectionType) {
+            yield (string)$paramType;
         }
 
-        return $constructor->getParameters();
+        yield null;
     }
 
     /**
@@ -175,11 +111,6 @@ class ObjectMapper implements ObjectMapperInterface
     private function getClassReflection(object|string $object): ReflectionClass
     {
         return new ReflectionClass($object);
-    }
-
-    private function dataHasValue(object|array $data, string $key): bool
-    {
-        return is_array($data) ? isset($data[$key]) : isset($data->{$key});
     }
 
     private function getDataValue(object|array $data, string $key): mixed
@@ -244,9 +175,105 @@ class ObjectMapper implements ObjectMapperInterface
         throw InvalidTypeException::notSupportedResolver($name, $resolver);
     }
 
+    /**
+     * @param class-string $name
+     * @param array|string|callable $resolver
+     */
+    public function defineResolver(
+        string $name,
+        array|string|callable $resolver
+    ): void {
+        $this->resolver[$name] = $resolver;
+    }
+
+    public function defineResolverWithSameMethod(
+        string $method,
+        array $classNames,
+    ): void {
+        foreach ($classNames as $className) {
+            $this->defineResolver($className, [$className, $method]);
+        }
+    }
+
+    /**
+     * Extract public, private and protected property
+     * Getter method is required for protected and private property
+     * Static and cons are ignored
+     *
+     * @param object $object
+     * @return array
+     */
+    public function extract(object $object): array
+    {
+        $extractor = new ObjectPropertyExtractor($this->propNameMapper);
+
+        return $extractor->extract($object);
+    }
+
+    /**
+     * @return \ReflectionParameter[]
+     * @throws \ReflectionException
+     */
+    final public function extractConstructorParameter(
+        string $object
+    ): array {
+        $refClass = $this->getClassReflection($object);
+        $constructor = $refClass->getConstructor();
+        if (! $constructor || $constructor->getNumberOfParameters() === 0) {
+            throw InvalidTypeException::missingConstructor($object);
+        }
+
+        return $constructor->getParameters();
+    }
+
+    public function mapMetaData(
+        string $name,
+        string $property,
+        string|callable $resolver = null
+    ): void {
+        $this->fieldNames[$property] = $name;
+        if ($resolver !== null) {
+            $this->fieldResolvers[$property] = $resolver;
+        }
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function transform(object|array $data, string $object): mixed
+    {
+        $params = [];
+        $props = $this->extractConstructorParameter($object);
+
+        foreach ($props as $param) {
+            $propertyName = $param->getName();
+            $name = $this->propNameMapper->extract($propertyName);
+            $hasValue = $this->dataHasValue($data, $name);
+            if (! $hasValue) {
+                // for required parameter maybe we should throw exception
+                // but for now just let the class handle that
+                continue;
+            }
+
+            $params[$propertyName] = $this->resolveFieldValue(
+                $param,
+                $data,
+                $name,
+                $propertyName,
+            );
+        }
+
+        return new $object(...$params);
+    }
+
     protected function getFieldNameFromPropertyName(string $objPropName): string
     {
         return $this->getFieldName->extract($objPropName);
+    }
+
+    protected function getPossibleMethod(mixed $type): ?string
+    {
+        return self::GENERIC_TYPE_METHODS[$type] ?? null;
     }
 
     /**
@@ -306,33 +333,5 @@ class ObjectMapper implements ObjectMapperInterface
 
         // just return the value and let the class decide how to handle it
         return $value;
-    }
-
-    protected function getPossibleMethod(mixed $type): ?string
-    {
-        return self::GENERIC_TYPE_METHODS[$type] ?? null;
-    }
-
-    /**
-     * @return iterable<string>
-     */
-    private function extractParamTypes(
-        null|ReflectionType|ReflectionUnionType $paramType
-    ): iterable {
-        if (! $paramType) {
-            yield null;
-        }
-
-        if ($paramType instanceof ReflectionUnionType) {
-            foreach ($paramType->getTypes() as $type) {
-                yield (string)$type;
-            }
-        }
-
-        if ($paramType instanceof ReflectionType) {
-            yield (string)$paramType;
-        }
-
-        yield null;
     }
 }

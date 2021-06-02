@@ -10,11 +10,6 @@ final class GetTemplates implements Query
 {
     private int $version = 1;
 
-    public function version(): int
-    {
-        return $this->version;
-    }
-
     public function __construct(
         private int $page,
         private int $perPage,
@@ -23,16 +18,6 @@ final class GetTemplates implements Query
         private string $sortBy = SharedValues::COL_CREATED_AT,
         private string $sortType = SortFilter::DESC,
     ) {
-    }
-
-    public function page(): int
-    {
-        return $this->page;
-    }
-
-    public function perPage(): int
-    {
-        return $this->perPage;
     }
 
     public function aggregateIds(): ?array
@@ -45,6 +30,16 @@ final class GetTemplates implements Query
         return $this->name;
     }
 
+    public function page(): int
+    {
+        return $this->page;
+    }
+
+    public function perPage(): int
+    {
+        return $this->perPage;
+    }
+
     public function sortBy(): string
     {
         return $this->sortBy;
@@ -53,5 +48,10 @@ final class GetTemplates implements Query
     public function sortType(): string
     {
         return $this->sortType;
+    }
+
+    public function version(): int
+    {
+        return $this->version;
     }
 }

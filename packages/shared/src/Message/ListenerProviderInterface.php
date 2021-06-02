@@ -23,19 +23,26 @@ interface ListenerProviderInterface
      */
     public function addHandlers(array $handlers): void;
 
-    public function getListenersForEvent(string $message): mixed;
+    /**
+     * Return class string by name
+     * @param string $name
+     * @return class-string|null
+     */
+    public function getClassName(string $name): ?string;
 
     /**
      * @return array<string, string[]>
      */
     public function getListeners(): array;
 
+    public function getListenersForEvent(string $message): mixed;
+
     /**
-     * Return true if has name
-     * @param string $name
-     * @return bool
+     * Return name by class string
+     * @param string $className
+     * @return string|null
      */
-    public function hasName(string $name): bool;
+    public function getName(string $className): ?string;
 
     /**
      * Return true if class object has handler
@@ -45,16 +52,9 @@ interface ListenerProviderInterface
     public function hasHandler(string $classStr): bool;
 
     /**
-     * Return class string by name
+     * Return true if has name
      * @param string $name
-     * @return class-string|null
+     * @return bool
      */
-    public function getClassName(string $name): ?string;
-
-    /**
-     * Return name by class string
-     * @param string $className
-     * @return string|null
-     */
-    public function getName(string $className): ?string;
+    public function hasName(string $name): bool;
 }

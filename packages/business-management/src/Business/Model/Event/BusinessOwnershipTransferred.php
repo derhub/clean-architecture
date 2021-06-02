@@ -10,11 +10,6 @@ class BusinessOwnershipTransferred implements DomainEvent
 {
     private int $version = 1;
 
-    public function version(): int
-    {
-        return $this->version;
-    }
-
     public function __construct(
         private string $aggregateRootId,
         private string $ownerId,
@@ -29,5 +24,10 @@ class BusinessOwnershipTransferred implements DomainEvent
     public function ownerId(): string
     {
         return $this->ownerId;
+    }
+
+    public function version(): int
+    {
+        return $this->version;
     }
 }

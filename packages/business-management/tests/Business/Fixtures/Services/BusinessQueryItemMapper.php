@@ -8,15 +8,15 @@ class BusinessQueryItemMapper implements \Derhub\BusinessManagement\Business\Ser
 {
     private BusinessQueryItem $result;
 
+    public function fromArray(array $data): BusinessQueryItem
+    {
+        return $this->result;
+    }
+
     public function setResults(BusinessQueryItem $item): self
     {
         $this->result = $item;
 
         return $this;
-    }
-
-    public function fromArray(array $data): BusinessQueryItem
-    {
-        return $this->result;
     }
 }

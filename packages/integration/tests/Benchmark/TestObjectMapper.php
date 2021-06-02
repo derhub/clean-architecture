@@ -8,6 +8,49 @@ class TestObjectMapper
      * @Revs(5)
      * @Iterations(5)
      */
+    public function benchExtract(): void
+    {
+        $map = new ObjectMapperConsume();
+        $map->extract(new TestClassHelper(1, 2, 3, 4, 5, 6, 7, 8, 9, 0));
+    }
+
+    /**
+     * @Revs(5)
+     * @Iterations(5)
+     */
+    public function benchRawExtract(): void
+    {
+        $newMap = new RawMapper();
+        $newMap->extract(new TestClassHelper(1, 2, 3, 4, 5, 6, 7, 8, 9, 0));
+    }
+
+    /**
+     * @Revs(5)
+     * @Iterations(5)
+     */
+    public function benchRawTransform(): void
+    {
+        $map = new RawMapper();
+        $map->transform(
+            [
+                'test1' => 1,
+                'test2' => 1,
+                'test3' => 1,
+                'test4' => 1,
+                'test5' => 1,
+                'test6' => 1,
+                'test7' => 1,
+                'test8' => 1,
+                'test9' => 1,
+                'test0' => 1,
+            ],
+            TestClassHelper::class
+        );
+    }
+    /**
+     * @Revs(5)
+     * @Iterations(5)
+     */
     public function benchTransform(): void
     {
         $map = new ObjectMapperConsume();
@@ -81,49 +124,5 @@ class TestObjectMapper
             $data,
             TestClassHelper::class
         );
-    }
-
-    /**
-     * @Revs(5)
-     * @Iterations(5)
-     */
-    public function benchRawTransform(): void
-    {
-        $map = new RawMapper();
-        $map->transform(
-            [
-                'test1' => 1,
-                'test2' => 1,
-                'test3' => 1,
-                'test4' => 1,
-                'test5' => 1,
-                'test6' => 1,
-                'test7' => 1,
-                'test8' => 1,
-                'test9' => 1,
-                'test0' => 1,
-            ],
-            TestClassHelper::class
-        );
-    }
-
-    /**
-     * @Revs(5)
-     * @Iterations(5)
-     */
-    public function benchExtract(): void
-    {
-        $map = new ObjectMapperConsume();
-        $map->extract(new TestClassHelper(1, 2, 3, 4, 5, 6, 7, 8, 9, 0));
-    }
-
-    /**
-     * @Revs(5)
-     * @Iterations(5)
-     */
-    public function benchRawExtract(): void
-    {
-        $newMap = new RawMapper();
-        $newMap->extract(new TestClassHelper(1, 2, 3, 4, 5, 6, 7, 8, 9, 0));
     }
 }

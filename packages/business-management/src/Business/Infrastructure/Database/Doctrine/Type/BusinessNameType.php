@@ -12,19 +12,9 @@ class BusinessNameType extends StringType
 
     public const NAME = 'business_name';
 
-    public function defineName(): string
+    public function convertFromRaw(mixed $value): Name
     {
-        return self::NAME;
-    }
-
-    public function defineEmptyValueForPHP(mixed $value): Name
-    {
-        return new Name();
-    }
-
-    public function defineClass(): string
-    {
-        return Name::class;
+        return Name::fromString($value);
     }
 
     public function convertToRaw(mixed $value): string
@@ -32,8 +22,18 @@ class BusinessNameType extends StringType
         return $value->toString();
     }
 
-    public function convertFromRaw(mixed $value): Name
+    public function defineClass(): string
     {
-        return Name::fromString($value);
+        return Name::class;
+    }
+
+    public function defineEmptyValueForPHP(mixed $value): Name
+    {
+        return new Name();
+    }
+
+    public function defineName(): string
+    {
+        return self::NAME;
     }
 }

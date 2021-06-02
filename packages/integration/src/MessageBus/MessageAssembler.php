@@ -6,9 +6,9 @@ interface MessageAssembler
 {
     public function add(string $className, mixed $mapper): void;
 
-    public function has(string $className): bool;
-
     public function get(string $className): mixed;
+
+    public function has(string $className): bool;
 
     /**
      * @param class-string $messageClass

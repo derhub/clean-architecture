@@ -21,11 +21,13 @@ abstract class AbstractQueryResponse extends AbstractMessageResponse implements 
         $this->results = $results;
     }
 
-    public function setResults(iterable $results): self
+    public function firstResult(): mixed
     {
-        $this->results = $results;
+        foreach ($this->result() as $item) {
+            return $item;
+        }
 
-        return $this;
+        return null;
     }
 
     /**
@@ -36,12 +38,10 @@ abstract class AbstractQueryResponse extends AbstractMessageResponse implements 
         return $this->results;
     }
 
-    public function firstResult(): mixed
+    public function setResults(iterable $results): self
     {
-        foreach ($this->result() as $item) {
-            return $item;
-        }
+        $this->results = $results;
 
-        return null;
+        return $this;
     }
 }

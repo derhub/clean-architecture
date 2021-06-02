@@ -8,28 +8,6 @@ trait ModuleCapabilities
 {
     protected static array $services = MI::INITIAL_SERVICES;
 
-    abstract public function getId(): string;
-
-    public function services(): array
-    {
-        return self::$services;
-    }
-
-    public function eventName(string $class): string
-    {
-        return MessageName::forEvent($this->getId(), $class);
-    }
-
-    public function commandName(string $class): string
-    {
-        return MessageName::forCommand($this->getId(), $class);
-    }
-
-    public function queryName(string $class): string
-    {
-        return MessageName::forQuery($this->getId(), $class);
-    }
-
     /**
      * @param class-string<\Derhub\Shared\Message\Command\Command> $class
      * @param string $handlerClass
@@ -43,15 +21,21 @@ trait ModuleCapabilities
         return $this;
     }
 
-    /**
-     * @param class-string<\Derhub\Shared\Message\Query\Query> $class
-     * @param string $handlerClass
-     * @return $this
-     */
-    public function addQuery(string $class, string $handlerClass): static
-    {
-        self::$services[MI::SERVICE_QUERIES][$class] =
-            $handlerClass;
+    public function addDependency(
+        string $class,
+        string|callable $abstract,
+    ): static {
+        self::$services[MI::DEPENDENCY_BIND][$class] = $abstract;
+
+        return $this;
+    }
+
+    public function addDependencySingleton(
+        string $class,
+        string|callable $abstract,
+    ): static {
+        self::$services[MI::DEPENDENCY_SINGLETON][$class] =
+            $abstract;
 
         return $this;
     }
@@ -95,22 +79,38 @@ trait ModuleCapabilities
         return $this;
     }
 
-    public function addDependency(
-        string $class,
-        string|callable $abstract,
-    ): static {
-        self::$services[MI::DEPENDENCY_BIND][$class] = $abstract;
+    /**
+     * @param class-string<\Derhub\Shared\Message\Query\Query> $class
+     * @param string $handlerClass
+     * @return $this
+     */
+    public function addQuery(string $class, string $handlerClass): static
+    {
+        self::$services[MI::SERVICE_QUERIES][$class] =
+            $handlerClass;
 
         return $this;
     }
 
-    public function addDependencySingleton(
-        string $class,
-        string|callable $abstract,
-    ): static {
-        self::$services[MI::DEPENDENCY_SINGLETON][$class] =
-            $abstract;
+    public function commandName(string $class): string
+    {
+        return MessageName::forCommand($this->getId(), $class);
+    }
 
-        return $this;
+    public function eventName(string $class): string
+    {
+        return MessageName::forEvent($this->getId(), $class);
+    }
+
+    abstract public function getId(): string;
+
+    public function queryName(string $class): string
+    {
+        return MessageName::forQuery($this->getId(), $class);
+    }
+
+    public function services(): array
+    {
+        return self::$services;
     }
 }

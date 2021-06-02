@@ -23,32 +23,6 @@ class TacticianQueryBusTest extends TestCase
     /**
      * @test
      */
-    public function it_dispatch_query_message(): void
-    {
-        ['bus' => $bus, 'listener' => $locator] = $this->createQueryBus();
-        $msg = new QueryMessageFixture(
-            SimpleValueObjFixture::fromString('tst'),
-            'test'
-        );
-
-        $locator->addHandler(
-            'QueryMessageFixture',
-            QueryMessageFixture::class,
-            QueryMessageFixtureHandler::class
-        );
-
-        $result = $bus->dispatch($msg);
-
-        self::assertInstanceOf(QueryResponseFixture::class, $result);
-        self::assertInstanceOf(
-            QueryMessageFixture::class,
-            $result->getMessage()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function it_can_dispatch_multiple_query_message(): void
     {
         ['bus' => $bus, 'listener' => $locator] = $this->createQueryBus();
@@ -73,5 +47,31 @@ class TacticianQueryBusTest extends TestCase
                 $result->getMessage()
             );
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_dispatch_query_message(): void
+    {
+        ['bus' => $bus, 'listener' => $locator] = $this->createQueryBus();
+        $msg = new QueryMessageFixture(
+            SimpleValueObjFixture::fromString('tst'),
+            'test'
+        );
+
+        $locator->addHandler(
+            'QueryMessageFixture',
+            QueryMessageFixture::class,
+            QueryMessageFixtureHandler::class
+        );
+
+        $result = $bus->dispatch($msg);
+
+        self::assertInstanceOf(QueryResponseFixture::class, $result);
+        self::assertInstanceOf(
+            QueryMessageFixture::class,
+            $result->getMessage()
+        );
     }
 }

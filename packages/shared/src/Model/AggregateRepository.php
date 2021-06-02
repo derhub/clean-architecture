@@ -7,13 +7,12 @@ namespace Derhub\Shared\Model;
  */
 interface AggregateRepository
 {
-    public function getNextId(): mixed;
-
     /**
      * @throw \EB\Shared\Model\Exceptions\AggregateNotFoundException
      * @return T
      */
     public function get(AggregateRootId $id): mixed;
+    public function getNextId(): mixed;
 
     /**
      * @throw \EB\Shared\Model\Exceptions\FailedToSaveAggregateException

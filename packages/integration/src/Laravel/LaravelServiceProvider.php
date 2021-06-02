@@ -40,50 +40,6 @@ use JMS\Serializer\SerializerInterface;
 
 class LaravelServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-        $this->app->singleton(
-            ContainerInterface::class,
-            static fn ($app) => new LaravelContainer(
-                static fn () => Container::getInstance()
-            )
-        );
-
-        $this->app->bind(
-            ObjectMapperInterface::class,
-            SimpleMapper::class
-        );
-
-        $this->registerModuleRegistry();
-
-        $this->registerOutboxMessage();
-        $this->registerMessageBus();
-        $this->registerCommand();
-        $this->registerQuery();
-        $this->registerEvent();
-    }
-
-    private function registerMessageBus(): void
-    {
-        $this->app->singleton(
-            MessageAssembler::class,
-            MessageAssemblerImpl::class
-        );
-    }
-
-    private function registerModuleRegistry(): void
-    {
-        $this->app->singleton(
-            ModuleList::class,
-            ModuleListImpl::class,
-        );
-
-        $this->app->singleton(
-            ModuleService::class,
-            ModuleServiceImpl::class,
-        );
-    }
-
     private function registerCommand(): void
     {
         $this->app->singleton(
@@ -107,31 +63,6 @@ class LaravelServiceProvider extends ServiceProvider
                     ]
                 );
             }
-        );
-    }
-
-    public function registerQuery(): void
-    {
-        $this->app->singleton(
-            QueryBus::class,
-            function ($app) {
-                $getConnection = static fn () => Container::getInstance()
-                    ->get(EntityManagerInterface::class)
-                    ->getConnection()
-                ;
-
-                return MessageBusFactory::createQueryBus(
-                    $app->get(QueryListenerProvider::class),
-                    [
-                        new PingConnectionMiddleware($getConnection),
-                    ]
-                );
-            }
-        );
-
-        $this->app->singleton(
-            QueryListenerProvider::class,
-            QueryLocator::class,
         );
     }
 
@@ -159,6 +90,26 @@ class LaravelServiceProvider extends ServiceProvider
 //            EventLocator::class,
 //        );
     }
+    private function registerMessageBus(): void
+    {
+        $this->app->singleton(
+            MessageAssembler::class,
+            MessageAssemblerImpl::class
+        );
+    }
+
+    private function registerModuleRegistry(): void
+    {
+        $this->app->singleton(
+            ModuleList::class,
+            ModuleListImpl::class,
+        );
+
+        $this->app->singleton(
+            ModuleService::class,
+            ModuleServiceImpl::class,
+        );
+    }
 
     private function registerOutboxMessage(): void
     {
@@ -176,6 +127,53 @@ class LaravelServiceProvider extends ServiceProvider
         $this->app->bind(
             MessageOutboxWrapperFactory::class,
             EventOutboxMessageFactory::class
+        );
+    }
+    public function register(): void
+    {
+        $this->app->singleton(
+            ContainerInterface::class,
+            static fn ($app) => new LaravelContainer(
+                static fn () => Container::getInstance()
+            )
+        );
+
+        $this->app->bind(
+            ObjectMapperInterface::class,
+            SimpleMapper::class
+        );
+
+        $this->registerModuleRegistry();
+
+        $this->registerOutboxMessage();
+        $this->registerMessageBus();
+        $this->registerCommand();
+        $this->registerQuery();
+        $this->registerEvent();
+    }
+
+    public function registerQuery(): void
+    {
+        $this->app->singleton(
+            QueryBus::class,
+            function ($app) {
+                $getConnection = static fn () => Container::getInstance()
+                    ->get(EntityManagerInterface::class)
+                    ->getConnection()
+                ;
+
+                return MessageBusFactory::createQueryBus(
+                    $app->get(QueryListenerProvider::class),
+                    [
+                        new PingConnectionMiddleware($getConnection),
+                    ]
+                );
+            }
+        );
+
+        $this->app->singleton(
+            QueryListenerProvider::class,
+            QueryLocator::class,
         );
     }
 }

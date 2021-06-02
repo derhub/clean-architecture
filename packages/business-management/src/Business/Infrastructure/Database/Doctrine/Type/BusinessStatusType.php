@@ -12,9 +12,9 @@ class BusinessStatusType extends IntegerType
 
     public const NAME = 'business_status';
 
-    public function defineName(): string
+    public function convertFromRaw(mixed $value): Status
     {
-        return self::NAME;
+        return Status::fromInt($value);
     }
 
     public function convertToRaw(mixed $value): int
@@ -22,18 +22,18 @@ class BusinessStatusType extends IntegerType
         return $value->toInt();
     }
 
-    public function defineEmptyValueForPHP(mixed $value): Status
-    {
-        return Status::enable();
-    }
-
     public function defineClass(): string
     {
         return Status::class;
     }
 
-    public function convertFromRaw(mixed $value): Status
+    public function defineEmptyValueForPHP(mixed $value): Status
     {
-        return Status::fromInt($value);
+        return Status::enable();
+    }
+
+    public function defineName(): string
+    {
+        return self::NAME;
     }
 }

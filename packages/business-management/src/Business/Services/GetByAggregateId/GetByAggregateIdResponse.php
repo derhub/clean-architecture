@@ -16,11 +16,6 @@ class GetByAggregateIdResponse extends AbstractQueryResponse
         $this->result = [];
     }
 
-    public function setResult(iterable $result): void
-    {
-        $this->result = $result;
-    }
-
     public function aggregate(): string
     {
         return Module::ID;
@@ -29,5 +24,10 @@ class GetByAggregateIdResponse extends AbstractQueryResponse
     public function result(): iterable
     {
         return $this->result;
+    }
+
+    public function setResult(iterable $result): void
+    {
+        $this->result = $result;
     }
 }

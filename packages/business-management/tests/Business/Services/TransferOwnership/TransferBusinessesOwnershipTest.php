@@ -11,11 +11,6 @@ use Tests\BusinessManagement\Business\Services\BaseServiceTestCase;
 
 class TransferBusinessesOwnershipTest extends BaseServiceTestCase
 {
-    protected function getHandler(): object
-    {
-        return new TransferBusinessesOwnershipHandler($this->repository);
-    }
-
     /**
      * @test
      */
@@ -29,5 +24,9 @@ class TransferBusinessesOwnershipTest extends BaseServiceTestCase
                 )
             )->then(CommandResponse::class)
         ;
+    }
+    protected function getHandler(): object
+    {
+        return new TransferBusinessesOwnershipHandler($this->repository);
     }
 }

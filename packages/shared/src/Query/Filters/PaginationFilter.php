@@ -12,6 +12,11 @@ class PaginationFilter implements QueryFilter
     ) {
     }
 
+    public function field(): mixed
+    {
+        return null;
+    }
+
     public function page(): int
     {
         return $this->page;
@@ -20,11 +25,6 @@ class PaginationFilter implements QueryFilter
     public function perPage(): int
     {
         return $this->perPage;
-    }
-
-    public function field(): mixed
-    {
-        return null;
     }
 
     public function value(): mixed

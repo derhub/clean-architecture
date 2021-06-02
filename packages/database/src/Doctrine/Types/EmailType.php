@@ -11,14 +11,9 @@ class EmailType extends StringType
 
     public const NAME = 'email';
 
-    public function defineName(): string
+    public function convertFromRaw(mixed $value): Email
     {
-        return self::NAME;
-    }
-
-    public function defineClass(): string
-    {
-        return Email::class;
+        return Email::fromString($value);
     }
 
     public function convertToRaw(mixed $value): string
@@ -26,13 +21,18 @@ class EmailType extends StringType
         return $value->toString();
     }
 
+    public function defineClass(): string
+    {
+        return Email::class;
+    }
+
     public function defineEmptyValueForPHP($value): Email
     {
         return new Email();
     }
 
-    public function convertFromRaw(mixed $value): Email
+    public function defineName(): string
     {
-        return Email::fromString($value);
+        return self::NAME;
     }
 }

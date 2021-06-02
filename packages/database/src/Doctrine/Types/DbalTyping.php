@@ -8,49 +8,7 @@ use Doctrine\DBAL\Types\ConversionException;
 
 trait DbalTyping
 {
-    public function getName(): string
-    {
-        return $this->defineName();
-    }
-
-    abstract public function defineName(): string;
-
-    abstract public function convertToRaw(mixed $value): mixed;
-
     abstract public function convertFromRaw(mixed $value): mixed;
-
-    abstract public function defineEmptyValueForPHP(mixed $value): mixed;
-
-    /**
-     * Use when convertToDatabaseValue
-     * @param $value
-     * @return mixed
-     */
-    public function defineEmptyValueForDB($value): mixed
-    {
-        return null;
-    }
-
-    /**
-     * @template T
-     * @return class-string<T>
-     */
-    abstract public function defineClass(): string;
-
-    public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        if ($value === '' || $value === null) {
-            return $this->defineEmptyValueForPHP($value);
-        }
-
-        $class = $this->defineClass();
-
-        if (is_object($value) && $value::class === $class) {
-            return $value;
-        }
-
-        return $this->convertFromRaw($value);
-    }
 
     public function convertToDatabaseValue($value, ?AbstractPlatform $platform)
     {
@@ -76,5 +34,46 @@ trait DbalTyping
 
         return $this->convertToRaw($value);
 //        throw ConversionException::conversionFailed($value, 'string');
+    }
+
+    public function convertToPHPValue($value, AbstractPlatform $platform)
+    {
+        if ($value === '' || $value === null) {
+            return $this->defineEmptyValueForPHP($value);
+        }
+
+        $class = $this->defineClass();
+
+        if (is_object($value) && $value::class === $class) {
+            return $value;
+        }
+
+        return $this->convertFromRaw($value);
+    }
+
+    abstract public function convertToRaw(mixed $value): mixed;
+
+    /**
+     * @template T
+     * @return class-string<T>
+     */
+    abstract public function defineClass(): string;
+
+    /**
+     * Use when convertToDatabaseValue
+     * @param $value
+     * @return mixed
+     */
+    public function defineEmptyValueForDB($value): mixed
+    {
+        return null;
+    }
+
+    abstract public function defineEmptyValueForPHP(mixed $value): mixed;
+
+    abstract public function defineName(): string;
+    public function getName(): string
+    {
+        return $this->defineName();
     }
 }

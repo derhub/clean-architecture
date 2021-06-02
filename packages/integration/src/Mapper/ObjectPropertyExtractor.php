@@ -6,9 +6,9 @@ use ReflectionClass;
 
 class ObjectPropertyExtractor
 {
-    private ExtractorCacheHelper $propertyNameConverter;
-    private ExtractorCacheHelper $propertyMethod;
     private mixed $allowAccess;
+    private ExtractorCacheHelper $propertyMethod;
+    private ExtractorCacheHelper $propertyNameConverter;
 
     public function __construct(ExtractorCacheHelper $propertyNameConverter)
     {
@@ -42,11 +42,6 @@ class ObjectPropertyExtractor
                 return null;
             }
         );
-    }
-
-    public function setAllowPrivateProtectedAccess($allow = true): void
-    {
-        $this->allowAccess = $allow;
     }
 
     public function extract(object $object): array
@@ -85,5 +80,10 @@ class ObjectPropertyExtractor
         }
 
         return $results;
+    }
+
+    public function setAllowPrivateProtectedAccess($allow = true): void
+    {
+        $this->allowAccess = $allow;
     }
 }

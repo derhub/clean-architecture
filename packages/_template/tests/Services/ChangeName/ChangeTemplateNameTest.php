@@ -23,14 +23,6 @@ class ChangeTemplateNameTest extends ServiceTestCase
         parent::setUp();
     }
 
-    protected function getHandler(): object
-    {
-        return new ChangeTemplateNameHandler(
-            $this->repository,
-            $this->nameSpecMock,
-        );
-    }
-
     /**
      * @test
      */
@@ -73,5 +65,13 @@ class ChangeTemplateNameTest extends ServiceTestCase
             )
             ->then(CommandResponse::class)
         ;
+    }
+
+    protected function getHandler(): object
+    {
+        return new ChangeTemplateNameHandler(
+            $this->repository,
+            $this->nameSpecMock,
+        );
     }
 }

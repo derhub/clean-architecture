@@ -29,13 +29,13 @@ class InArrayFilter implements QueryFilter
         return $this->field;
     }
 
-    public function value(): array
-    {
-        return $this->value;
-    }
-
     public function operation(): string
     {
         return $this->operation;
+    }
+
+    public function value(): array
+    {
+        return $this->value;
     }
 }

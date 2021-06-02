@@ -41,16 +41,16 @@ use Derhub\Shared\Values\DateTimeLiteral;
  */
 final class Business implements AggregateRoot
 {
-    use UseTimestampsWithSoftDelete;
     use UseAggregateRoot {
         UseAggregateRoot::record as private _record;
     }
+    use UseTimestampsWithSoftDelete;
+    private BusinessId $aggregateRootId;
 
     private BusinessInfo $info;
-    private Slug $slug;
     private OnBoardStatus $onBoardStatus;
+    private Slug $slug;
     private Status $status;
-    private BusinessId $aggregateRootId;
 
     public function __construct(?BusinessId $aggregateRootId = null)
     {
@@ -61,26 +61,6 @@ final class Business implements AggregateRoot
         $this->slug = new Slug();
 
         $this->initTimestamps();
-    }
-
-    public function aggregateRootId(): BusinessId
-    {
-        return $this->aggregateRootId;
-    }
-
-    public function owner(): OwnerId
-    {
-        return $this->info->ownerId();
-    }
-
-    /**
-     * @throws \Derhub\BusinessManagement\Business\Model\Exception\ChangesToDisabledBusinessException
-     */
-    protected function record(DomainEvent $e): void
-    {
-        $this->disallowChangesWhenDisabled($e);
-
-        $this->_record($e);
     }
 
     /**
@@ -95,6 +75,11 @@ final class Business implements AggregateRoot
         if ($this->status->isDisabled()) {
             throw ChangesToDisabledBusinessException::notAllowed();
         }
+    }
+
+    public function aggregateRootId(): BusinessId
+    {
+        return $this->aggregateRootId;
     }
 
     public function changeCountry(
@@ -125,6 +110,49 @@ final class Business implements AggregateRoot
                 $name->toString()
             )
         );
+
+        return $this;
+    }
+
+    public function changeSlug(
+        UniqueSlugSpec $slugSpec,
+        Slug $slug
+    ): self {
+        $isValid = $slugSpec->isSatisfiedBy(new UniqueSlug($slug));
+        if (! $isValid) {
+            throw SlugExistException::fromSlug($slug);
+        }
+
+        $this->slug = $slug;
+
+        $this->record(
+            new BusinessSlugChanged(
+                $this->aggregateRootId()->toString(),
+                $slug->toString()
+            ),
+        );
+
+        return $this;
+    }
+
+    public function disable(): self
+    {
+        $this->record(
+            new BusinessDisabled($this->aggregateRootId()->toString()),
+        );
+
+        $this->status = Status::disable();
+
+        return $this;
+    }
+
+    public function enable(): self
+    {
+        $this->record(
+            new BusinessEnabled($this->aggregateRootId()->toString()),
+        );
+
+        $this->status = Status::enable();
 
         return $this;
     }
@@ -180,47 +208,9 @@ final class Business implements AggregateRoot
         return $this;
     }
 
-    public function disable(): self
+    public function owner(): OwnerId
     {
-        $this->record(
-            new BusinessDisabled($this->aggregateRootId()->toString()),
-        );
-
-        $this->status = Status::disable();
-
-        return $this;
-    }
-
-    public function enable(): self
-    {
-        $this->record(
-            new BusinessEnabled($this->aggregateRootId()->toString()),
-        );
-
-        $this->status = Status::enable();
-
-        return $this;
-    }
-
-    public function changeSlug(
-        UniqueSlugSpec $slugSpec,
-        Slug $slug
-    ): self {
-        $isValid = $slugSpec->isSatisfiedBy(new UniqueSlug($slug));
-        if (! $isValid) {
-            throw SlugExistException::fromSlug($slug);
-        }
-
-        $this->slug = $slug;
-
-        $this->record(
-            new BusinessSlugChanged(
-                $this->aggregateRootId()->toString(),
-                $slug->toString()
-            ),
-        );
-
-        return $this;
+        return $this->info->ownerId();
     }
 
     /**
@@ -243,5 +233,15 @@ final class Business implements AggregateRoot
         );
 
         return $this;
+    }
+
+    /**
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\ChangesToDisabledBusinessException
+     */
+    protected function record(DomainEvent $e): void
+    {
+        $this->disallowChangesWhenDisabled($e);
+
+        $this->_record($e);
     }
 }

@@ -18,18 +18,6 @@ abstract class AbstractMessageHandler implements Middleware
         $this->allowMultipleHandlers = false;
     }
 
-    protected function handleMessage(object $message): mixed
-    {
-        [
-            'handler' => $handler,
-        ] = $this->requirements($message);
-
-        $methodName =
-            $this->methodNameInflector->inflect($message, $handler);
-
-        return $this->callHandler($message, $handler, $methodName);
-    }
-
     protected function callHandler($message, $handler, $methodName): mixed
     {
         if (is_iterable($handler)) {
@@ -48,6 +36,18 @@ abstract class AbstractMessageHandler implements Middleware
         }
 
         return $handler->{$methodName}($message);
+    }
+
+    protected function handleMessage(object $message): mixed
+    {
+        [
+            'handler' => $handler,
+        ] = $this->requirements($message);
+
+        $methodName =
+            $this->methodNameInflector->inflect($message, $handler);
+
+        return $this->callHandler($message, $handler, $methodName);
     }
 
 

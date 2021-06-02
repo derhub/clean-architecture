@@ -23,47 +23,6 @@ class ModuleServiceImpl implements ModuleService
         $this->isStarted = false;
     }
 
-    /**
-     * @throws \Derhub\Integration\ModuleService\ModuleAlreadyRegistered
-     */
-    public function register(ModuleInterface ...$module): void
-    {
-        $this->manager->register(...$module);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isStarted(): bool
-    {
-        return $this->isStarted;
-    }
-
-    public function list(): ModuleList
-    {
-        return $this->manager;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function start(): void
-    {
-        if ($this->isStarted()) {
-            return;
-        }
-
-        foreach ($this->manager->all() as $module) {
-            $module->start();
-            $this->registerDependencies($module);
-            $this->registerServices($module);
-        }
-
-        //TODO: register role & permission
-
-        $this->isStarted = true;
-    }
-
     private function registerDependencies(ModuleInterface $module): void
     {
         $binds = $module->services()[$module::DEPENDENCY_BIND] ?? [];
@@ -79,32 +38,13 @@ class ModuleServiceImpl implements ModuleService
         }
     }
 
-    private function registerServices(ModuleInterface $module): void
-    {
-        $services = $module->services();
-
-        $this->registerMessage(
-            $this->commandListener,
-            $module,
-            $module::SERVICE_COMMANDS,
-        );
-
-        $this->registerMessage(
-            $this->queryListener,
-            $module,
-            $module::SERVICE_QUERIES,
-        );
-
-        $this->registerMessage(
-            $this->eventListener,
-            $module,
-            $module::SERVICE_EVENTS,
-        );
-
-        $this->registerListeners(
-            $this->eventListener,
-            $services[$module::SERVICE_LISTENERS] ?? [],
-        );
+    private function registerListeners(
+        EventListenerProvider $eventListener,
+        mixed $listeners
+    ): void {
+        foreach ($listeners as $name => $listener) {
+            $eventListener->addHandlerByName($name, $listener);
+        }
     }
 
     private function registerMessage(
@@ -143,12 +83,72 @@ class ModuleServiceImpl implements ModuleService
         }
     }
 
-    private function registerListeners(
-        EventListenerProvider $eventListener,
-        mixed $listeners
-    ): void {
-        foreach ($listeners as $name => $listener) {
-            $eventListener->addHandlerByName($name, $listener);
+    private function registerServices(ModuleInterface $module): void
+    {
+        $services = $module->services();
+
+        $this->registerMessage(
+            $this->commandListener,
+            $module,
+            $module::SERVICE_COMMANDS,
+        );
+
+        $this->registerMessage(
+            $this->queryListener,
+            $module,
+            $module::SERVICE_QUERIES,
+        );
+
+        $this->registerMessage(
+            $this->eventListener,
+            $module,
+            $module::SERVICE_EVENTS,
+        );
+
+        $this->registerListeners(
+            $this->eventListener,
+            $services[$module::SERVICE_LISTENERS] ?? [],
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isStarted(): bool
+    {
+        return $this->isStarted;
+    }
+
+    public function list(): ModuleList
+    {
+        return $this->manager;
+    }
+
+    /**
+     * @throws \Derhub\Integration\ModuleService\ModuleAlreadyRegistered
+     */
+    public function register(ModuleInterface ...$module): void
+    {
+        $this->manager->register(...$module);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function start(): void
+    {
+        if ($this->isStarted()) {
+            return;
         }
+
+        foreach ($this->manager->all() as $module) {
+            $module->start();
+            $this->registerDependencies($module);
+            $this->registerServices($module);
+        }
+
+        //TODO: register role & permission
+
+        $this->isStarted = true;
     }
 }

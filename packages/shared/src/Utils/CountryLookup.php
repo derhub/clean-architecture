@@ -6,42 +6,9 @@ class CountryLookup
 {
     public const KEY_ALPHA2 = 'alpha2';
     public const KEY_ALPHA3 = 'alpha3';
-    public const KEY_NUMERIC = 'numeric';
     public const KEY_CURRENCY = 'currency';
     public const KEY_NAME = 'name';
-
-    /**
-     * Override country data set
-     * @param array $countries
-     */
-    public static function setCountries(array $countries): void
-    {
-        self::$countries = $countries;
-    }
-
-    public static function isValidKey(string $key): bool
-    {
-        return isset(self::$countries[$key]);
-    }
-
-    public static function fromAlpha2($value): array
-    {
-        if (! self::isValidKey($value)) {
-            throw InvalidCountryException::fromKey($value);
-        }
-
-        return self::$countries[$value];
-    }
-
-    public static function values(): array
-    {
-        return self::$countries;
-    }
-
-    public static function keys(): array
-    {
-        return self::$alpha2Values;
-    }
+    public const KEY_NUMERIC = 'numeric';
 
     private static array $alpha2Values = [];
 
@@ -2064,4 +2031,37 @@ class CountryLookup
             'currency' => ['BWP', 'EUR', 'GBP', 'USD', 'ZAR'],
         ],
     ];
+
+    public static function fromAlpha2($value): array
+    {
+        if (! self::isValidKey($value)) {
+            throw InvalidCountryException::fromKey($value);
+        }
+
+        return self::$countries[$value];
+    }
+
+    public static function isValidKey(string $key): bool
+    {
+        return isset(self::$countries[$key]);
+    }
+
+    public static function keys(): array
+    {
+        return self::$alpha2Values;
+    }
+
+    /**
+     * Override country data set
+     * @param array $countries
+     */
+    public static function setCountries(array $countries): void
+    {
+        self::$countries = $countries;
+    }
+
+    public static function values(): array
+    {
+        return self::$countries;
+    }
 }

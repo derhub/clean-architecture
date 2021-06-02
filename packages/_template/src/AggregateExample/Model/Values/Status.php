@@ -13,24 +13,43 @@ class Status implements ValueObjectStr, ValueObjectInt
 {
     public const DRAFT = 0;
     public const PUBLISH = 1;
-    public const UN_PUBLISH = 2;
 
     public const STATUSES = [
         self::DRAFT => 'draft',
         self::PUBLISH => 'publish',
         self::UN_PUBLISH => 'un-publish',
     ];
-
-    private int $value;
+    public const UN_PUBLISH = 2;
     /**
      * @var string[]
      */
     private static array $stringStatuses;
 
-    public function __construct()
+    private int $value;
+
+    public static function draft(): self
     {
-        $this->value = self::DRAFT;
-        self::$stringStatuses = array_flip(self::STATUSES);
+        return self::init(self::DRAFT);
+    }
+
+    /**
+     * @throws \Assert\AssertionFailedException
+     */
+    public static function fromInt(int $value): self
+    {
+        Assert::inArray($value, self::STATUSES);
+
+        return self::init($value);
+    }
+
+    /**
+     * @throws \Assert\AssertionFailedException
+     */
+    public static function fromString(string $value): self
+    {
+        Assert::keyIsset(self::$stringStatuses, $value);
+
+        return self::init(self::$stringStatuses[$value]);
     }
 
     private static function init(int $value): self
@@ -39,6 +58,22 @@ class Status implements ValueObjectStr, ValueObjectInt
         $self->value = $value;
 
         return $self;
+    }
+
+    public static function publish(): self
+    {
+        return self::init(self::PUBLISH);
+    }
+
+    public static function unPublish(): self
+    {
+        return self::init(self::UN_PUBLISH);
+    }
+
+    public function __construct()
+    {
+        $this->value = self::DRAFT;
+        self::$stringStatuses = array_flip(self::STATUSES);
     }
 
     public function __toString()
@@ -52,48 +87,13 @@ class Status implements ValueObjectStr, ValueObjectInt
             && $other->toString() === $this->toString();
     }
 
-    /**
-     * @throws \Assert\AssertionFailedException
-     */
-    public static function fromInt(int $value): self
-    {
-        Assert::inArray($value, self::STATUSES);
-
-        return self::init($value);
-    }
-
     public function toInt(): int
     {
         return $this->value;
     }
 
-    /**
-     * @throws \Assert\AssertionFailedException
-     */
-    public static function fromString(string $value): self
-    {
-        Assert::keyIsset(self::$stringStatuses, $value);
-
-        return self::init(self::$stringStatuses[$value]);
-    }
-
     public function toString(): string
     {
         return self::STATUSES[$this->value];
-    }
-
-    public static function publish(): self
-    {
-        return self::init(self::PUBLISH);
-    }
-
-    public static function draft(): self
-    {
-        return self::init(self::DRAFT);
-    }
-
-    public static function unPublish(): self
-    {
-        return self::init(self::UN_PUBLISH);
     }
 }

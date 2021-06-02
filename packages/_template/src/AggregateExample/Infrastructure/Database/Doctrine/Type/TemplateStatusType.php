@@ -12,9 +12,9 @@ class TemplateStatusType implements IntegerType
 
     public const NAME = 'template_status';
 
-    public function defineName(): string
+    public function convertFromRaw(mixed $value): Status
     {
-        return self::NAME;
+        return Status::fromString($value);
     }
 
     public function convertToRaw(mixed $value): int
@@ -22,9 +22,9 @@ class TemplateStatusType implements IntegerType
         return $value->toInt();
     }
 
-    public function convertFromRaw(mixed $value): Status
+    public function defineClass(): string
     {
-        return Status::fromString($value);
+        return Status::class;
     }
 
     public function defineEmptyValueForPHP(mixed $value): Status
@@ -32,8 +32,8 @@ class TemplateStatusType implements IntegerType
         return new Status();
     }
 
-    public function defineClass(): string
+    public function defineName(): string
     {
-        return Status::class;
+        return self::NAME;
     }
 }

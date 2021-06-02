@@ -17,13 +17,13 @@ class TemplateStatusChanged implements \Derhub\Shared\Model\DomainEvent
         return $this->aggregateRootId;
     }
 
-    public function version(): int
-    {
-        return $this->version;
-    }
-
     public function status(): string
     {
         return $this->status;
+    }
+
+    public function version(): int
+    {
+        return $this->version;
     }
 }

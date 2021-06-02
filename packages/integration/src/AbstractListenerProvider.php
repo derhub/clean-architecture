@@ -8,6 +8,10 @@ use Derhub\Shared\Message\ListenerProviderInterface;
 abstract class AbstractListenerProvider implements ListenerProviderInterface
 {
     /**
+     * @var array<string, class-string>
+     */
+    protected array $classLookup = [];
+    /**
      * @var array<string, mixed>
      */
     protected array $handlers = [];
@@ -15,10 +19,6 @@ abstract class AbstractListenerProvider implements ListenerProviderInterface
      * @var array<class-string, string>
      */
     protected array $nameLookup = [];
-    /**
-     * @var array<string, class-string>
-     */
-    protected array $classLookup = [];
 
     public function __construct(
         protected ContainerInterface $container,
@@ -55,6 +55,17 @@ abstract class AbstractListenerProvider implements ListenerProviderInterface
         }
     }
 
+    public function getClassName(string $name): ?string
+    {
+        return $this->nameLookup[$name] ?? null;
+    }
+
+
+    public function getListeners(): array
+    {
+        return $this->handlers;
+    }
+
     public function getListenersForEvent(string $message): mixed
     {
         $className = $this->nameLookup[$message] ?? $message;
@@ -64,15 +75,9 @@ abstract class AbstractListenerProvider implements ListenerProviderInterface
         return $this->container->resolve($handlerClass);
     }
 
-
-    public function getListeners(): array
+    public function getName(string $className): ?string
     {
-        return $this->handlers;
-    }
-
-    public function hasName(string $name): bool
-    {
-        return isset($this->nameLookup[$name]);
+        return $this->classLookup[$className] ?? null;
     }
 
     public function hasHandler(string $classStr): bool
@@ -80,13 +85,8 @@ abstract class AbstractListenerProvider implements ListenerProviderInterface
         return isset($this->handlers[$classStr]);
     }
 
-    public function getClassName(string $name): ?string
+    public function hasName(string $name): bool
     {
-        return $this->nameLookup[$name] ?? null;
-    }
-
-    public function getName(string $className): ?string
-    {
-        return $this->classLookup[$className] ?? null;
+        return isset($this->nameLookup[$name]);
     }
 }

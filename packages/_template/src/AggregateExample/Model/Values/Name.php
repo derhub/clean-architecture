@@ -13,6 +13,19 @@ class Name implements ValueObjectStr
 
     private ?string $value;
 
+    /**
+     * @throws \Assert\AssertionFailedException
+     */
+    public static function fromString(string $value): self
+    {
+        Assert::betweenLength($value, self::MIN_LENGTH, self::MAX_LENGTH);
+
+        $self = new self();
+        $self->value = $value;
+
+        return $self;
+    }
+
     public function __construct()
     {
         $this->value = null;
@@ -27,32 +40,19 @@ class Name implements ValueObjectStr
         return 'template name: '.$this->toString();
     }
 
+    private function isEmpty(): bool
+    {
+        return empty($this->value);
+    }
+
     public function sameAs(ValueObject $other): bool
     {
         return $other instanceof self
             && $other->toString() === $this->toString();
     }
 
-    /**
-     * @throws \Assert\AssertionFailedException
-     */
-    public static function fromString(string $value): self
-    {
-        Assert::betweenLength($value, self::MIN_LENGTH, self::MAX_LENGTH);
-
-        $self = new self();
-        $self->value = $value;
-
-        return $self;
-    }
-
     public function toString(): ?string
     {
         return $this->value;
-    }
-
-    private function isEmpty(): bool
-    {
-        return empty($this->value);
     }
 }

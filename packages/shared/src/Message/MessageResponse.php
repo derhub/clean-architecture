@@ -6,9 +6,9 @@ interface MessageResponse
 {
     public function errors(): array;
 
-    public function warning(): array;
+    public function isFailed(): bool;
 
     public function isSuccess(): bool;
 
-    public function isFailed(): bool;
+    public function warning(): array;
 }

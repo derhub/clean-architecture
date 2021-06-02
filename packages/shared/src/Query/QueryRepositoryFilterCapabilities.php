@@ -6,12 +6,14 @@ use function array_merge;
 
 trait QueryRepositoryFilterCapabilities
 {
-    protected array $filters = [];
     protected ?QueryFilterFactory $filterFactory = null;
+    protected array $filters = [];
 
-    protected function setFilterFactory(QueryFilterFactory $filterFactory): void
+    public function addFilter(QueryFilter $filter): static
     {
-        $this->filterFactory = $filterFactory;
+        $this->filters[] = $filter;
+
+        return $this;
     }
 
     /**
@@ -20,13 +22,6 @@ trait QueryRepositoryFilterCapabilities
     public function addFilters(array $filters): static
     {
         $this->filters = array_merge($this->filters, $filters);
-
-        return $this;
-    }
-
-    public function addFilter(QueryFilter $filter): static
-    {
-        $this->filters[] = $filter;
 
         return $this;
     }
@@ -43,5 +38,10 @@ trait QueryRepositoryFilterCapabilities
         }
 
         return $lastFilterFactoryResult;
+    }
+
+    protected function setFilterFactory(QueryFilterFactory $filterFactory): void
+    {
+        $this->filterFactory = $filterFactory;
     }
 }

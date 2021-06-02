@@ -12,14 +12,14 @@ class MessageEventFixture implements Message
     {
     }
 
-    public function test(): string
-    {
-        return $this->test;
-    }
-
     public function aggregateRootId(): ?string
     {
         return null;
+    }
+
+    public function test(): string
+    {
+        return $this->test;
     }
 
     public function version(): int

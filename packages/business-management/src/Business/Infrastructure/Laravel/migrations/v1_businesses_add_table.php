@@ -8,6 +8,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class() extends Migration {
+    public function down(): void
+    {
+        Schema::dropIfExists('business-management');
+    }
     public function up(): void
     {
         Schema::create(
@@ -28,10 +32,5 @@ return new class() extends Migration {
                 $table->timestamps();
             }
         );
-    }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('business-management');
     }
 };

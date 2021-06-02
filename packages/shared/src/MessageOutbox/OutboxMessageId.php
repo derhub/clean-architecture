@@ -10,6 +10,19 @@ class OutboxMessageId implements ValueObjectStr
 {
     private ?string $value;
 
+    public static function fromString(string $value): self
+    {
+        $self = new self();
+        $self->value = $value;
+
+        return $self;
+    }
+
+    public static function generate(): self
+    {
+        return self::fromString(Uuid::generate()->toString());
+    }
+
     public function __construct()
     {
         $this->value = null;
@@ -27,21 +40,8 @@ class OutboxMessageId implements ValueObjectStr
             && $this->toString() === $other->toString();
     }
 
-    public static function fromString(string $value): self
-    {
-        $self = new self();
-        $self->value = $value;
-
-        return $self;
-    }
-
     public function toString(): ?string
     {
         return $this->value;
-    }
-
-    public static function generate(): self
-    {
-        return self::fromString(Uuid::generate()->toString());
     }
 }

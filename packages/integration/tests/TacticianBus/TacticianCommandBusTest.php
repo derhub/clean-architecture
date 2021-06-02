@@ -23,29 +23,6 @@ class TacticianCommandBusTest extends TestCase
     /**
      * @test
      */
-    public function it_dispatch_command_message(): void
-    {
-        ['bus' => $bus, 'listener' => $locator] = $this->createCommandBus();
-        $msg = new CommandMessageFixture(
-            SimpleValueObjFixture::fromString('tst'),
-            'test'
-        );
-
-
-        $locator->addHandler(
-            'CommandFixture',
-            CommandMessageFixture::class,
-            CommandMessageFixtureHandler::class
-        );
-
-        $result = $bus->dispatch($msg);
-
-        self::assertInstanceOf(CommandMessageFixtureResponse::class, $result);
-    }
-
-    /**
-     * @test
-     */
     public function it_can_dispatch_multiple_message(): void
     {
         ['bus' => $bus, 'listener' => $locator] = $this->createCommandBus();
@@ -71,5 +48,28 @@ class TacticianCommandBusTest extends TestCase
                 $result
             );
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_dispatch_command_message(): void
+    {
+        ['bus' => $bus, 'listener' => $locator] = $this->createCommandBus();
+        $msg = new CommandMessageFixture(
+            SimpleValueObjFixture::fromString('tst'),
+            'test'
+        );
+
+
+        $locator->addHandler(
+            'CommandFixture',
+            CommandMessageFixture::class,
+            CommandMessageFixtureHandler::class
+        );
+
+        $result = $bus->dispatch($msg);
+
+        self::assertInstanceOf(CommandMessageFixtureResponse::class, $result);
     }
 }

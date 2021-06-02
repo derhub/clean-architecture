@@ -11,19 +11,9 @@ class DateTimeLiteralType extends DateTimeImmutableType
 {
     public const NAME = 'datetime_literal';
 
-    public function getName(): string
-    {
-        return self::NAME;
-    }
-
     public function convertEmptyToNull(): bool
     {
         return true;
-    }
-
-    public function getClass(): string
-    {
-        return DateTimeLiteral::class;
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
@@ -61,5 +51,15 @@ class DateTimeLiteralType extends DateTimeImmutableType
             $platform->getDateTimeFormatString(),
             $value
         );
+    }
+
+    public function getClass(): string
+    {
+        return DateTimeLiteral::class;
+    }
+
+    public function getName(): string
+    {
+        return self::NAME;
     }
 }
