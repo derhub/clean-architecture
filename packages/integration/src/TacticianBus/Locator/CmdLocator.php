@@ -4,7 +4,6 @@ namespace Derhub\Integration\TacticianBus\Locator;
 
 use Derhub\Shared\Message\Command\CommandListenerProvider;
 use Derhub\Shared\Utils\Assert;
-use League\Tactician\Exception\MissingHandlerException;
 
 class CmdLocator extends ContainerLocator implements CommandListenerProvider
 {

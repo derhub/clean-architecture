@@ -7,7 +7,6 @@ use Derhub\Shared\MessageOutbox\OutboxMessageProcessor;
 
 class DoctrineOutboxMessageProcessor implements OutboxMessageProcessor
 {
-
     public function isProcess(OutboxMessage $event): bool
     {
         // TODO: Implement isProcess() method.

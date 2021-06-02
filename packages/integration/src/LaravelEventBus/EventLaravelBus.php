@@ -2,11 +2,9 @@
 
 namespace Derhub\Integration\LaravelEventBus;
 
-use Derhub\Shared\Message\Event\Event;
 use Derhub\Shared\Message\Event\EventBus;
 use Derhub\Shared\Message\Event\EventListenerProvider;
 use Derhub\Shared\MessageOutbox\OutboxMessage;
-use Illuminate\Database\Eloquent\Model;
 
 final class EventLaravelBus implements EventBus
 {

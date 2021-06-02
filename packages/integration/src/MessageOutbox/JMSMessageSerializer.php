@@ -36,7 +36,8 @@ class JMSMessageSerializer implements MessageSerializer
     public function serialize(OutboxMessage $message): array
     {
         $messageArr = $this->jmsSerializer
-            ->toArray($message->message());
+            ->toArray($message->message())
+        ;
 
         return [
             'id' => $message->id(),
@@ -62,7 +63,8 @@ class JMSMessageSerializer implements MessageSerializer
         };
 
         $messageObj = $this->jmsSerializer
-            ->fromArray($message['message'], $messageCLass);
+            ->fromArray($message['message'], $messageCLass)
+        ;
         return new OutboxMessage(
             id: $message['id'],
             messageType: $msgType,

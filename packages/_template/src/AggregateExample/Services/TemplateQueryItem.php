@@ -57,5 +57,4 @@ class TemplateQueryItem implements QueryItem
     {
         return $this->status;
     }
-
 }

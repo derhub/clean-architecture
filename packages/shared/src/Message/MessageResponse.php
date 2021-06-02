@@ -11,5 +11,4 @@ interface MessageResponse
     public function isSuccess(): bool;
 
     public function isFailed(): bool;
-
 }

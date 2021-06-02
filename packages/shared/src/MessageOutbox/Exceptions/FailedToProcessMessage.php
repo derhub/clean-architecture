@@ -6,5 +6,4 @@ use Derhub\Shared\Exceptions\InfrastructureException;
 
 interface FailedToProcessMessage extends InfrastructureException
 {
-
 }

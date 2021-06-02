@@ -51,7 +51,7 @@ class DoctrinePersistenceRepository implements DatabasePersistenceRepository
         if ($this->aggregateClassName === null) {
             throw MissingAggregateClassNameException::notProvided();
         }
-        
+
         return $this->doctrineRepo;
     }
 

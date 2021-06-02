@@ -2,7 +2,6 @@
 
 namespace Derhub\Shared\Database\Exceptions;
 
-use Derhub\Shared\Model\AggregateRootId;
 use Derhub\Shared\Model\Exceptions\AggregateNotFoundException;
 
 class AggregateNotFound extends \Exception implements AggregateNotFoundException

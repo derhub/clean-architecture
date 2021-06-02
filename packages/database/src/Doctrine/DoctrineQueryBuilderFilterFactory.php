@@ -94,7 +94,8 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
                 "{$this->createField($filter)} LIKE :$lookupField"
             )
             ->setParameter(
-                $lookupField, "%{$filter->value()}%"
+                $lookupField,
+                "%{$filter->value()}%"
             )
             ;
     }
@@ -136,13 +137,15 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
                 "{$this->createField($filter)} >$symbol :min$lookupField"
             )
             ->setParameter(
-                "min$lookupField", $filter->minValue()
+                "min$lookupField",
+                $filter->minValue()
             )
             ->where(
                 "{$this->createField($filter)} <$symbol :max$lookupField"
             )
             ->setParameter(
-                "max$lookupField", $filter->maxValue()
+                "max$lookupField",
+                $filter->maxValue()
             )
             ;
     }
@@ -152,7 +155,8 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
         SortFilter $filter
     ): QueryBuilder {
         return $queryBuilder
-            ->addOrderBy($this->createField($filter), $filter->value());
+            ->addOrderBy($this->createField($filter), $filter->value())
+        ;
     }
 
     public function createField(QueryFilter $filter): string
@@ -165,5 +169,4 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
     ): string {
         return $filter->field().$this->loopKey;
     }
-
 }

@@ -63,7 +63,9 @@ class GetTemplatesHandler
         }
 
         return new OperationFilter(
-            SharedValues::COL_NAME, 'equal', $searchName
+            SharedValues::COL_NAME,
+            'equal',
+            $searchName
         );
     }
 }

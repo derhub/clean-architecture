@@ -15,7 +15,6 @@ use Derhub\Template\AggregateExample\Model\Values\TemplateId;
 class InMemoryRepository extends InMemoryPersistenceRepository implements
     TemplateRepository
 {
-
     public function getNextId(): TemplateId
     {
         return $this->createId();

@@ -6,7 +6,6 @@ use Derhub\Shared\Exceptions\LayeredException;
 
 class MissingHandlerException extends \Exception implements LayeredException
 {
-
     public static function forMessage(string $message)
     {
         return new self(

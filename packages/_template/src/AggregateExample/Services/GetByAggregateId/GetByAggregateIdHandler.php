@@ -2,7 +2,6 @@
 
 namespace Derhub\Template\AggregateExample\Services\GetByAggregateId;
 
-use Derhub\Shared\Exceptions\LayeredException;
 use Derhub\Shared\Query\Filters\InArrayFilter;
 use Derhub\Shared\Query\Filters\OperationFilter;
 use Derhub\Template\AggregateExample\Infrastructure\Database\TemplateQueryRepository;

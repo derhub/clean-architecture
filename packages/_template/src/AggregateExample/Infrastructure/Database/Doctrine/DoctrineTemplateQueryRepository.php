@@ -13,8 +13,7 @@ use Doctrine\ORM\EntityRepository;
 /**
  * @template-extends AbstractDoctrineQueryRepository<Business>
  */
-class DoctrineTemplateQueryRepository extends DoctrineQueryRepository
-    implements TemplateQueryRepository
+class DoctrineTemplateQueryRepository extends DoctrineQueryRepository implements TemplateQueryRepository
 {
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -32,5 +31,4 @@ class DoctrineTemplateQueryRepository extends DoctrineQueryRepository
     {
         return $this->entityManager->getRepository(Template::class);
     }
-
 }

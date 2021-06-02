@@ -8,7 +8,6 @@ use Derhub\Shared\MessageOutbox\MessageOutboxWrapperFactory;
 use Derhub\Shared\MessageOutbox\OutboxMessageConsumer;
 use Derhub\Shared\MessageOutbox\OutboxMessageProcessor;
 use Derhub\Shared\MessageOutbox\OutboxMessageRecorder;
-use Derhub\Shared\MessageOutbox\OutboxMessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Derhub\Integration\LaravelEventBus\EventLaravelBus;
 use Derhub\Integration\LaravelEventBus\EventHandlerProvider;
@@ -51,7 +50,8 @@ class LaravelServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            ObjectMapperInterface::class, SimpleMapper::class
+            ObjectMapperInterface::class,
+            SimpleMapper::class
         );
 
         $this->registerModuleRegistry();
@@ -172,7 +172,8 @@ class LaravelServiceProvider extends ServiceProvider
         $this->app->bind(OutboxMessageProcessor::class, DoctrineOutboxMessageProcessor::class);
 
         $this->app->bind(
-            MessageOutboxWrapperFactory::class, EventOutboxMessageFactory::class
+            MessageOutboxWrapperFactory::class,
+            EventOutboxMessageFactory::class
         );
     }
 }

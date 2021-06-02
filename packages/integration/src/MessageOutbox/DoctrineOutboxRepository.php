@@ -14,8 +14,7 @@ use Derhub\Shared\MessageOutbox\MessageSerializer;
 use Derhub\Shared\MessageOutbox\OutboxMessage;
 use Generator;
 
-class DoctrineOutboxRepository
-    implements OutboxMessageConsumer, OutboxMessageRecorder
+class DoctrineOutboxRepository implements OutboxMessageConsumer, OutboxMessageRecorder
 {
     private const TABLE_NAME = 'outbox_messages';
 
@@ -115,7 +114,8 @@ class DoctrineOutboxRepository
                 $sqlStatement,
                 [
                     'ids' => $messageIds,
-                ], [
+                ],
+                [
                     'ids' => Connection::PARAM_INT_ARRAY,
                 ]
             )

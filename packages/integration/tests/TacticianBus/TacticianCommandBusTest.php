@@ -2,19 +2,14 @@
 
 namespace Tests\Integration\TacticianBus;
 
-use Derhub\Integration\TacticianBus\Locator\CmdLocator;
-use Derhub\Integration\TacticianBus\MessageBusFactory;
-use Derhub\Shared\Message\Command\AbstractCommandResponse;
 use Tests\Integration\Fixtures\Command\CommandMessageFixture;
 use Tests\Integration\Fixtures\Command\CommandMessageFixtureHandler;
 use Tests\Integration\Fixtures\Command\CommandMessageFixtureResponse;
 use Tests\Integration\Fixtures\SimpleValueObjFixture;
 use Tests\Integration\TestCase;
 
-
 class TacticianCommandBusTest extends TestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();

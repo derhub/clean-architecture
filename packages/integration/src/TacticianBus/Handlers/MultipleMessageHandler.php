@@ -19,5 +19,4 @@ class MultipleMessageHandler extends AbstractMessageHandler
 
         return $results;
     }
-
 }

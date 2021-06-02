@@ -2,7 +2,6 @@
 
 namespace Derhub\Shared\Database\Doctrine\Types;
 
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\GuidType;
 use Derhub\Shared\Values\UserId;
 

@@ -26,5 +26,4 @@ class TemplateStatusChanged implements \Derhub\Shared\Model\DomainEvent
     {
         return $this->status;
     }
-
 }

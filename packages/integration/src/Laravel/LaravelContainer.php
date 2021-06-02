@@ -10,7 +10,7 @@ class LaravelContainer implements ContainerInterface
      * @var callable():\Illuminate\Contracts\Container\Container
      */
     private $laravel;
-    
+
     public function __construct(callable $laravel)
     {
         $this->laravel = $laravel;

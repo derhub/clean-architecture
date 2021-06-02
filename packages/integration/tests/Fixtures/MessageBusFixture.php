@@ -6,5 +6,4 @@ use Derhub\Integration\TacticianBus\BaseMessageBus;
 
 class MessageBusFixture extends BaseMessageBus
 {
-
 }

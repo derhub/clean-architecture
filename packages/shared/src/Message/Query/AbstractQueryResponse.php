@@ -7,8 +7,7 @@ use Derhub\Shared\Message\AbstractMessageResponse;
 /**
  * @template T
  */
-abstract class AbstractQueryResponse extends AbstractMessageResponse
-    implements QueryResponse
+abstract class AbstractQueryResponse extends AbstractMessageResponse implements QueryResponse
 {
     /**
      * @var iterable<T>

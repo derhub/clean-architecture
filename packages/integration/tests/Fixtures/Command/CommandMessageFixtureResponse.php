@@ -7,7 +7,6 @@ use Tests\Integration\Fixtures\TestModule;
 
 class CommandMessageFixtureResponse extends AbstractCommandResponse
 {
-
     public function aggregate(): string
     {
         return TestModule::ID;

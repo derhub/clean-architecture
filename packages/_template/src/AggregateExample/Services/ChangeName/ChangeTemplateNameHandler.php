@@ -7,7 +7,6 @@ use Derhub\Template\AggregateExample\Model\TemplateRepository;
 use Derhub\Template\AggregateExample\Model\Values\Name;
 use Derhub\Template\AggregateExample\Model\Values\TemplateId;
 use Derhub\Template\AggregateExample\Services\CommandResponse;
-use MongoDB\Driver\Command;
 
 class ChangeTemplateNameHandler
 {

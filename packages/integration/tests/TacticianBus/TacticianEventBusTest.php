@@ -3,7 +3,6 @@
 namespace Tests\Integration\TacticianBus;
 
 use Derhub\Integration\TestUtils\ModuleTestCase;
-use Derhub\Shared\MessageOutbox\OutboxMessage;
 use Tests\Integration\Fixtures\Event\EventMessageFixture;
 use Tests\Integration\Fixtures\Event\EventMessageFixtureHandlerOne;
 use Tests\Integration\Fixtures\Event\EventMessageFixtureHandlerTwo;

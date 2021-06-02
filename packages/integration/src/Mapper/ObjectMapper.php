@@ -5,7 +5,6 @@ namespace Derhub\Integration\Mapper;
 use Derhub\Shared\ObjectMapper\ObjectMapperInterface;
 use ReflectionClass;
 use ReflectionParameter;
-use ReflectionProperty;
 use ReflectionType;
 use ReflectionUnionType;
 

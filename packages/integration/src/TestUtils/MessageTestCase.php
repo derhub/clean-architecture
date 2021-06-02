@@ -6,7 +6,6 @@ use Derhub\Integration\Mapper\ObjectMapper;
 use Derhub\Shared\Message\Command\Command;
 use Derhub\Shared\Message\Event\Event;
 use Derhub\Shared\Message\MessageResponse;
-use Derhub\Shared\Message\Query\Query;
 use Derhub\Shared\Model\AggregateRepository;
 use Derhub\Shared\Model\AggregateRoot;
 use Derhub\Shared\Model\DomainEvent;
@@ -178,7 +177,8 @@ abstract class MessageTestCase extends ModuleTestCase
                 if ($exception) {
                     $exceptions[] = $exception::class;
                     self::assertContains(
-                        $exception::class, $this->expectedExceptionErrors,
+                        $exception::class,
+                        $this->expectedExceptionErrors,
                         'unexpected error: '.$error['message']
                     );
                 }

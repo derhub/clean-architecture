@@ -3,7 +3,6 @@
 namespace Derhub\Integration\TacticianBus;
 
 use Derhub\Integration\MultipleMessageWrapper;
-use Derhub\Shared\Message\Event\Event;
 use Derhub\Shared\Message\Event\EventBus;
 
 class TacticianEventBus extends BaseMessageBus implements EventBus
@@ -12,5 +11,4 @@ class TacticianEventBus extends BaseMessageBus implements EventBus
     {
         $this->handle(new MultipleMessageWrapper($messages));
     }
-
 }

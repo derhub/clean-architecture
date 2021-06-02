@@ -2,8 +2,6 @@
 
 namespace Derhub\Shared\Query;
 
-use Derhub\Shared\Query\Filters\PaginationFilter;
-
 use function array_merge;
 
 trait QueryRepositoryFilterCapabilities

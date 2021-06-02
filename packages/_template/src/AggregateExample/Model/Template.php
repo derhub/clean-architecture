@@ -111,7 +111,8 @@ final class Template implements AggregateRoot
         $this->status = Status::publish();
         $this->record(
             new TemplateStatusChanged(
-                $this->aggregateRootId->toString(), $this->status->toString()
+                $this->aggregateRootId->toString(),
+                $this->status->toString()
             ),
         );
         return $this;
@@ -125,7 +126,8 @@ final class Template implements AggregateRoot
         $this->status = Status::unPublish();
         $this->record(
             new TemplateStatusChanged(
-                $this->aggregateRootId->toString(), $this->status->toString()
+                $this->aggregateRootId->toString(),
+                $this->status->toString()
             ),
         );
         return $this;

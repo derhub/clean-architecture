@@ -9,8 +9,7 @@ class PaginationFilter implements QueryFilter
     public function __construct(
         private int $page,
         private int $perPage,
-    )
-    {
+    ) {
     }
 
     public function page(): int

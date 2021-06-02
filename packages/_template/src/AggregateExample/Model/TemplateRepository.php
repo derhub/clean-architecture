@@ -9,5 +9,4 @@ use Derhub\Shared\Model\AggregateRepository;
  */
 interface TemplateRepository extends AggregateRepository
 {
-
 }

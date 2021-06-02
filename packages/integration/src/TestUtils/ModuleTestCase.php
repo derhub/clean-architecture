@@ -143,5 +143,4 @@ class ModuleTestCase extends TestCase
             $this->eventProvider
         );
     }
-
 }

@@ -5,8 +5,7 @@ namespace Derhub\Template\AggregateExample\Shared;
 use Derhub\Shared\Exceptions\ApplicationException;
 use Derhub\Shared\Message\Command\CommandResponse;
 
-class FailedCommandException extends \Exception
-    implements ApplicationException
+class FailedCommandException extends \Exception implements ApplicationException
 {
     private ?CommandResponse $response = null;
 

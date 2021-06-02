@@ -10,8 +10,8 @@ use Derhub\Shared\MessageOutbox\OutboxMessageConsumer;
 use Derhub\Shared\MessageOutbox\OutboxMessageRecorder;
 use Generator;
 
-class InMemoryOutboxRepository
-    implements OutboxMessageConsumer,
+class InMemoryOutboxRepository implements
+    OutboxMessageConsumer,
                OutboxMessageRecorder
 {
     /**

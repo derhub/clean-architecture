@@ -43,5 +43,4 @@ class OperationFilter implements QueryFilter
     {
         return $this->value;
     }
-
 }

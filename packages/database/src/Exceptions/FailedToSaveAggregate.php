@@ -2,11 +2,9 @@
 
 namespace Derhub\Shared\Database\Exceptions;
 
-use Derhub\Shared\Model\AggregateRoot;
 use Derhub\Shared\Model\Exceptions\FailedToSaveAggregateException;
 
-class FailedToSaveAggregate extends \Exception
-    implements FailedToSaveAggregateException
+class FailedToSaveAggregate extends \Exception implements FailedToSaveAggregateException
 {
     public static function fromObjectWithException(
         object $aggregateRoot,

@@ -10,7 +10,6 @@ namespace Derhub\Shared\MessageOutbox;
  */
 class SimpleSerializer implements MessageSerializer
 {
-
     public function serialize(OutboxMessage $message): string
     {
         return serialize($message);

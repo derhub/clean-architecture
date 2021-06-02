@@ -2,14 +2,11 @@
 
 namespace Derhub\Integration\TacticianBus\Locator;
 
-use Derhub\Shared\Container\ContainerInterface;
 use Derhub\Shared\Message\Query\QueryListenerProvider;
 use Derhub\Shared\Utils\Assert;
-use League\Tactician\Exception\MissingHandlerException;
 
 class QueryLocator extends ContainerLocator implements QueryListenerProvider
 {
-
     /**
      * @param string $name
      * @param string $message

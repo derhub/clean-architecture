@@ -10,11 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Derhub\Shared\Query\Filters\OperationFilter;
-use Derhub\Shared\Query\Filters\PaginationFilter;
 use Derhub\Shared\Query\NotSingleResultException;
-use Derhub\Shared\Query\QueryFilter;
 use Derhub\Shared\Query\QueryRepository;
 
 /**
@@ -143,5 +140,4 @@ abstract class DoctrineQueryRepository implements QueryRepository
 
         return $result === '0';
     }
-
 }

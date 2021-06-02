@@ -7,7 +7,6 @@ use Derhub\Template\AggregateExample\Infrastructure\Database\TemplateQueryReposi
 
 class QueryRepositoryStub implements TemplateQueryRepository
 {
-
     private mixed $results;
 
     public function setResults(mixed $data): self

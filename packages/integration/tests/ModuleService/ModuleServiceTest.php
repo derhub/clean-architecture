@@ -2,16 +2,11 @@
 
 namespace Tests\Integration\ModuleService;
 
-use Derhub\Integration\Mapper\ObjectMapper;
-use Derhub\Integration\MessageBus\MessageAssemblerImpl;
 use Derhub\Integration\ModuleService\ModuleAlreadyRegistered;
-use Derhub\Integration\ModuleService\ModuleListImpl;
-use Derhub\Integration\ModuleService\ModuleServiceImpl;
 use Derhub\Integration\TestUtils\ModuleIntegrationTestCaseCase;
 use Derhub\Shared\ModuleInterface;
 use Tests\Integration\Fixtures\MessageWithFactory\CmdMessageWithFactoryTest;
 use Tests\Integration\Fixtures\TestModule;
-use Tests\Integration\TestCase;
 
 class ModuleServiceTest extends ModuleIntegrationTestCaseCase
 {

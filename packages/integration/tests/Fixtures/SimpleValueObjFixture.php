@@ -2,7 +2,6 @@
 
 namespace Tests\Integration\Fixtures;
 
-
 use Derhub\Shared\Values\ValueObject;
 use Derhub\Shared\Values\ValueObjectStr;
 

@@ -47,5 +47,4 @@ class ModuleListImpl implements ModuleList
     {
         return isset($this->modules[$id]);
     }
-
 }

@@ -5,7 +5,6 @@ namespace Tests\Template\Services\GetTemplates;
 use Derhub\Template\AggregateExample\Model\Template;
 use Derhub\Template\AggregateExample\Services\GetTemplates\GetTemplates;
 use Derhub\Template\AggregateExample\Services\GetTemplates\GetTemplatesHandler;
-use Derhub\Template\AggregateExample\Services\GetTemplates\GetTemplatesResponse;
 use Derhub\Template\AggregateExample\Services\QueryResponse;
 use Tests\Template\Services\ServiceTestCase;
 

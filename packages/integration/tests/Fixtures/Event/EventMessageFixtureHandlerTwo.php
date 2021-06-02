@@ -6,6 +6,5 @@ class EventMessageFixtureHandlerTwo
 {
     public function __invoke(EventMessageFixture $msg): void
     {
-
     }
 }

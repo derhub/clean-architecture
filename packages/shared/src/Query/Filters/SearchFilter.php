@@ -9,8 +9,7 @@ class SearchFilter implements QueryFilter
     public function __construct(
         private string $field,
         private mixed $value,
-    )
-    {
+    ) {
     }
 
     public function field(): string

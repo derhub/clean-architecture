@@ -7,5 +7,4 @@ use Tests\Integration\Fixtures\MessageFixture;
 
 class QueryMessageFixture extends MessageFixture implements Query
 {
-
 }

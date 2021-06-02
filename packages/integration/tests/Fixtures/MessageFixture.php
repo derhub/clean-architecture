@@ -2,11 +2,8 @@
 
 namespace Tests\Integration\Fixtures;
 
-use Derhub\Shared\Message\Command\Command;
-
 class MessageFixture
 {
-
     public function aggregateRootId(): ?string
     {
         return null;
@@ -16,7 +13,7 @@ class MessageFixture
     {
         return 1;
     }
-    
+
     public function __construct(
         private SimpleValueObjFixture $param1,
         private string $param2,

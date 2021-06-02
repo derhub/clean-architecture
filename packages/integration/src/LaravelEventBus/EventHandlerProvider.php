@@ -9,8 +9,7 @@ use Derhub\Shared\Message\Event\EventListenerProvider;
 
 use function class_exists;
 
-class EventHandlerProvider extends AbstractListenerProvider
-    implements EventListenerProvider
+class EventHandlerProvider extends AbstractListenerProvider implements EventListenerProvider
 {
     use UseListenerProviderHandlerRegistry;
 

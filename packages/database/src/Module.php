@@ -9,9 +9,8 @@ use Derhub\Shared\Persistence\DatabasePersistenceRepository;
 
 class Module implements ModuleInterface
 {
-    public const ID = 'module_database';
-
     use ModuleCapabilities;
+    public const ID = 'module_database';
 
     public function getId(): string
     {

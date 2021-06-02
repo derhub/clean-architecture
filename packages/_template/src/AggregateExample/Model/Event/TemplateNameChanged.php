@@ -2,7 +2,6 @@
 
 namespace Derhub\Template\AggregateExample\Model\Event;
 
-
 class TemplateNameChanged implements \Derhub\Shared\Model\DomainEvent
 {
     private int $version = 1;

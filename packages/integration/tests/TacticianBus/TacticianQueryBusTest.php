@@ -41,7 +41,8 @@ class TacticianQueryBusTest extends TestCase
 
         self::assertInstanceOf(QueryResponseFixture::class, $result);
         self::assertInstanceOf(
-            QueryMessageFixture::class, $result->getMessage()
+            QueryMessageFixture::class,
+            $result->getMessage()
         );
     }
 
@@ -68,7 +69,8 @@ class TacticianQueryBusTest extends TestCase
         foreach ($results as $result) {
             self::assertInstanceOf(QueryResponseFixture::class, $result);
             self::assertInstanceOf(
-                QueryMessageFixture::class, $result->getMessage()
+                QueryMessageFixture::class,
+                $result->getMessage()
             );
         }
     }

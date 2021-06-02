@@ -2,7 +2,6 @@
 
 namespace Tests\Integration\Fixtures\Mapper;
 
-
 class PlainTestClass
 {
     public function __construct(

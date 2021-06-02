@@ -8,7 +8,6 @@ use function sprintf;
 
 class InvalidName extends \Exception implements DomainException
 {
-
     public static function notUnique(
         \Derhub\Template\AggregateExample\Model\Values\Name $name
     ): self {

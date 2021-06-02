@@ -10,7 +10,6 @@ class DoctrineFactory
 {
     public static function registerDefaultTypes(): void
     {
-
     }
 
     /**

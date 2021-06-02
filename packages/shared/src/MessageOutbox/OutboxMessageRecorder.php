@@ -2,7 +2,6 @@
 
 namespace Derhub\Shared\MessageOutbox;
 
-
 use Derhub\Shared\Message\Event\Event;
 
 interface OutboxMessageRecorder

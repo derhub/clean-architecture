@@ -3,7 +3,6 @@
 namespace Derhub\Shared\Database\Doctrine;
 
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use League\Fractal\Pagination\PaginatorInterface;
 

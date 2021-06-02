@@ -51,5 +51,4 @@ class RangeFilter implements QueryFilter
     {
         return $this->operation;
     }
-
 }

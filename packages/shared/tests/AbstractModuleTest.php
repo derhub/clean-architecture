@@ -18,7 +18,7 @@ class AbstractModuleTest extends TestCase
     {
         parent::setUp();
 
-        $this->module = new class extends AbstractModule {
+        $this->module = new class() extends AbstractModule {
             public function getId(): string
             {
                 return 'test';

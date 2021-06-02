@@ -96,5 +96,4 @@ class DoctrinePersistenceRepositoryTest extends TestCase
 
         $this->repo->persist($model);
     }
-
 }

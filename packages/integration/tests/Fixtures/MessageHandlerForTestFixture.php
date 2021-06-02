@@ -9,7 +9,7 @@ class MessageHandlerForTestFixture
     public function __invoke(mixed $msg): mixed
     {
         $this->message = $msg;
-        
+
         return $this;
     }
 

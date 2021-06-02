@@ -6,5 +6,4 @@ use Derhub\Shared\Exceptions\InfrastructureException;
 
 interface FailedToConsume extends InfrastructureException
 {
-
 }

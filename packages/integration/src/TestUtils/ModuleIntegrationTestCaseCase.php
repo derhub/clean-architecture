@@ -76,7 +76,8 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
         array $service
     ): void {
         if (! in_array(
-            $name, [
+            $name,
+            [
             ModuleInterface::SERVICE_EVENTS,
             ModuleInterface::SERVICE_QUERIES,
             ModuleInterface::SERVICE_COMMANDS,
@@ -122,7 +123,8 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
             $this->moduleList->get($module->getId())
         );
         self::assertEquals(
-            [$module->getId() => $module], $this->moduleList->all()
+            [$module->getId() => $module],
+            $this->moduleList->all()
         );
 
         // test module register services
@@ -150,7 +152,8 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
         foreach ($serviceValues['commands'] as $className => $handler) {
             $messageName =
                 \Derhub\Shared\Capabilities\MessageName::forCommand(
-                    $this->getModule()->getId(), $className
+                    $this->getModule()->getId(),
+                    $className
                 );
             self::assertTrue(
                 $this->commandProvider->hasName(
@@ -166,7 +169,8 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
         // test events
         foreach ($serviceValues['events'] as $className) {
             $messageName = \Derhub\Shared\Capabilities\MessageName::forEvent(
-                $this->getModule()->getId(), $className
+                $this->getModule()->getId(),
+                $className
             );
             self::assertTrue(
                 $this->eventProvider->hasName($messageName),
@@ -189,6 +193,4 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
             );
         }
     }
-
-
 }

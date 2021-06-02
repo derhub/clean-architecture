@@ -6,5 +6,4 @@ use Derhub\Shared\Message\Command\AbstractCommandResponse;
 
 class CommandResponse extends AbstractCommandResponse
 {
-
 }

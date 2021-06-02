@@ -6,5 +6,4 @@ use Tests\Integration\Fixtures\MessageHandlerForTestFixture;
 
 class CmdMessageWithFactoryHandler extends MessageHandlerForTestFixture
 {
-
 }

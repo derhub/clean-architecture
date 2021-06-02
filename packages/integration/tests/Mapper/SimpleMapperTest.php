@@ -3,7 +3,6 @@
 namespace Tests\Integration\Mapper;
 
 use Derhub\Integration\Mapper\SimpleMapper;
-use Derhub\Shared\Utils\Str;
 use Tests\Integration\Fixtures\Mapper\ObjectWithCamelCaseParameter;
 use Tests\Integration\Fixtures\Mapper\PlainTestClass;
 use Tests\Integration\Fixtures\Mapper\TestDefineResolver;
@@ -55,7 +54,6 @@ class SimpleMapperTest extends TestCase
     {
         $mapper = new SimpleMapper();
         $extract = $mapper->extract(
-
             new PlainTestClass(1, '2', 3),
         );
 
