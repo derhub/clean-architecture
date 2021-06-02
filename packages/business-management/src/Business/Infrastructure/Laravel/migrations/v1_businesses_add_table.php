@@ -17,8 +17,7 @@ return new class() extends Migration {
         Schema::create(
             SharedValues::TABLE_NAME,
             function (Blueprint $table) {
-                $table->increments('id')->primary();
-                $table->uuid('uuid');
+                $table->uuid('id')->primary();
                 $table->uuid('owner_id')->nullable();
                 $table->smallInteger('status')
                     ->default(Status::enable()->toInt())
