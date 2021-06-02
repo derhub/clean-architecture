@@ -8,14 +8,13 @@
     }
   ],
   "require": {
-    "ext-pdo": "*",
-    "derhub/shared": "dev-master",
-    "derhub/shared-database": "dev-master"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^9.5",
-    "derhub/integration": "dev-master"
+    "derhub/integration": "dev-master",
+    "derhub/shared": "dev-master",
+    "derhub/shared-database": "dev-master"
   },
   "autoload": {
     "psr-4": {

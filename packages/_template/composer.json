@@ -9,9 +9,7 @@
     }
   ],
   "require": {
-    "php": "^8.0",
-    "derhub/shared": "dev-master",
-    "derhub/shared-database": "dev-master"
+    "php": "^8.0"
   },
   "autoload": {
     "psr-4": {
@@ -36,6 +34,8 @@
   "prefer-stable": true,
   "require-dev": {
     "derhub/integration": "dev-master",
+    "derhub/shared": "dev-master",
+    "derhub/shared-database": "dev-master",
     "phpunit/phpunit": "^9.5"
   }
 }
