@@ -27,6 +27,7 @@ abstract class AbstractMessageResponse implements MessageResponse
             'type' => $type,
             'message' => $message,
         ];
+
         return $this;
     }
 
@@ -37,6 +38,7 @@ abstract class AbstractMessageResponse implements MessageResponse
             'message' => $e->getMessage(),
             'exception' => $e,
         ];
+
         return $this;
     }
 
@@ -48,6 +50,7 @@ abstract class AbstractMessageResponse implements MessageResponse
             'type' => $type,
             'message' => $message,
         ];
+
         return $this;
     }
 

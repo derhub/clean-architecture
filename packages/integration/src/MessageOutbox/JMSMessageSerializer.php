@@ -65,6 +65,7 @@ class JMSMessageSerializer implements MessageSerializer
         $messageObj = $this->jmsSerializer
             ->fromArray($message['message'], $messageCLass)
         ;
+
         return new OutboxMessage(
             id: $message['id'],
             messageType: $msgType,

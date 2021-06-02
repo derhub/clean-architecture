@@ -27,6 +27,7 @@ class Name implements ValueObjectStr
 
             $self = new self();
             $self->value = $value;
+
             return $self;
         } catch (DomainException $e) {
             throw InvalidNameException::fromException($e);

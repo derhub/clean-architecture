@@ -17,6 +17,7 @@ final class DisableBusinessHandler
     public function __invoke(DisableBusiness $msg): DisableBusinessResponse
     {
         $response = new DisableBusinessResponse($msg->aggregateRootId());
+
         try {
             $id = BusinessId::fromString($msg->aggregateRootId());
 

@@ -15,6 +15,7 @@ class TestDefineResolver
     {
         $s = new self();
         $s->value = $test;
+
         return $s;
     }
 
@@ -22,6 +23,7 @@ class TestDefineResolver
     {
         $s = new self();
         $s->value = $test;
+
         return $s;
     }
 
@@ -29,6 +31,7 @@ class TestDefineResolver
     {
         $s = new self();
         $s->value = $test;
+
         return $s;
     }
 
@@ -36,6 +39,7 @@ class TestDefineResolver
     {
         $s = new self();
         $s->value = $test;
+
         return $s;
     }
 
@@ -43,6 +47,7 @@ class TestDefineResolver
     {
         $s = new self();
         $s->value = $obj;
+
         return $s;
     }
 }

@@ -18,6 +18,7 @@ class Email implements ValueObjectStr
         Assert::email($value);
         $self = new static();
         $self->value = $value;
+
         return $self;
     }
 

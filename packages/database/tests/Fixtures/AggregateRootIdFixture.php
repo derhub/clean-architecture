@@ -14,6 +14,7 @@ class AggregateRootIdFixture implements AggregateRootId
         if ($this->isEmpty()) {
             return 'empty aggregate test id';
         }
+
         return 'aggregate test id'.$this->toString();
     }
 }

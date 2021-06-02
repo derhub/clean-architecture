@@ -31,6 +31,7 @@ class TransactionMiddleware implements Middleware
             $connection->commit();
         } catch (\Exception | \Throwable $exception) {
             $connection->rollBack();
+
             throw $exception;
         }
 

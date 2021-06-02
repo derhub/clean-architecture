@@ -98,6 +98,7 @@ class LaravelServiceProvider extends ServiceProvider
                     ->get(EntityManagerInterface::class)
                     ->getConnection()
                 ;
+
                 return MessageBusFactory::createCommandBus(
                     $app->get(CommandListenerProvider::class),
                     [
@@ -118,6 +119,7 @@ class LaravelServiceProvider extends ServiceProvider
                     ->get(EntityManagerInterface::class)
                     ->getConnection()
                 ;
+
                 return MessageBusFactory::createQueryBus(
                     $app->get(QueryListenerProvider::class),
                     [

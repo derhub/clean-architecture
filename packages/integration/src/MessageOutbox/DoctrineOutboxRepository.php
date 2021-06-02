@@ -55,6 +55,7 @@ class DoctrineOutboxRepository implements OutboxMessageConsumer, OutboxMessageRe
     public function record(OutboxMessage ...$messages): void
     {
         $queryBuilder = $this->createQueryBuilder();
+
         try {
             foreach ($messages as $message) {
                 $queryBuilder

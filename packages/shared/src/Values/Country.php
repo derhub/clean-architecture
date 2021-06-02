@@ -18,6 +18,7 @@ abstract class Country implements ValueObjectStr
         if ($this->isEmpty()) {
             return 'no country';
         }
+
         return 'country name: '.$this->name();
     }
 
@@ -42,6 +43,7 @@ abstract class Country implements ValueObjectStr
         $data = CountryLookup::fromAlpha2($value);
         $self = new static();
         $self->value = $data;
+
         return $self;
     }
 

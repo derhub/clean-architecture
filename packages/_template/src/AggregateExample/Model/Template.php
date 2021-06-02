@@ -56,6 +56,7 @@ final class Template implements AggregateRoot
         $this->record(
             new TemplateRestored($this->aggregateRootId->toString())
         );
+
         return $this;
     }
 
@@ -76,6 +77,7 @@ final class Template implements AggregateRoot
                 $this->name->toString(),
             )
         );
+
         return $this;
     }
 
@@ -115,6 +117,7 @@ final class Template implements AggregateRoot
                 $this->status->toString()
             ),
         );
+
         return $this;
     }
 
@@ -130,6 +133,7 @@ final class Template implements AggregateRoot
                 $this->status->toString()
             ),
         );
+
         return $this;
     }
 }

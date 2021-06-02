@@ -30,6 +30,7 @@ class Status implements ValueObjectInt, ValueObjectStr
 
         $self = new self();
         $self->value = $value;
+
         return $self;
     }
 
@@ -55,6 +56,7 @@ class Status implements ValueObjectInt, ValueObjectStr
 
         /** @var int $intVal */
         $intVal = array_search($value, self::$statusNames, true);
+
         return self::init($intVal);
     }
 

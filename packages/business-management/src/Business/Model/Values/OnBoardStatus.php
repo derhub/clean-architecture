@@ -34,6 +34,7 @@ class OnBoardStatus implements
 
         $self = new self();
         $self->value = $value;
+
         return $self;
     }
 
@@ -49,6 +50,7 @@ class OnBoardStatus implements
 
         /** @var int $intVal */
         $intVal = array_search($value, self::STATUES, true);
+
         return self::init($intVal);
     }
 

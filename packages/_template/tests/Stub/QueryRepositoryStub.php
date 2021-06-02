@@ -12,6 +12,7 @@ class QueryRepositoryStub implements TemplateQueryRepository
     public function setResults(mixed $data): self
     {
         $this->results = $data;
+
         return $this;
     }
 

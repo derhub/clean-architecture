@@ -37,6 +37,7 @@ class Status implements ValueObjectStr, ValueObjectInt
     {
         $self = new self();
         $self->value = $value;
+
         return $self;
     }
 
@@ -57,6 +58,7 @@ class Status implements ValueObjectStr, ValueObjectInt
     public static function fromInt(int $value): self
     {
         Assert::inArray($value, self::STATUSES);
+
         return self::init($value);
     }
 

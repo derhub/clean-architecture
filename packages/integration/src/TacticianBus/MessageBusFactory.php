@@ -54,6 +54,7 @@ class MessageBusFactory
         ListenerProviderInterface $locator
     ): MultipleMessageHandler {
         $inflector = new InvokeInflector();
+
         return new MultipleMessageHandler(
             $locator,
             $inflector,

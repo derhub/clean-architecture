@@ -18,6 +18,7 @@ class GetByAggregateIdHandler
     public function __invoke(GetByAggregateId $msg): GetByAggregateIdResponse
     {
         $response = new GetByAggregateIdResponse();
+
         try {
             $aggregateIds = $msg->aggregateRootId();
             BusinessId::validate($aggregateIds);

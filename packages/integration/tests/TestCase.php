@@ -23,6 +23,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function createQueryBus(): array
     {
         $locator = new QueryLocator($this->container);
+
         return [
             'bus' => MessageBusFactory::createQueryBus($locator),
             'listener' => $locator,
@@ -32,6 +33,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function createCommandBus(): array
     {
         $locator = new CmdLocator($this->container);
+
         return [
             'bus' => MessageBusFactory::createCommandBus($locator),
             'listener' => $locator,
@@ -41,6 +43,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function createEventBus(): array
     {
         $locator = new CmdLocator($this->container);
+
         return [
             'bus' => MessageBusFactory::createCommandBus($locator),
             'listener' => $locator,

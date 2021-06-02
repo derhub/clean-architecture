@@ -26,6 +26,7 @@ class ExtractorCacheHelper
             ? ($this->propertyNameConverter)($name, ...$callbackParams)
             : null;
         $this->cache[$name] = $result;
+
         return $result;
     }
 }

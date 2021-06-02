@@ -12,6 +12,7 @@ class MessageName
         string $class
     ): string {
         $className = ClassName::for($class);
+
         return "{$moduleId}.{$serviceType}.{$className}";
     }
 

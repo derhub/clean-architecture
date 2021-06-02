@@ -50,6 +50,7 @@ class SimpleMapper implements ObjectMapperInterface
     public function extract(object $object): array
     {
         $extractor = new ObjectPropertyExtractor($this->converter);
+
         return $extractor->extract($object);
     }
 }

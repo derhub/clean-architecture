@@ -71,6 +71,7 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
     ): QueryBuilder {
         $symbol = $filter->operation();
         $lookupField = $this->createLookupField($filter);
+
         return $queryBuilder
             ->where(
                 "{$this->createField($filter)} $symbol (:$lookupField)"

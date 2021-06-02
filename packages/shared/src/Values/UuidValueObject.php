@@ -18,6 +18,7 @@ trait UuidValueObject
     {
         $self = new static();
         $self->value = (string)$value;
+
         return $self;
     }
 
@@ -30,6 +31,7 @@ trait UuidValueObject
     public static function fromString(string $value): self
     {
         Assert::uuid($value);
+
         return self::init($value);
     }
 
@@ -41,6 +43,7 @@ trait UuidValueObject
     public static function validate(array|string $values): bool
     {
         Assert::allUuid((array)$values);
+
         return true;
     }
 

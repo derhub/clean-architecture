@@ -29,6 +29,7 @@ class CountryLookup
         if (! self::isValidKey($value)) {
             throw InvalidCountryException::fromKey($value);
         }
+
         return self::$countries[$value];
     }
 

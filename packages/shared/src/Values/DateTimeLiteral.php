@@ -27,6 +27,7 @@ class DateTimeLiteral implements ValueObjectStr
     {
         $self = new static();
         $self->value = static::$freeze?->rawValue() ?? $datetime;
+
         return $self;
     }
 

@@ -9,6 +9,7 @@ class UserId extends AggregateRootUuid
         if ($val = $this->toString()) {
             return sprintf('user id %s', $val);
         }
+
         return 'empty user id';
     }
 }

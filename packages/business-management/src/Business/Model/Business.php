@@ -125,6 +125,7 @@ final class Business implements AggregateRoot
                 $name->toString()
             )
         );
+
         return $this;
     }
 
@@ -240,6 +241,7 @@ final class Business implements AggregateRoot
                 $ownerId->toString(),
             ),
         );
+
         return $this;
     }
 }

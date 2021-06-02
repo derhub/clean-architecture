@@ -29,6 +29,7 @@ class SimpleValueObjFixture implements ValueObjectStr
     {
         $self = new self();
         $self->value = $value;
+
         return $self;
     }
 

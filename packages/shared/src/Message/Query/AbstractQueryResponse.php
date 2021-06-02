@@ -24,6 +24,7 @@ abstract class AbstractQueryResponse extends AbstractMessageResponse implements 
     public function setResults(iterable $results): self
     {
         $this->results = $results;
+
         return $this;
     }
 

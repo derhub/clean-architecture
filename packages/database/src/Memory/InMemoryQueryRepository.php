@@ -27,12 +27,14 @@ class InMemoryQueryRepository implements QueryRepository
     public function addFilters(array $filters): QueryRepository
     {
         $this->filters = array_merge($this->filters, $filters);
+
         return $this;
     }
 
     public function addFilter(QueryFilter $filters): QueryRepository
     {
         $this->filters[] = $filters;
+
         return $this;
     }
 
@@ -44,6 +46,7 @@ class InMemoryQueryRepository implements QueryRepository
     public function setResult(array $data): self
     {
         $this->results = $data;
+
         return $this;
     }
 
@@ -62,6 +65,7 @@ class InMemoryQueryRepository implements QueryRepository
     public function setSingleResult(mixed $data): self
     {
         $this->singleResult = $data;
+
         return $this;
     }
 
@@ -73,6 +77,7 @@ class InMemoryQueryRepository implements QueryRepository
     public function setFindByResult(mixed $data): self
     {
         $this->findByResult = $data;
+
         return $this;
     }
 
@@ -84,6 +89,7 @@ class InMemoryQueryRepository implements QueryRepository
     public function setFindOneResult(mixed $data): self
     {
         $this->findOneResult = $data;
+
         return $this;
     }
 
@@ -95,6 +101,7 @@ class InMemoryQueryRepository implements QueryRepository
     public function setExistResult(bool $exists): self
     {
         $this->existsResult = $exists;
+
         return $this;
     }
 

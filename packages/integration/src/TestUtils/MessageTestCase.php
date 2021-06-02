@@ -55,6 +55,7 @@ abstract class MessageTestCase extends ModuleTestCase
     protected function givenData($data): self
     {
         $this->fakeData = array_merge($this->fakeData ?? [], $data);
+
         return $this;
     }
 
@@ -67,6 +68,7 @@ abstract class MessageTestCase extends ModuleTestCase
     public function given(string $aggregateRoot): self
     {
         $this->lastAr = $this->createAggregateRoot($aggregateRoot);
+
         return $this;
     }
 
@@ -74,6 +76,7 @@ abstract class MessageTestCase extends ModuleTestCase
     {
         $this->given($aggregateRoot);
         $this->repository->save($this->lastAr);
+
         return $this;
     }
 
@@ -83,6 +86,7 @@ abstract class MessageTestCase extends ModuleTestCase
 
         // make sure no events
         $aggregateRoot->pullEvents();
+
         return $this;
     }
 
@@ -94,6 +98,7 @@ abstract class MessageTestCase extends ModuleTestCase
 
         // make sure no events
         $aggregateRoot->pullEvents();
+
         return $this;
     }
 
@@ -106,12 +111,14 @@ abstract class MessageTestCase extends ModuleTestCase
                 'You can set it using givenData(array $data) method'
             );
         }
+
         return $this->fakeData;
     }
 
     protected function createMessageFromData(string $str): object
     {
         $mapper = new ObjectMapper();
+
         return $mapper->transform($this->getDataFor($str), $str);
     }
 
@@ -154,12 +161,14 @@ abstract class MessageTestCase extends ModuleTestCase
     public function expectEvents(string ...$events): self
     {
         $this->events = $events;
+
         return $this;
     }
 
     public function expectExceptionErrors(string ...$errors): self
     {
         $this->expectedExceptionErrors = $errors;
+
         return $this;
     }
 

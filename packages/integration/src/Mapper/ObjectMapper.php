@@ -100,6 +100,7 @@ class ObjectMapper implements ObjectMapperInterface
                 if ($getFieldName = $this->propertyNameConverter) {
                     return $getFieldName($propertyName);
                 }
+
                 return $this->fieldNames[$propertyName] ?? $propertyName;
             }
         );
@@ -145,6 +146,7 @@ class ObjectMapper implements ObjectMapperInterface
     public function extract(object $object): array
     {
         $extractor = new ObjectPropertyExtractor($this->propNameMapper);
+
         return $extractor->extract($object);
     }
 

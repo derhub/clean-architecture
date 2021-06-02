@@ -22,6 +22,7 @@ class GetBusinessesHandler
     public function __invoke(GetBusinesses $msg): GetBusinessesResponse
     {
         $response = new GetBusinessesResponse();
+
         try {
             $filters = [
                 new SortFilter(SharedValues::COL_CREATED_AT, 'desc'),
@@ -114,6 +115,7 @@ class GetBusinessesHandler
                 'equal',
                 $statusObj->toInt()
             );
+
         return $prevFilters;
     }
 }

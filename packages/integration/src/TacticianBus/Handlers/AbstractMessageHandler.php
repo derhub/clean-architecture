@@ -26,6 +26,7 @@ abstract class AbstractMessageHandler implements Middleware
 
         $methodName =
             $this->methodNameInflector->inflect($message, $handler);
+
         return $this->callHandler($message, $handler, $methodName);
     }
 
@@ -45,6 +46,7 @@ abstract class AbstractMessageHandler implements Middleware
                 "Method '{$methodName}' does not exist on handler"
             );
         }
+
         return $handler->{$methodName}($message);
     }
 
@@ -52,6 +54,7 @@ abstract class AbstractMessageHandler implements Middleware
     protected function requirements(object $message): array
     {
         $handler = $this->handlerLocator->getListenersForEvent($message::class);
+
         return [
             'name' => $message::class,
 //            'alias' => $this->handlerLocator->getName($message::class),

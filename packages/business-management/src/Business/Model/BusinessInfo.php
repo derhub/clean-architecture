@@ -25,6 +25,7 @@ class BusinessInfo implements Entity
     {
         $self = clone $this;
         $self->name = $name;
+
         return $self;
     }
 
@@ -32,6 +33,7 @@ class BusinessInfo implements Entity
     {
         $self = clone $this;
         $self->ownerId = $ownerId;
+
         return $self;
     }
 
@@ -39,6 +41,7 @@ class BusinessInfo implements Entity
     {
         $self = clone $this;
         $self->country = $country;
+
         return $self;
     }
 

@@ -21,6 +21,7 @@ final class TransferBusinessesOwnershipHandler
         TransferBusinessesOwnership $msg
     ): TransferBusinessesOwnershipResponse {
         $res = new TransferBusinessesOwnershipResponse($msg->aggregateRootId());
+
         try {
             $id = BusinessId::fromString($msg->aggregateRootId());
             /** @var \Derhub\BusinessManagement\Business\Model\Business $model */

@@ -39,6 +39,7 @@ trait ModuleCapabilities
     {
         self::$services[MI::SERVICE_COMMANDS][$class] =
             $handlerClass;
+
         return $this;
     }
 
@@ -51,6 +52,7 @@ trait ModuleCapabilities
     {
         self::$services[MI::SERVICE_QUERIES][$class] =
             $handlerClass;
+
         return $this;
     }
 
@@ -64,6 +66,7 @@ trait ModuleCapabilities
         foreach ($classes as $events) {
             self::$services[MI::SERVICE_EVENTS][$events] = $events;
         }
+
         return $this;
     }
 
@@ -88,6 +91,7 @@ trait ModuleCapabilities
                 self::$services[MI::SERVICE_LISTENERS][$messageName],
                 $handlerClass
             );
+
         return $this;
     }
 
@@ -96,6 +100,7 @@ trait ModuleCapabilities
         string|callable $abstract,
     ): static {
         self::$services[MI::DEPENDENCY_BIND][$class] = $abstract;
+
         return $this;
     }
 
@@ -105,6 +110,7 @@ trait ModuleCapabilities
     ): static {
         self::$services[MI::DEPENDENCY_SINGLETON][$class] =
             $abstract;
+
         return $this;
     }
 }

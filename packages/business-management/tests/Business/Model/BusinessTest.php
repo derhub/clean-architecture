@@ -141,6 +141,7 @@ class BusinessTest extends ModuleTestCase
     private function createModel(): Business
     {
         $this->lastId = BusinessId::fromString((string)Uuid::generate());
+
         return new Business($this->lastId);
     }
 

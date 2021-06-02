@@ -16,6 +16,7 @@ class EventOutboxMessageFactory implements MessageOutboxWrapperFactory
     public function create(Event $message): OutboxMessage
     {
         $name = $this->eventProvider->getName($message::class);
+
         return new OutboxMessage(
             id: OutboxMessageId::generate()->toString(),
             messageType: MessageTypes::EVENT,

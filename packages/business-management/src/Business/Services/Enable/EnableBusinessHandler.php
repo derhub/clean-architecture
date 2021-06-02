@@ -17,6 +17,7 @@ class EnableBusinessHandler
     public function __invoke(EnableBusiness $msg): EnableBusinessResponse
     {
         $res = new EnableBusinessResponse($msg->aggregateRootId());
+
         try {
             $id = BusinessId::fromString($msg->aggregateRootId());
 

@@ -67,12 +67,14 @@ class ObjectPropertyExtractor
             // get property from public class
             if ($property->isPublic()) {
                 $results[$fieldName] = $object->{$propertyName};
+
                 continue;
             }
 
             $method = $this->propertyMethod->extract($propertyName, $object);
             if ($method) {
                 $results[$fieldName] = $object->{$method}();
+
                 continue;
             }
 

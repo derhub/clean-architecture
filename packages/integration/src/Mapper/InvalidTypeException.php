@@ -46,6 +46,7 @@ class InvalidTypeException extends \RuntimeException
         if (is_array($resolver)) {
             $value = implode(',', $resolver);
         }
+
         return new self(
             name: $name,
             message: sprintf(

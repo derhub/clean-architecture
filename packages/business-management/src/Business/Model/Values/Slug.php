@@ -24,6 +24,7 @@ class Slug implements ValueObjectStr
 
         $self = new self();
         $self->value = $value;
+
         return $self;
     }
 
@@ -50,6 +51,7 @@ class Slug implements ValueObjectStr
         } catch (DomainException $e) {
             throw InvalidSlugException::fromException($e);
         }
+
         return true;
     }
 

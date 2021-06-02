@@ -28,6 +28,7 @@ class InMemoryContainer implements ContainerInterface
         if (! $this->has($id)) {
             throw new InMemoryContainerNotFoundException('not found '.$id);
         }
+
         return $this->container[$id];
     }
 

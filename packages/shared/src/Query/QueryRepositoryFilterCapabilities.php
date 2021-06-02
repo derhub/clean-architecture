@@ -20,12 +20,14 @@ trait QueryRepositoryFilterCapabilities
     public function addFilters(array $filters): static
     {
         $this->filters = array_merge($this->filters, $filters);
+
         return $this;
     }
 
     public function addFilter(QueryFilter $filter): static
     {
         $this->filters[] = $filter;
+
         return $this;
     }
 
