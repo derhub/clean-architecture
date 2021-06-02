@@ -2,10 +2,10 @@
 
 namespace Derhub\Integration\MessageOutbox;
 
-use Derhub\Shared\MessageOutbox\FailedToSaveMessageException;
+use Derhub\Shared\MessageOutbox\Exceptions\FailedToRetrieve;
 
 class DoctrineFailedToSaveMessageException extends \Exception
-    implements FailedToSaveMessageException
+    implements FailedToRetrieve
 {
     public static function fromThrowable(\Throwable $e): self
     {

@@ -2,8 +2,13 @@
 
 namespace Derhub\Integration\Laravel;
 
-use Derhub\Shared\MessageOutbox\MessageOutboxObjectWrapper;
-use Derhub\Shared\MessageOutbox\MessageOutboxObjectWrapperFactory;
+use Derhub\Integration\MessageOutbox\DoctrineOutboxMessageProcessor;
+use Derhub\Shared\MessageOutbox\EventOutboxMessageFactory;
+use Derhub\Shared\MessageOutbox\MessageOutboxWrapperFactory;
+use Derhub\Shared\MessageOutbox\OutboxMessageConsumer;
+use Derhub\Shared\MessageOutbox\OutboxMessageProcessor;
+use Derhub\Shared\MessageOutbox\OutboxMessageRecorder;
+use Derhub\Shared\MessageOutbox\OutboxMessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Derhub\Integration\LaravelEventBus\EventLaravelBus;
 use Derhub\Integration\LaravelEventBus\EventHandlerProvider;
@@ -29,7 +34,6 @@ use Derhub\Shared\Message\Event\EventListenerProvider;
 use Derhub\Shared\Message\Query\QueryBus;
 use Derhub\Shared\Message\Query\QueryListenerProvider;
 use Derhub\Shared\MessageOutbox\MessageSerializer;
-use Derhub\Shared\MessageOutbox\OutboxRepository;
 use Derhub\Shared\ObjectMapper\ObjectMapperInterface;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Container\Container;
@@ -51,19 +55,8 @@ class LaravelServiceProvider extends ServiceProvider
         );
 
         $this->registerModuleRegistry();
-        $this->app->bind(
-            SerializerInterface::class,
-            static fn () => \JMS\Serializer\SerializerBuilder::create()->build()
-        );
 
-        $this->app->bind(MessageSerializer::class, JMSMessageSerializer::class);
-        $this->app->bind(
-            OutboxRepository::class,
-            DoctrineOutboxRepository::class
-        );
-
-        $this->app->bind(MessageOutboxObjectWrapper::class, MessageOutboxObjectWrapperFactory::class);
-
+        $this->registerOutboxMessage();
         $this->registerMessageBus();
         $this->registerCommand();
         $this->registerQuery();
@@ -163,5 +156,23 @@ class LaravelServiceProvider extends ServiceProvider
 //            EventListenerProvider::class,
 //            EventLocator::class,
 //        );
+    }
+
+    private function registerOutboxMessage(): void
+    {
+        $this->app->bind(
+            SerializerInterface::class,
+            static fn () => \JMS\Serializer\SerializerBuilder::create()->build()
+        );
+
+        $this->app->bind(MessageSerializer::class, JMSMessageSerializer::class);
+
+        $this->app->bind(OutboxMessageConsumer::class, DoctrineOutboxRepository::class);
+        $this->app->bind(OutboxMessageRecorder::class, DoctrineOutboxRepository::class);
+        $this->app->bind(OutboxMessageProcessor::class, DoctrineOutboxMessageProcessor::class);
+
+        $this->app->bind(
+            MessageOutboxWrapperFactory::class, EventOutboxMessageFactory::class
+        );
     }
 }

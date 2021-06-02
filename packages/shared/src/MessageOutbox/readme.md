@@ -32,7 +32,7 @@ then in relay we will just fetch all the not consume messages
 ### OutboxMessageRelay
 publish messages to queue.
 
-example: `pusblis messages using cron every 2sec`
+example: `publish messages using cron every 2sec`
 
 ### OutboxMessageProcessor
 messages might publish more than once to avoid this
@@ -43,3 +43,5 @@ Resources:
 - http://www.kamilgrzybek.com/design/the-outbox-pattern/
 - https://exactly-once.github.io/posts/improving-outbox/
 - https://event-driven.io/en/outbox_inbox_patterns_and_delivery_guarantees_explained/
+- https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html
+- https://www.enterpriseintegrationpatterns.com/patterns/messaging/GuaranteedMessaging.html

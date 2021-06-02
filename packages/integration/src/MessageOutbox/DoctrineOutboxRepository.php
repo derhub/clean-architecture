@@ -2,16 +2,20 @@
 
 namespace Derhub\Integration\MessageOutbox;
 
+use Derhub\Shared\Message\Event\Event;
+use Derhub\Shared\MessageOutbox\MessageOutboxWrapperFactory;
+use Derhub\Shared\MessageOutbox\OutboxMessageConsumer;
+use Derhub\Shared\MessageOutbox\OutboxMessageRecorder;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Derhub\Shared\MessageOutbox\MessageSerializer;
 use Derhub\Shared\MessageOutbox\OutboxMessage;
-use Derhub\Shared\MessageOutbox\OutboxRepository;
 use Generator;
 
-class DoctrineOutboxRepository implements OutboxRepository
+class DoctrineOutboxRepository
+    implements OutboxMessageConsumer, OutboxMessageRecorder
 {
     private const TABLE_NAME = 'outbox_messages';
 
@@ -22,10 +26,12 @@ class DoctrineOutboxRepository implements OutboxRepository
      * DoctrineOutboxRepository constructor.
      * @param EntityManager $entityManager
      * @param \Derhub\Shared\MessageOutbox\MessageSerializer $serializer
+     * @param \Derhub\Shared\MessageOutbox\MessageOutboxWrapperFactory $factory
      */
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private MessageSerializer $serializer
+        private MessageSerializer $serializer,
+        private MessageOutboxWrapperFactory $factory,
     ) {
     }
 
@@ -37,6 +43,14 @@ class DoctrineOutboxRepository implements OutboxRepository
     private function createQueryBuilder(): \Doctrine\DBAL\Query\QueryBuilder
     {
         return $this->getConnection()->createQueryBuilder();
+    }
+
+    public function recordFromEvent(Event ...$events): void
+    {
+        foreach ($events as $event) {
+            $message = $this->factory->create($event);
+            $this->record($message);
+        }
     }
 
     public function record(OutboxMessage ...$messages): void
@@ -51,6 +65,8 @@ class DoctrineOutboxRepository implements OutboxRepository
                             'message_id' => $message->id(),
                             'message_type' => $message->messageType(),
                             'message_name' => $message->name(),
+                            'consume_status' => $message->isConsume()
+                                ? self::IS_CONSUME : self::NOT_CONSUME,
                             'version' => $message->version(),
                             'payload' => json_encode(
                                 $this->serializer->serialize($message)
@@ -64,7 +80,7 @@ class DoctrineOutboxRepository implements OutboxRepository
         }
     }
 
-    public function all(): Generator
+    public function getUnConsumed(): Generator
     {
         $tableName = self::TABLE_NAME;
         $consumed = self::NOT_CONSUME;
@@ -82,7 +98,7 @@ class DoctrineOutboxRepository implements OutboxRepository
         }
     }
 
-    public function markAsConsume(OutboxMessage ...$messages): void
+    public function consume(OutboxMessage ...$messages): void
     {
         $messageIds = [];
         foreach ($messages as $message) {
@@ -109,7 +125,7 @@ class DoctrineOutboxRepository implements OutboxRepository
         }
     }
 
-    public function eraseConsumed(): void
+    public function eraseConsumedMessage(): void
     {
         $tableName = self::TABLE_NAME;
         $consumed = self::IS_CONSUME;
@@ -121,10 +137,5 @@ class DoctrineOutboxRepository implements OutboxRepository
         } catch (Exception $e) {
             throw DoctrineFailedToRetrieveMessageException::fromThrowable($e);
         }
-    }
-
-    public function clear(): void
-    {
-        $this->eraseConsumed();
     }
 }

@@ -6,10 +6,13 @@ use Derhub\Shared\Message\Event\Event;
 use Derhub\Shared\MessageOutbox\MessageOutboxWrapperFactory;
 use Derhub\Shared\MessageOutbox\MessageSerializer;
 use Derhub\Shared\MessageOutbox\OutboxMessage;
-use Derhub\Shared\MessageOutbox\OutboxMessageRepository;
+use Derhub\Shared\MessageOutbox\OutboxMessageConsumer;
+use Derhub\Shared\MessageOutbox\OutboxMessageRecorder;
 use Generator;
 
-class InMemoryOutboxRepository implements OutboxMessageRepository
+class InMemoryOutboxRepository
+    implements OutboxMessageConsumer,
+               OutboxMessageRecorder
 {
     /**
      * @var array<\Derhub\Shared\MessageOutbox\OutboxMessage>

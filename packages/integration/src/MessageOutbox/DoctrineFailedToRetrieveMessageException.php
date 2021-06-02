@@ -2,9 +2,9 @@
 
 namespace Derhub\Integration\MessageOutbox;
 
-use Derhub\Shared\MessageOutbox\FailedToRetrieveMessageException;
+use Derhub\Shared\MessageOutbox\Exceptions\RecordMessageFailException;
 
-class DoctrineFailedToRetrieveMessageException extends \Exception implements FailedToRetrieveMessageException
+class DoctrineFailedToRetrieveMessageException extends \Exception implements RecordMessageFailException
 {
     public static function fromThrowable(\Throwable $e): self
     {
