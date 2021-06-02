@@ -10,7 +10,7 @@ use Derhub\BusinessManagement\Business\Model\Event\BusinessOwnershipTransferred;
 use Derhub\BusinessManagement\Business\Model\Event\BusinessSlugChanged;
 use Derhub\BusinessManagement\Business\Model\Exception\InvalidOwnerIdException;
 use Derhub\BusinessManagement\Business\Model\Exception\NameAlreadyExist;
-use Derhub\BusinessManagement\Business\Model\Exception\SlugExistException;
+use Derhub\BusinessManagement\Business\Model\Exception\SlugAlreadyExist;
 use Derhub\BusinessManagement\Business\Model\Specification\UniqueSlugSpec;
 use Derhub\BusinessManagement\Business\Model\Values\Country;
 use Derhub\BusinessManagement\Business\Model\Values\OnBoardStatus;
@@ -41,19 +41,6 @@ class IsUniqueSlug extends FakeSpecification implements UniqueSlugSpec
 class BusinessTest extends ModuleTestCase
 {
     private BusinessId $lastId;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        DateTimeLiteral::freezeAt(DateTimeLiteral::now());
-        $this->lastId = BusinessId::generate();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        DateTimeLiteral::unFreeze();
-    }
 
     /**
      * @param array<class-string> $actual
@@ -114,7 +101,7 @@ class BusinessTest extends ModuleTestCase
 
         $this->assertEvents([BusinessSlugChanged::class], $model->pullEvents());
 
-        $this->expectException(SlugExistException::class);
+        $this->expectException(SlugAlreadyExist::class);
         $model = $this->createModel();
         $model->changeSlug(
             IsUniqueSlug::no(),
@@ -179,5 +166,18 @@ class BusinessTest extends ModuleTestCase
     protected function givenRepository(): InMemoryBusinessRepository
     {
         return new InMemoryBusinessRepository();
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        DateTimeLiteral::freezeAt(DateTimeLiteral::now());
+        $this->lastId = BusinessId::generate();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        DateTimeLiteral::unFreeze();
     }
 }

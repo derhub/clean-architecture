@@ -2,7 +2,7 @@
 
 namespace Tests\BusinessManagement\Business;
 
-use Derhub\BusinessManagement\Business\Module;
+use Derhub\BusinessManagement\Module;
 use Derhub\Integration\TestUtils\ModuleIntegrationTestCaseCase;
 use Derhub\Shared\ModuleInterface;
 

@@ -7,8 +7,8 @@ use Derhub\BusinessManagement\Business\Infrastructure\Database\QueryBusinessRepo
 use Derhub\BusinessManagement\Business\Model\Specification\UniqueNameSpec;
 use Derhub\BusinessManagement\Business\Model\Specification\UniqueSlugSpec;
 use Derhub\BusinessManagement\Business\Model\Values\BusinessId;
-use Derhub\BusinessManagement\Business\Module;
 use Derhub\BusinessManagement\Business\Services\BusinessQueryItem;
+use Derhub\BusinessManagement\Module;
 use Derhub\Integration\TestUtils\MessageTestCase;
 use Derhub\Shared\ModuleInterface;
 use Tests\BusinessManagement\Business\Fixtures\Services\BusinessQueryItemMapper;
@@ -21,6 +21,21 @@ abstract class BaseServiceTestCase extends MessageTestCase
     protected UniqueSlugSpec|\PHPUnit\Framework\MockObject\MockObject $mockUniqueSlugSpec;
     protected BusinessQueryItemMapper $queryMapper;
     protected QueryBusinessRepository|QueryRepositoryStub $queryRepo;
+
+    public function createQueryItemObject(): BusinessQueryItem
+    {
+        return new BusinessQueryItem(
+            'test',
+            'test',
+            'test',
+            'test',
+            'test',
+            'test',
+            'test',
+            'test',
+            'test',
+        );
+    }
 
     public function setUp(): void
     {
@@ -36,21 +51,6 @@ abstract class BaseServiceTestCase extends MessageTestCase
         $this->container->add(
             $handler::class,
             static fn () => $handler,
-        );
-    }
-
-    public function createQueryItemObject(): BusinessQueryItem
-    {
-        return new BusinessQueryItem(
-            'test',
-            'test',
-            'test',
-            'test',
-            'test',
-            'test',
-            'test',
-            'test',
-            'test',
         );
     }
 

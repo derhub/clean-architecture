@@ -17,7 +17,7 @@ use Derhub\BusinessManagement\Business\Model\Exception\ChangesToDisabledBusiness
 use Derhub\BusinessManagement\Business\Model\Exception\InvalidOwnerIdException;
 
 use Derhub\BusinessManagement\Business\Model\Exception\NameAlreadyExist;
-use Derhub\BusinessManagement\Business\Model\Exception\SlugExistException;
+use Derhub\BusinessManagement\Business\Model\Exception\SlugAlreadyExist;
 use Derhub\BusinessManagement\Business\Model\Specification\UniqueName;
 use Derhub\BusinessManagement\Business\Model\Specification\UniqueNameSpec;
 use Derhub\BusinessManagement\Business\Model\Specification\UniqueSlug;
@@ -42,22 +42,21 @@ use Derhub\Shared\Values\DateTimeLiteral;
 final class Business implements AggregateRoot
 {
     use UseAggregateRoot {
-        UseAggregateRoot::record as private _record;
+        UseAggregateRoot::record as private recordEvent;
     }
     use UseTimestampsWithSoftDelete;
+
     private BusinessId $aggregateRootId;
 
     private BusinessInfo $info;
     private OnBoardStatus $onBoardStatus;
     private Slug $slug;
-    private Status $status;
 
     public function __construct(?BusinessId $aggregateRootId = null)
     {
         $this->aggregateRootId = $aggregateRootId ?? new BusinessId();
         $this->info = new BusinessInfo();
         $this->onBoardStatus = new OnBoardStatus();
-        $this->status = new Status();
         $this->slug = new Slug();
 
         $this->initTimestamps();
@@ -72,7 +71,7 @@ final class Business implements AggregateRoot
             return;
         }
 
-        if ($this->status->isDisabled()) {
+        if ($this->info->status()->isDisabled()) {
             throw ChangesToDisabledBusinessException::notAllowed();
         }
     }
@@ -96,6 +95,10 @@ final class Business implements AggregateRoot
         return $this;
     }
 
+    /**
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\NameAlreadyExist
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\ChangesToDisabledBusinessException
+     */
     public function changeName(UniqueNameSpec $uniqueName, Name $name): self
     {
         $isNameUnique = $uniqueName->isSatisfiedBy(new UniqueName($name));
@@ -114,13 +117,17 @@ final class Business implements AggregateRoot
         return $this;
     }
 
+    /**
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\ChangesToDisabledBusinessException
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\SlugAlreadyExist
+     */
     public function changeSlug(
         UniqueSlugSpec $slugSpec,
         Slug $slug
     ): self {
         $isValid = $slugSpec->isSatisfiedBy(new UniqueSlug($slug));
         if (! $isValid) {
-            throw SlugExistException::fromSlug($slug);
+            throw SlugAlreadyExist::fromSlug($slug);
         }
 
         $this->slug = $slug;
@@ -135,13 +142,16 @@ final class Business implements AggregateRoot
         return $this;
     }
 
+    /**
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\ChangesToDisabledBusinessException
+     */
     public function disable(): self
     {
         $this->record(
             new BusinessDisabled($this->aggregateRootId()->toString()),
         );
 
-        $this->status = Status::disable();
+        $this->info = $this->info->newStatus(Status::disable());
 
         return $this;
     }
@@ -152,11 +162,18 @@ final class Business implements AggregateRoot
             new BusinessEnabled($this->aggregateRootId()->toString()),
         );
 
-        $this->status = Status::enable();
+        $this->info = $this->info->newStatus(Status::enable());
+
 
         return $this;
     }
 
+    /**
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\AlreadyOnBoardException
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\SlugAlreadyExist
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\NameAlreadyExist
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\ChangesToDisabledBusinessException
+     */
     public function onBoard(
         UniqueNameSpec $nameSpec,
         UniqueSlugSpec $slugSpec,
@@ -180,7 +197,7 @@ final class Business implements AggregateRoot
 
         $checkSlug = $slugSpec->isSatisfiedBy(new UniqueSlug($slug));
         if (! $checkSlug) {
-            throw SlugExistException::fromSlug($slug);
+            throw SlugAlreadyExist::fromSlug($slug);
         }
 
         $this->aggregateRootId = $id;
@@ -196,7 +213,7 @@ final class Business implements AggregateRoot
         $this->record(
             new BusinessOnboarded(
                 aggregateRootId: $this->aggregateRootId()->toString(),
-                ownerId: $this->owner()->toString(),
+                ownerId: $this->info->ownerId()->toString(),
                 name: $this->info->name()->toString(),
                 slug: $this->slug->toString(),
                 country: $this->info->country()->toString(),
@@ -206,11 +223,6 @@ final class Business implements AggregateRoot
         );
 
         return $this;
-    }
-
-    public function owner(): OwnerId
-    {
-        return $this->info->ownerId();
     }
 
     /**
@@ -242,6 +254,6 @@ final class Business implements AggregateRoot
     {
         $this->disallowChangesWhenDisabled($e);
 
-        $this->_record($e);
+        $this->recordEvent($e);
     }
 }

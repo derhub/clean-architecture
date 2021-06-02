@@ -4,7 +4,7 @@ namespace Tests\BusinessManagement\Business\Services\Onboard;
 
 use Derhub\BusinessManagement\Business\Model\Business;
 use Derhub\BusinessManagement\Business\Model\Exception\NameAlreadyExist;
-use Derhub\BusinessManagement\Business\Model\Exception\SlugExistException;
+use Derhub\BusinessManagement\Business\Model\Exception\SlugAlreadyExist;
 use Derhub\BusinessManagement\Business\Model\Values\OnBoardStatus;
 use Derhub\BusinessManagement\Business\Model\Values\OwnerId;
 use Derhub\BusinessManagement\Business\Services\Onboard\OnBoardBusiness;
@@ -37,7 +37,7 @@ class OnBoardBusinessTest extends BaseServiceTestCase
         $this->mockUniqueSlugSpec->method('isSatisfiedBy')->willReturn(false);
 
         $this->prepareTest()
-            ->expectExceptionErrors(SlugExistException::class)
+            ->expectExceptionErrors(SlugAlreadyExist::class)
             ->then(OnBoardBusinessResponse::class)
         ;
     }

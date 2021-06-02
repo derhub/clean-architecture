@@ -8,6 +8,6 @@ class ChangesToDisabledBusinessException extends \Exception implements DomainExc
 {
     public static function notAllowed(): self
     {
-        return new self('Changes to disabled business-management is not allowed');
+        return new self('Changes to disabled business is not allowed');
     }
 }

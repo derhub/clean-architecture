@@ -5,6 +5,7 @@ namespace Derhub\BusinessManagement\Business\Model;
 use Derhub\BusinessManagement\Business\Model\Values\Country;
 use Derhub\BusinessManagement\Business\Model\Values\Name;
 use Derhub\BusinessManagement\Business\Model\Values\OwnerId;
+use Derhub\BusinessManagement\Business\Model\Values\Status;
 use Derhub\Shared\Model\Entity;
 use Derhub\Shared\Utils\Assert;
 
@@ -13,6 +14,7 @@ class BusinessInfo implements Entity
     private Country $country;
     private Name $name;
     private OwnerId $ownerId;
+    private Status $status;
 
     public static function fromArray(array $values): self
     {
@@ -31,6 +33,7 @@ class BusinessInfo implements Entity
         $this->name = new Name();
         $this->ownerId = new OwnerId();
         $this->country = new Country();
+        $this->status = Status::enable();
     }
 
     public function country(): Country
@@ -67,15 +70,31 @@ class BusinessInfo implements Entity
         return $self;
     }
 
+    public function newStatus(Status $status): self
+    {
+        $self = clone $this;
+        $self->status = $status;
+
+        return $self;
+    }
+
     public function ownerId(): OwnerId
     {
         return $this->ownerId;
     }
 
+
     public function sameAs(Entity $other): bool
     {
         return $other instanceof self
-            && $other->ownerId() === $this->ownerId();
+            && $other->ownerId()->toString() === $this->ownerId()->toString()
+            && $other->name()->toString() === $this->name()->toString()
+            && $other->country()->toString() === $this->country()->toString();
+    }
+
+    public function status(): Status
+    {
+        return $this->status;
     }
 
     public function toArray(): array
@@ -84,6 +103,7 @@ class BusinessInfo implements Entity
             'name' => $this->name()->toString(),
             'owner_id' => $this->ownerId()->toString(),
             'country' => $this->country()->toString(),
+            'status' => $this->status()->toString(),
         ];
     }
 }
