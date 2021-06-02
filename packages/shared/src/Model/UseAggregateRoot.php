@@ -10,12 +10,15 @@ use Derhub\Shared\Values\DateTimeLiteral;
 
 trait UseAggregateRoot
 {
-    private bool $isInCreateState = false;
+    protected int $versions = 0;
+
     /**
      * Holds the domain events
      * @var DomainEvent[]
      */
     protected array $events = [];
+
+    private bool $isInCreateState = false;
 
     /**
      * @return DomainEvent[]
@@ -32,6 +35,8 @@ trait UseAggregateRoot
     {
         $this->events[] = $event;
         $this->applyTimestamps();
+
+        ++$this->versions;
     }
 
 
