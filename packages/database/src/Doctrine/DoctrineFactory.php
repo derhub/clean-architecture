@@ -2,18 +2,21 @@
 
 namespace Derhub\Shared\Database\Doctrine;
 
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
+use Psr\Cache\CacheItemPoolInterface;
 
 class DoctrineFactory
 {
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * config:
+     * @param array $config
+     * @param \Psr\Cache\CacheItemPoolInterface $cachePool
+     * @return \Doctrine\ORM\EntityManagerInterface
+     * @throws \Doctrine\ORM\ORMException config:
      * [
      *      'dev_mode' => false,
-     *      'cache_dir' => '...dir here',
      *      'proxy_dir' => '...dir here',
      *      'metadata' => ['...dir here'],
      *      'connection' => [
@@ -29,20 +32,20 @@ class DoctrineFactory
      */
     public static function createEntityManager(
         array $config,
+        CacheItemPoolInterface $cachePool,
     ): EntityManagerInterface {
-//        $cache = isset($config['cache_dir']) ? new PhpFileCache($config['cache_dir']) : new ArrayCache();
+        $cache = DoctrineProvider::wrap($cachePool);
+
         $setup = Setup::createXMLMetadataConfiguration(
             $config['metadata'],
             $config['dev_mode'],
             $config['proxy_dir'] ?? null,
+            $cache
         );
 
         return EntityManager::create(
             $config['connection'],
             $setup
         );
-    }
-    public static function registerDefaultTypes(): void
-    {
     }
 }

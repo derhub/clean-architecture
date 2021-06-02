@@ -14,7 +14,7 @@
     "derhub/shared": "dev-master",
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^9.5",
-    "doctrine/orm": "^2.8"
+    "doctrine/orm": "^2.9"
   },
   "autoload": {
     "psr-4": {
