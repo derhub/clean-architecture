@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <embeddable name="Derhub\BusinessManagement\Business\Model\BusinessInfo">
+        <field type="business_name" name="name" column="name" nullable="true"/>
+        <field type="business_status" name="status" column="status"/>
+        <field type="business_owner_id" name="ownerId" column="owner_id"
+               nullable="true"/>
+        <field type="business_country" name="country" column="country"
+               nullable="true"/>
+    </embeddable>
+</doctrine-mapping>
