@@ -21,7 +21,6 @@ abstract class MessageTestCase extends ModuleTestCase
     protected array $extraExceptions = [];
     protected mixed $messageResponse;
     protected mixed $messageResponseType;
-    protected MessageRoute $messageRoute;
     protected ?array $fakeData;
 
     public function setUp(): void

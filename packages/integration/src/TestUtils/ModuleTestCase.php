@@ -5,9 +5,8 @@ namespace Derhub\Integration\TestUtils;
 use Derhub\Integration\InMemoryContainer;
 use Derhub\Integration\Mapper\SimpleMapper;
 use Derhub\Integration\MessageBus\MessageAssemblerImpl;
-use Derhub\Integration\MessageBus\MessageBus;
-use Derhub\Integration\MessageBus\MessageBusFacade;
-use Derhub\Integration\MessageBus\MessageRouteFactory;
+use Derhub\Integration\MessageOutbox\InMemory\InMemoryOutboxMessageWrapper;
+use Derhub\Integration\MessageOutbox\InMemory\InMemoryOutboxRepository;
 use Derhub\Integration\MessageOutbox\JMSMessageSerializer;
 use Derhub\Integration\ModuleService\MessageNameResolver;
 use Derhub\Integration\ModuleService\ModuleListImpl;
@@ -24,10 +23,9 @@ use Derhub\Shared\Message\Event\EventBus;
 use Derhub\Shared\Message\Event\EventListenerProvider;
 use Derhub\Shared\Message\Query\QueryBus;
 use Derhub\Shared\Message\Query\QueryListenerProvider;
-use Derhub\Shared\MessageOutbox\InMemoryOutboxRepository;
-use Derhub\Shared\MessageOutbox\MessageOutboxObjectWrapperFactory;
 use Derhub\Shared\MessageOutbox\MessageSerializer;
-use Derhub\Shared\MessageOutbox\OutboxRepository;
+use Derhub\Shared\MessageOutbox\OutboxMessageConsumer;
+use Derhub\Shared\MessageOutbox\OutboxMessageRecorder;
 use Derhub\Shared\MessageOutbox\SimpleSerializer;
 use PHPUnit\Framework\TestCase;
 
@@ -39,16 +37,15 @@ class ModuleTestCase extends TestCase
     protected CommandBus $commandBus;
     protected QueryBus $queryBus;
     protected SimpleMapper $mapper;
-    protected MessageBus $messageBus;
     protected MessageAssemblerImpl $assembler;
     protected ModuleListImpl $moduleList;
     protected ModuleService $moduleService;
     protected MessageNameResolver $messageNameResolver;
     protected MessageSerializer $serializer;
-    protected OutboxRepository $outboxRepo;
+    protected OutboxMessageConsumer|OutboxMessageRecorder $outboxRepo;
     protected EventListenerProvider $eventProvider;
     protected EventBus $eventBus;
-    protected MessageOutboxObjectWrapperFactory $outboxWrapper;
+    protected \Derhub\Shared\MessageOutbox\MessageOutboxWrapperFactory $outboxWrapper;
 
     protected function setUp(): void
     {
@@ -67,18 +64,15 @@ class ModuleTestCase extends TestCase
         $this->queryBus = $this->createQueryBus($this->queryProvider);
 
         $this->eventProvider = $this->createEventProvider();
-        $this->serializer = new JMSMessageSerializer(
-            $this->commandProvider,
-            $this->queryProvider,
-            $this->eventProvider,
-            \JMS\Serializer\SerializerBuilder::create()->build()
-        );
-        $this->outboxRepo = new InMemoryOutboxRepository($this->serializer);
-        $this->outboxWrapper = new MessageOutboxObjectWrapperFactory(
-            $this->commandProvider,
-            $this->queryProvider,
-            $this->eventProvider
-        );
+//        $this->serializer = new JMSMessageSerializer(
+//            $this->commandProvider,
+//            $this->queryProvider,
+//            $this->eventProvider,
+//            \JMS\Serializer\SerializerBuilder::create()->build()
+//        );
+        $this->serializer = new SimpleSerializer();
+        $this->outboxWrapper = new InMemoryOutboxMessageWrapper();
+        $this->outboxRepo = new InMemoryOutboxRepository($this->serializer, $this->outboxWrapper);
 
         $this->eventBus = $this->createEventBus();
 
