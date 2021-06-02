@@ -2,9 +2,9 @@
 
 namespace Derhub\Shared\Capabilities;
 
-class ClassNameCapability
+class ClassName
 {
-    public static function name(string $class): string
+    public static function for(string $class): string
     {
         $array = explode('\\', $class);
         return end($array);

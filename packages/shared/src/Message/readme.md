@@ -1,5 +1,6 @@
 # Message bus contracts base on PSR-14
 
+Resources:
  - https://www.php-fig.org/psr/psr-14/
  - https://en.wikipedia.org/wiki/Command–query_separation
  - message bus: https://www.enterpriseintegrationpatterns.com/patterns/messaging/MessageBus.html

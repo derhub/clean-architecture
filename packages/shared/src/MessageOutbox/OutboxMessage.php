@@ -10,6 +10,7 @@ class OutboxMessage
         private string $id,
         private string $messageType,
         private string $name,
+        private bool $isConsume,
         private Message $message,
         private array $meta = [],
     ) {
@@ -43,5 +44,10 @@ class OutboxMessage
     public function version(): int
     {
         return $this->message->version();
+    }
+
+    public function isConsume(): bool
+    {
+        return $this->isConsume;
     }
 }

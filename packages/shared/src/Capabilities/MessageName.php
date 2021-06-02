@@ -11,7 +11,7 @@ class MessageName
         string $serviceType,
         string $class
     ): string {
-        $className = ClassNameCapability::name($class);
+        $className = ClassName::for($class);
         return "{$moduleId}.{$serviceType}.{$className}";
     }
 
