@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine\BusinessDoctrineTypes;
 use Derhub\Integration\ModuleService\ModuleService;
 use Derhub\Shared\Database\Doctrine\DatabaseDoctrineTypes;
 use Derhub\Shared\Database\Doctrine\DoctrineFactory;
@@ -19,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        DatabaseDoctrineTypes::register();
+        BusinessDoctrineTypes::register();
     }
 
     /**
@@ -27,8 +30,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        DatabaseDoctrineTypes::register();
-
         $this->app->bind(
             EntityManagerInterface::class,
             static function ($app) {
@@ -51,9 +52,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->register(
             \Derhub\Integration\Laravel\LaravelServiceProvider::class,
-        );
-        $this->app->register(
-            \Derhub\BusinessManagement\Business\Infrastructure\Laravel\LaravelServiceProvider::class
         );
 
         /** @var ModuleService $moduleService */
