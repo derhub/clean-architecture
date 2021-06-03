@@ -2,11 +2,8 @@
 
 return [
     'dev_mode' => env('APP_ENV') !== 'production',
-    'cache_dir' => storage_path('doctrine_cache'),
     'proxy_dir' => storage_path('doctrine_cache'),
-    'metadata' => [
-        __DIR__.'/../database/doctrine_mapping',
-    ],
+    'metadata' => glob(base_path('vendor/derhub/*/db/mapping')) ?? [],
     'connection' => [
         'driver' => 'pdo_mysql',
         'host' => env('DB_HOST', '127.0.0.1'),

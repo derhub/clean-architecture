@@ -12,3 +12,5 @@ vendor
 .DS_Store
 
 apps
+
+packages/*/phinx.php
