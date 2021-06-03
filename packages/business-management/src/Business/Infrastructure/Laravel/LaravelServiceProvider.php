@@ -11,7 +11,6 @@ class LaravelServiceProvider extends ServiceProvider
     {
         BusinessDoctrineTypes::register();
 
-        $this->loadMigrationsFrom(__DIR__.'/migrations');
         $this->publishes(
             [
                 __DIR__.'/../Database/Doctrine/mapping' =>

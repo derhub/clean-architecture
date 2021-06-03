@@ -26,7 +26,7 @@ class BusinessItemMapperDoctrineTest extends TestCase
                 'slug' => Slug::fromString('test-a-a-s-d-f'),
                 'info.country' => Country::fromString('PH'),
                 'info.name' => Name::fromString('test'),
-                'status' => Status::enable(),
+                'info.status' => Status::enable(),
                 'onBoardStatus' => OnBoardStatus::byOwner(),
                 'createdAt' => DateTimeLiteral::now(),
                 'updatedAt' => DateTimeLiteral::now(),

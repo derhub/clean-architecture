@@ -33,13 +33,10 @@ class GetBusinessesHandler
                 $this->addFilterForAggregateId($filters, $msg->aggregateIds());
             $filters = $this->addFilterForSlugs($filters, $msg->slugs());
             $filters = $this->addFilterForStatus($filters, $msg->enabled());
-
             $query = $this->repository
-                ->addFilters($filters)
-                ->iterableResult()
-            ;
+                ->addFilters($filters);
 
-            $response->setResults($query);
+            $response->setResults($query->iterableResult());
         } catch (LayeredException $e) {
             $response->addError($e::class, $e->getMessage(), $e);
         }
@@ -59,11 +56,14 @@ class GetBusinessesHandler
             $aggregateIds = [$aggregateIds];
         }
 
-        BusinessId::validate($aggregateIds);
+        $idAsBytes = [];
+        foreach ($aggregateIds as $aggregateId) {
+            $idAsBytes[] = BusinessId::fromString($aggregateId)->toBytes();
+        }
 
         $prevFilters[] = $this->createInFilter(
             SharedValues::COL_ID,
-            $aggregateIds,
+            $idAsBytes,
         );
 
         return $prevFilters;

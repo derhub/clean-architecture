@@ -14,12 +14,12 @@ class BusinessIdType extends GuidType
 
     public function convertFromRaw(mixed $value): BusinessId
     {
-        return BusinessId::fromString($value);
+        return BusinessId::fromBytes($value);
     }
 
     public function convertToRaw(mixed $value): string
     {
-        return $value->toString();
+        return $value->toBytes();
     }
 
     public function defineClass(): string
@@ -27,9 +27,9 @@ class BusinessIdType extends GuidType
         return BusinessId::class;
     }
 
-    public function defineEmptyValueForPHP(mixed $value): mixed
+    public function defineEmptyValueForPHP(mixed $value): BusinessId
     {
-        return null;
+        return new BusinessId();
     }
 
     public function defineName(): string

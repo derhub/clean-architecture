@@ -14,12 +14,12 @@ class BusinessOwnerIdType extends StringType
 
     public function convertFromRaw(mixed $value): OwnerId
     {
-        return OwnerId::fromString($value);
+        return OwnerId::fromBytes($value);
     }
 
     public function convertToRaw(mixed $value): string
     {
-        return $value->toString();
+        return $value->toBytes();
     }
 
     public function defineClass(): string
@@ -27,9 +27,9 @@ class BusinessOwnerIdType extends StringType
         return OwnerId::class;
     }
 
-    public function defineEmptyValueForPHP(mixed $value): mixed
+    public function defineEmptyValueForPHP(mixed $value): OwnerId
     {
-        return null;
+        return new OwnerId();
     }
 
     public function defineName(): string
