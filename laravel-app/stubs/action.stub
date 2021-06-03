@@ -34,12 +34,6 @@ use ActionCapabilities;
             //TODO: Dispatch job
         );
 
-        return ApiResponse::create(
-            []
-            // TODO: add results
-            // ['aggregate_id' => $response->aggregateRootId()] // for command
-            // iterator_to_array($response->results()) // for query
-        )->toJsonResponse()
-            ;
+        return ApiResponseFactory::create($response)->toJsonResponse();
     }
 }

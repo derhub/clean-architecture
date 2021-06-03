@@ -4,14 +4,16 @@ namespace App\Actions;
 
 use Illuminate\Http\Request;
 
+use function request;
+
 trait ActionCapabilities
 {
-    public function getCountry(): string
+    protected function getCountry(): string
     {
         return config('general.country');
     }
 
-    public function getRequest(): Request
+    protected function getRequest(): Request
     {
         return request();
     }

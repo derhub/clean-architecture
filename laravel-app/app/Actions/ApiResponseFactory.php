@@ -7,26 +7,20 @@ use Derhub\Shared\Message\Query\QueryResponse;
 
 class ApiResponseFactory
 {
-    public function create(): ApiResponse
+    public static function create(null|CommandResponse|QueryResponse $response): ApiResponse
     {
-        return new ApiResponse([]);
+        return new ApiResponse($response);
     }
 
     public static function fromCommand(
         CommandResponse $response
     ): ApiResponse {
-        return ApiResponse::create(
-            [
-                'aggregate_id' => $response->aggregateRootId(),
-            ]
-        );
+        return new ApiResponse($response);
     }
 
     public static function fromQuery(
         QueryResponse $response,
     ): ApiResponse {
-        return ApiResponse::create(
-            $response->results(),
-        );
+        return new ApiResponse($response);
     }
 }

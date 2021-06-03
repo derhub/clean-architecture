@@ -2,34 +2,41 @@
 
 namespace App\Actions;
 
+use Derhub\Shared\Message\Command\CommandResponse;
+use Derhub\Shared\Message\Query\QueryResponse;
 use Derhub\Shared\Query\QueryItem;
 use Illuminate\Http\JsonResponse;
 
 use function is_array;
-use function is_iterable;
 use function json_encode;
 
 class ApiResponse
 {
     public const HTTP_SUCCESS = 200;
+    public const HTTP_FAILED = 422;
 
     private int $status;
     private array $errors;
+    private \Generator|array $data;
 
-    public static function create(
-        iterable $data,
-        int $status = self::HTTP_SUCCESS
-    ): self {
-        $self = new self($data);
-        $self->setStatus($status);
-        return $self;
-    }
+    public function __construct(
+        private null|CommandResponse|QueryResponse $response
+    ) {
+        $this->status = $this->response === null || $this->response->isSuccess()
+            ? self::HTTP_SUCCESS
+            : self::HTTP_FAILED;
 
-    public function __construct(private iterable $data)
-    {
-        $this->status = self::HTTP_SUCCESS;
-        $this->errors = [];
+        $this->errors = $this->response?->errors() ?? [];
+
         $this->data = [];
+        if ($this->response instanceof CommandResponse) {
+            $this->data =
+                ['aggregate_id' => $this->response->aggregateRootId()];
+        }
+
+        if ($this->response instanceof QueryResponse) {
+            $this->data = $this->response->results();
+        }
     }
 
     public function setStatus(int $status): self
