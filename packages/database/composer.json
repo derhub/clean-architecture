@@ -8,7 +8,8 @@
     }
   ],
   "require": {
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "robmorgan/phinx": "^0.12.7"
   },
   "require-dev": {
     "derhub/shared": "dev-master",
