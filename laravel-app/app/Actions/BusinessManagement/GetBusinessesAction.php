@@ -27,7 +27,7 @@ class GetBusinessesAction
         }
 
         $response = $this->handle(
-            page: $request->get('page', 1),
+            page: $request->get('page', 0),
             perPage: $request->get('per_page', 10),
             aggregateIds: $request->get('ids'),
             slugs: $request->get('slugs'),

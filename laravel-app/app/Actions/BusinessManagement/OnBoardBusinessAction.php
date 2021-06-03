@@ -2,7 +2,7 @@
 
 namespace App\Actions\BusinessManagement;
 
-use App\Actions\BaseAction;
+use App\Actions\ActionCapabilities;
 use App\Actions\ApiResponseFactory;
 use Derhub\Shared\Message\Command\CommandBus;
 use Derhub\Shared\Message\Command\CommandResponse;
@@ -12,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 
 class OnBoardBusinessAction
 {
-    use BaseAction;
+    use ActionCapabilities;
 
     public function __construct(private CommandBus $cmdBus)
     {
