@@ -9,6 +9,16 @@ trait UuidValueObject
 {
     private ?string $value;
 
+    public static function fromBytes(string $bytes): self
+    {
+        return self::init(Uuid::fromBytes($bytes)->toString());
+    }
+
+    public function toBytes(): string
+    {
+        return Uuid::fromString($this->toString())->toBytes();
+    }
+
     public static function fromString(string $value): self
     {
         Assert::uuid($value);

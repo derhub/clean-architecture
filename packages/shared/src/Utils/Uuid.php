@@ -7,6 +7,7 @@
 namespace Derhub\Shared\Utils;
 
 use Ramsey\Uuid\Uuid as BaseUuid;
+use Ramsey\Uuid\UuidInterface;
 
 final class Uuid
 {
@@ -14,14 +15,25 @@ final class Uuid
     {
         Assert::uuid($value);
 
-        return new self($value);
+        return new self(BaseUuid::fromString($value));
+    }
+
+    public static function fromBytes(string $bytes): self
+    {
+        return new self(BaseUuid::fromBytes($bytes));
+    }
+
+    public function toBytes(): string
+    {
+        return $this->value->getBytes();
     }
 
     public static function generate(): self
     {
-        return new self(BaseUuid::uuid4()->toString());
+        return new self(BaseUuid::uuid4());
     }
-    protected function __construct(protected string $value)
+
+    protected function __construct(protected UuidInterface $value)
     {
     }
 
@@ -32,10 +44,10 @@ final class Uuid
 
     public function toString(): string
     {
-        return $this->value;
+        return $this->value->toString();
     }
 
-    public function value(): string
+    public function value(): UuidInterface
     {
         return $this->value;
     }
