@@ -2,13 +2,15 @@
 
 namespace App\Providers;
 
-use Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine\BusinessDoctrineTypes;
+use Composer\Autoload\ClassMapGenerator;
 use Derhub\Integration\ModuleService\ModuleService;
-use Derhub\Shared\Database\Doctrine\DatabaseDoctrineTypes;
 use Derhub\Shared\Database\Doctrine\DoctrineFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
+
+use function base_path;
+use function config;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,8 +22,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        DatabaseDoctrineTypes::register();
-        BusinessDoctrineTypes::register();
+        $moduleBootstraps = config()->get('derhub.module.bootstraps', []);
+        foreach ($moduleBootstraps as $bootstrap) {
+            include_once $bootstrap;
+        }
     }
 
     /**
@@ -56,10 +60,9 @@ class AppServiceProvider extends ServiceProvider
 
         /** @var ModuleService $moduleService */
         $moduleService = $this->app->make(ModuleService::class);
-        $moduleService->register(
-            $this->app->make(\Derhub\Shared\Database\Module::class),
-            $this->app->make(\Derhub\BusinessManagement\Module::class)
-        );
+        foreach (config('derhub.module.modules', []) as $module) {
+            $moduleService->register($this->app->make($module));
+        }
         $moduleService->start();
 
         $this->registerDebugBar();
