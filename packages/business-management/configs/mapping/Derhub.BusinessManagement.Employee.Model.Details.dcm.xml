@@ -9,7 +9,7 @@
         <field type="string" name="name" column="name" nullable="true"/>
         <field type="employee_initial" name="initial" column="initial"
                nullable="true"/>
-        <field type="employee_position" name="position" column="position"
+        <field type="employee_position" name="position" column="position_id"
                nullable="true"/>
         <field type="employee_email" name="email" column="email"
                nullable="true"/>

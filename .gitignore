@@ -13,8 +13,6 @@ vendor
 
 apps
 
-packages/*/phinx.php
-
 .*
 composer.json
 monorepo-builder.php
