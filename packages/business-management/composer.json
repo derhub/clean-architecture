@@ -27,6 +27,7 @@
     }
   },
   "scripts": {
+    "phinx": "@php vendor/bin/phinx",
     "psalm": "../../vendor/bin/psalm ."
   },
   "repositories": [
