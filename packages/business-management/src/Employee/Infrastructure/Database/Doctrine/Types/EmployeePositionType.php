@@ -7,7 +7,7 @@ use Derhub\BusinessManagement\Employee\Model\Values\EmployeePosition;
 use Derhub\Shared\Database\Doctrine\Types\DbalTyping;
 use Doctrine\DBAL\Types\StringType;
 
-class EmployeePositionType implements StringType
+class EmployeePositionType extends StringType
 {
     use DbTypeBytes;
 

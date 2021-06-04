@@ -4,6 +4,7 @@ namespace Derhub\BusinessManagement\Employee\Infrastructure\Database\Doctrine\Ty
 
 use Derhub\BusinessManagement\Employee\Infrastructure\Database\Doctrine\DbTypeBytes;
 use Derhub\BusinessManagement\Employee\Model\Values\EmployeeId;
+use Doctrine\DBAL\Types\GuidType;
 
 class EmployeeIdType extends GuidType
 {

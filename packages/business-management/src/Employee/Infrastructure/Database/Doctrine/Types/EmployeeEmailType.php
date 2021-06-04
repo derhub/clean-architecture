@@ -6,7 +6,7 @@ use Derhub\BusinessManagement\Employee\Infrastructure\Database\Doctrine\DbTypeBy
 use Derhub\BusinessManagement\Employee\Model\Values\Email;
 use Doctrine\DBAL\Types\StringType;
 
-class EmployeeEmailType implements StringType
+class EmployeeEmailType extends StringType
 {
     use DbTypeBytes;
 

@@ -6,7 +6,7 @@ use Derhub\BusinessManagement\Employee\Infrastructure\Database\Doctrine\DbTypeBy
 use Derhub\BusinessManagement\Employee\Model\Values\Status;
 use Doctrine\DBAL\Types\StringType;
 
-class EmployeeStatusIdType implements StringType
+class EmployeeStatusIdType extends StringType
 {
     use DbTypeBytes;
 
