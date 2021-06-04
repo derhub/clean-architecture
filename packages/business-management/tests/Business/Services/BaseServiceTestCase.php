@@ -7,8 +7,8 @@ use Derhub\BusinessManagement\Business\Infrastructure\Database\QueryBusinessRepo
 use Derhub\BusinessManagement\Business\Model\Specification\UniqueNameSpec;
 use Derhub\BusinessManagement\Business\Model\Specification\UniqueSlugSpec;
 use Derhub\BusinessManagement\Business\Model\Values\BusinessId;
+use Derhub\BusinessManagement\Business\Module;
 use Derhub\BusinessManagement\Business\Services\BusinessQueryItem;
-use Derhub\BusinessManagement\Module;
 use Derhub\Integration\TestUtils\MessageTestCase;
 use Derhub\Shared\ModuleInterface;
 use Tests\BusinessManagement\Business\Fixtures\Services\BusinessQueryItemMapper;

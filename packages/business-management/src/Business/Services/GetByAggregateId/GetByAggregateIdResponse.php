@@ -2,7 +2,7 @@
 
 namespace Derhub\BusinessManagement\Business\Services\GetByAggregateId;
 
-use Derhub\BusinessManagement\Business\BusinessModule;
+use Derhub\BusinessManagement\Business\Module;
 use Derhub\Shared\Message\Query\AbstractQueryResponse;
 
 class GetByAggregateIdResponse extends AbstractQueryResponse
@@ -18,7 +18,7 @@ class GetByAggregateIdResponse extends AbstractQueryResponse
 
     public function aggregate(): string
     {
-        return BusinessModule::ID;
+        return Module::ID;
     }
 
     public function result(): iterable

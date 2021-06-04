@@ -2,33 +2,39 @@
 
 namespace Derhub\BusinessManagement\Business;
 
-use Derhub\BusinessManagement\Module;
+use Derhub\Shared\Capabilities\ModuleCapabilities;
+use Derhub\Shared\ModuleInterface;
 
-final class BusinessModule
+final class Module implements ModuleInterface
 {
-    public function __construct(private Module $module)
+    use ModuleCapabilities;
+
+    public const ID = 'business';
+
+    public function getId(): string
     {
+        return self::ID;
     }
 
     public function start(): void
     {
-        $this->module->addDependency(
+        $this->addDependency(
             Services\BusinessQueryItemMapper::class,
             Services\BusinessItemMapperDoctrine::class
         );
-        $this->module->addDependency(
+        $this->addDependency(
             Model\BusinessRepository::class,
             Infrastructure\Database\BusinessPersistenceRepository::class,
         );
-        $this->module->addDependency(
+        $this->addDependency(
             Infrastructure\Database\QueryBusinessRepository::class,
             Infrastructure\Database\Doctrine\DoctrineQueryBusinessRepository::class,
         );
-        $this->module->addDependency(
+        $this->addDependency(
             Model\Specification\UniqueSlugSpec::class,
             Infrastructure\Specifications\QueryUniqueSlugSpec::class,
         );
-        $this->module->addDependency(
+        $this->addDependency(
             Model\Specification\UniqueNameSpec::class,
             Infrastructure\Specifications\QueryUniqueNameSpec::class,
         );
@@ -36,19 +42,19 @@ final class BusinessModule
         /**
          * Commands
          */
-        $this->module->addCommand(
+        $this->addCommand(
             Services\Disable\DisableBusiness::class,
             Services\Disable\DisableBusinessHandler::class
         );
-        $this->module->addCommand(
+        $this->addCommand(
             Services\Enable\EnableBusiness::class,
             Services\Enable\EnableBusinessHandler::class
         );
-        $this->module->addCommand(
+        $this->addCommand(
             Services\Onboard\OnBoardBusiness::class,
             Services\Onboard\OnBoardBusinessHandler::class
         );
-        $this->module->addCommand(
+        $this->addCommand(
             Services\TransferOwnership\TransferBusinessesOwnership::class,
             Services\TransferOwnership\TransferBusinessesOwnershipHandler::class,
         );
@@ -56,11 +62,11 @@ final class BusinessModule
         /**
          * Queries
          */
-        $this->module->addQuery(
+        $this->addQuery(
             Services\GetBusinesses\GetBusinesses::class,
             Services\GetBusinesses\GetBusinessesHandler::class
         );
-        $this->module->addQuery(
+        $this->addQuery(
             Services\GetByAggregateId\GetByAggregateId::class,
             Services\GetByAggregateId\GetByAggregateIdHandler::class
         );
@@ -68,7 +74,7 @@ final class BusinessModule
         /**
          * Commands
          */
-        $this->module->addEvent(
+        $this->addEvent(
             Model\Event\BusinessCountryChanged::class,
             Model\Event\BusinessDisabled::class,
             Model\Event\BusinessEnabled::class,

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Derhub\BusinessManagement\Employee\Model\Employee"
+            table="business_employees">
+
+        <indexes>
+            <index columns="employee_email"/>
+            <index columns="employee_employer_id"/>
+            <index columns="employee_status_id"/>
+        </indexes>
+
+        <id type="business_employee_id" name="aggregateRootId" column="id">
+            <generator strategy="NONE"/>
+        </id>
+        <field type="employee_employer_id" name="employerId"
+               column="employer_id"
+               nullable="true"/>
+        <field type="employee_status_id" name="status"
+               column="status_id"
+               nullable="true"/>
+
+        <embedded name="info"
+                  class="Derhub\BusinessManagement\Employee\Model\Details"
+                  use-column-prefix="false"/>
+
+        <field type="datetime_literal" name="createdAt" column="created_at"
+               nullable="true"/>
+        <field type="datetime_literal" name="updatedAt" column="updated_at"
+               nullable="true"/>
+        <field type="datetime_literal" name="deletedAt" column="deleted_at"
+               nullable="true"/>
+
+    </entity>
+
+</doctrine-mapping>

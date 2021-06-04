@@ -3,9 +3,9 @@
 namespace Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine;
 
 use Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine\Type\BusinessCountryType;
-use Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine\Type\BusinessOnBoardStatusType;
 use Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine\Type\BusinessIdType;
 use Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine\Type\BusinessNameType;
+use Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine\Type\BusinessOnBoardStatusType;
 use Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine\Type\BusinessOwnerIdType;
 use Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine\Type\BusinessSlugType;
 use Derhub\BusinessManagement\Business\Infrastructure\Database\Doctrine\Type\BusinessStatusType;
