@@ -8,7 +8,7 @@ class Email implements ValueObjectStr
 {
     private ?string $value;
 
-    public static function fromString(string $value): self
+    public static function fromString(string $value): static
     {
         return static::init($value);
     }
