@@ -2,15 +2,9 @@
 
 namespace Derhub\BusinessManagement\Employee;
 
-
-use Derhub\BusinessManagement\Employee\Infrastructure\Database\Doctrine\DoctrineEmployeeQueryRepository;
-use Derhub\BusinessManagement\Employee\Infrastructure\Database\EmployeePersistenceRepository;
-use Derhub\BusinessManagement\Employee\Infrastructure\Database\EmployeeQueryRepository;
-use Derhub\BusinessManagement\Employee\Model\EmployeeRepository;
-use Derhub\BusinessManagement\Employee\Services\GetBusinessEmployees\GetBusinessEmployees;
-use Derhub\BusinessManagement\Employee\Services\GetBusinessEmployees\GetBusinessEmployeesHandler;
-use Derhub\BusinessManagement\Employee\Services\NewEmployee\NewEmployee;
-use Derhub\BusinessManagement\Employee\Services\NewEmployee\NewEmployeeHandler;
+use Derhub\BusinessManagement\Employee\Infrastructure;
+use Derhub\BusinessManagement\Employee\Model;
+use Derhub\BusinessManagement\Employee\Services;
 use Derhub\Shared\Capabilities\ModuleCapabilities;
 use Derhub\Shared\ModuleInterface;
 
@@ -29,12 +23,12 @@ class Module implements ModuleInterface
     {
         $this
             ->addDependency(
-                EmployeeRepository::class,
-                EmployeePersistenceRepository::class,
+                Model\EmployeeRepository::class,
+                Infrastructure\Database\EmployeePersistenceRepository::class,
             )
             ->addDependency(
-                EmployeeQueryRepository::class,
-                DoctrineEmployeeQueryRepository::class
+                Infrastructure\Database\EmployeeQueryRepository::class,
+                Infrastructure\Database\Doctrine\DoctrineEmployeeQueryRepository::class
             )
         ;
 
@@ -45,16 +39,21 @@ class Module implements ModuleInterface
     private function registerCommands(): void
     {
         $this->addCommand(
-            NewEmployee::class,
-            NewEmployeeHandler::class,
-        );
+            Services\RegisterEmployee\RegisterEmployee::class,
+            Services\RegisterEmployee\RegisterEmployeeHandler::class,
+        )
+            ->addCommand(
+                Services\UpdateDetails\UpdateEmployeeDetails::class,
+                Services\UpdateDetails\UpdateEmployeeDetailsHandler::class
+            )
+        ;
     }
 
     private function registerQuery(): void
     {
         $this->addQuery(
-            GetBusinessEmployees::class,
-            GetBusinessEmployeesHandler::class
+            Services\GetBusinessEmployees\GetBusinessEmployees::class,
+            Services\GetBusinessEmployees\GetBusinessEmployeesHandler::class
         );
     }
 }

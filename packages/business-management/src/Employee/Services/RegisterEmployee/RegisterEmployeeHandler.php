@@ -1,6 +1,6 @@
 <?php
 
-namespace Derhub\BusinessManagement\Employee\Services\NewEmployee;
+namespace Derhub\BusinessManagement\Employee\Services\RegisterEmployee;
 
 use Derhub\BusinessManagement\Employee\Infrastructure\Database\EmployeePersistenceRepository;
 use Derhub\BusinessManagement\Employee\Model\Details;
@@ -14,7 +14,7 @@ use Derhub\BusinessManagement\Employee\Model\Values\Status;
 use Derhub\BusinessManagement\Employee\Services\EmployeeCommandResponse;
 use Derhub\Shared\Values\DateTimeLiteral;
 
-class NewEmployeeHandler
+class RegisterEmployeeHandler
 {
     public function __construct(
         private EmployeePersistenceRepository $repo,
@@ -25,7 +25,7 @@ class NewEmployeeHandler
     /**
      * @throws \Derhub\BusinessManagement\Employee\Model\Exceptions\EmployeeAlreadyExist
      */
-    public function __invoke(NewEmployee $cmd): EmployeeCommandResponse
+    public function __invoke(RegisterEmployee $cmd): EmployeeCommandResponse
     {
         $id = $this->repo->getNextId();
 
@@ -37,7 +37,7 @@ class NewEmployeeHandler
             birthday: DateTimeLiteral::fromString($cmd->birthday())
         );
 
-        $model = Employee::newEmployee(
+        $model = Employee::registerEmployee(
             spec: $this->uniqueEmployeeSpec,
             aggregateRootId: $id,
             employer: EmployerId::fromString($cmd->employerId()),

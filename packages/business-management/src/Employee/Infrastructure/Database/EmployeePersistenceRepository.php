@@ -16,9 +16,13 @@ class EmployeePersistenceRepository implements EmployeeRepository
         $this->repo->setAggregateClass(Employee::class);
     }
 
+    /**
+     * @param EmployeeId $id
+     * @return \Derhub\BusinessManagement\Employee\Model\Employee
+     */
     public function get(AggregateRootId $id): Employee
     {
-        return $this->repo->findById($id->toString());
+        return $this->repo->findById($id->toBytes());
     }
 
     public function getNextId(): EmployeeId

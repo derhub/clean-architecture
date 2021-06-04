@@ -2,6 +2,7 @@
 
 namespace Derhub\BusinessManagement\Employee\Model\Specifications;
 
+use Derhub\BusinessManagement\Employee\Model\Values\EmployeeId;
 use Derhub\BusinessManagement\Employee\Model\Values\EmployeePosition;
 use Derhub\BusinessManagement\Employee\Model\Values\EmployerId;
 use Derhub\BusinessManagement\Employee\Model\Values\Initial;
@@ -11,13 +12,19 @@ use Derhub\Shared\Values\Email;
 class UniqueEmployee
 {
     public function __construct(
+        private EmployeeId $employeeId,
         private EmployerId $employerId,
-        private string $name,
+        private ?string $name,
         private Initial $initial,
         private EmployeePosition $position,
         private Email $email,
         private DateTimeLiteral $birthday,
     ) {
+    }
+
+    public function employeeId(): EmployeeId
+    {
+        return $this->employeeId;
     }
 
     public function employerId(): EmployerId

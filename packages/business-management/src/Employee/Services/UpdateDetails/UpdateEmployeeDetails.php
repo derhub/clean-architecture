@@ -1,16 +1,15 @@
 <?php
 
-namespace Derhub\BusinessManagement\Employee\Services\NewEmployee;
+namespace Derhub\BusinessManagement\Employee\Services\UpdateDetails;
 
 use Derhub\Shared\Message\Command\Command;
 
-class NewEmployee implements Command
+class UpdateEmployeeDetails implements Command
 {
     private int $version = 1;
 
     public function __construct(
-        private string $employerId,
-        private string $statusId,
+        private string $employeeId,
         private string $name,
         private string $initial,
         private string $position,
@@ -19,14 +18,9 @@ class NewEmployee implements Command
     ) {
     }
 
-    public function employerId(): string
+    public function employeeId(): string
     {
-        return $this->employerId;
-    }
-
-    public function statusId(): string
-    {
-        return $this->statusId;
+        return $this->employeeId;
     }
 
     public function name(): string
