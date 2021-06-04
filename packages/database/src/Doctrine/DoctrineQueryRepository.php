@@ -20,6 +20,7 @@ use Derhub\Shared\Query\QueryRepository;
 abstract class DoctrineQueryRepository implements QueryRepository
 {
     use QueryRepositoryFilterCapabilities;
+
     /**
      * @return \Doctrine\ORM\EntityRepository<T>
      */
@@ -31,10 +32,17 @@ abstract class DoctrineQueryRepository implements QueryRepository
      */
     public function __construct(
         protected EntityManagerInterface $entityManager,
-        protected QueryItemMapper $mapper,
+        protected ?QueryItemMapper $mapper = null,
     ) {
         $this->doctrineRepo = $this->getRepository();
-        $this->setFilterFactory(new DoctrineQueryBuilderFilterFactory($this->doctrineRepo));
+        $this->setFilterFactory(
+            new DoctrineQueryBuilderFilterFactory($this->doctrineRepo)
+        );
+    }
+
+    public function setMapper(QueryItemMapper $mapper): void
+    {
+        $this->mapper = $mapper;
     }
 
     /**
@@ -139,6 +147,6 @@ abstract class DoctrineQueryRepository implements QueryRepository
 
     protected function mapResult(array $data): mixed
     {
-        return $this->mapper->fromArray($data);
+        return $this->mapper?->fromArray($data) ?? $data;
     }
 }
