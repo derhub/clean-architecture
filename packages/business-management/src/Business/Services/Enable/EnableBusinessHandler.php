@@ -5,6 +5,7 @@ namespace Derhub\BusinessManagement\Business\Services\Enable;
 use Derhub\BusinessManagement\Business\Model\Business;
 use Derhub\BusinessManagement\Business\Model\BusinessRepository;
 use Derhub\BusinessManagement\Business\Model\Values\BusinessId;
+use Derhub\BusinessManagement\Business\Services\CommandResponse;
 use Derhub\Shared\Exceptions\ApplicationException;
 use Derhub\Shared\Exceptions\DomainException;
 
@@ -14,23 +15,17 @@ class EnableBusinessHandler
     {
     }
 
-    public function __invoke(EnableBusiness $msg): EnableBusinessResponse
+    public function __invoke(EnableBusiness $msg): CommandResponse
     {
-        $res = new EnableBusinessResponse($msg->aggregateRootId());
+        $id = BusinessId::fromString($msg->aggregateRootId());
 
-        try {
-            $id = BusinessId::fromString($msg->aggregateRootId());
+        $model = $this->getModel($id);
 
-            $model = $this->getModel($id);
+        $model->enable();
 
-            $model->enable();
+        $this->repo->save($model);
 
-            $this->repo->save($model);
-        } catch (DomainException | ApplicationException $e) {
-            $res->addErrorFromException($e);
-        }
-
-        return $res;
+        return new CommandResponse($msg->aggregateRootId());
     }
 
     private function getModel(BusinessId $id): Business

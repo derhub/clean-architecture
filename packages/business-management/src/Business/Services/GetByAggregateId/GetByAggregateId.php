@@ -9,13 +9,13 @@ class GetByAggregateId implements Query
     private int $version = 1;
 
     public function __construct(
-        private string|array $aggregateRootId,
+        private string|array $businessId,
     ) {
     }
 
     public function aggregateRootId(): ?string
     {
-        return $this->aggregateRootId;
+        return $this->businessId;
     }
 
     public function version(): int

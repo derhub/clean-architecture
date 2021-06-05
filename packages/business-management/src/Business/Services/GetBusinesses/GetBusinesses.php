@@ -12,8 +12,8 @@ final class GetBusinesses extends BaseMessage implements Query
     public function __construct(
         private int $page,
         private int $perPage,
-        private ?array $aggregateIds = null,
-        private ?array $slugs = null,
+        private ?array $businessId = null,
+        private ?array $slug = null,
         private null|bool|int $enabled = null,
         private null|string|int|array $onBoardType = null,
     ) {
@@ -21,7 +21,7 @@ final class GetBusinesses extends BaseMessage implements Query
 
     public function aggregateIds(): ?array
     {
-        return $this->aggregateIds;
+        return $this->businessId;
     }
 
     public function enabled(): ?bool
@@ -46,7 +46,7 @@ final class GetBusinesses extends BaseMessage implements Query
 
     public function slugs(): ?array
     {
-        return $this->slugs;
+        return $this->slug;
     }
 
     public function version(): int

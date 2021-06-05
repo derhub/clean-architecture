@@ -13,7 +13,7 @@ class OnBoardBusiness implements Command
         private string $ownerId,
         private string $slug,
         private string $country,
-        private string $onboardStatus,
+        private string|int $onboardStatus,
     ) {
     }
 

@@ -7,8 +7,7 @@ namespace Derhub\BusinessManagement\Business\Services\TransferOwnership;
 use Derhub\BusinessManagement\Business\Model\BusinessRepository;
 use Derhub\BusinessManagement\Business\Model\Values\BusinessId;
 use Derhub\BusinessManagement\Business\Model\Values\OwnerId;
-use Derhub\Shared\Exceptions\ApplicationException;
-use Derhub\Shared\Exceptions\DomainException;
+use Derhub\BusinessManagement\Business\Services\CommandResponse;
 
 final class TransferBusinessesOwnershipHandler
 {
@@ -17,22 +16,20 @@ final class TransferBusinessesOwnershipHandler
     ) {
     }
 
+    /**
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\InvalidOwnerIdException
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\ChangesToDisabledBusinessException
+     */
     public function __invoke(
         TransferBusinessesOwnership $msg
-    ): TransferBusinessesOwnershipResponse {
-        $res = new TransferBusinessesOwnershipResponse($msg->aggregateRootId());
+    ): CommandResponse {
+        $id = BusinessId::fromString($msg->aggregateRootId());
+        /** @var \Derhub\BusinessManagement\Business\Model\Business $model */
+        $model = $this->repo->get($id);
 
-        try {
-            $id = BusinessId::fromString($msg->aggregateRootId());
-            /** @var \Derhub\BusinessManagement\Business\Model\Business $model */
-            $model = $this->repo->get($id);
+        $model->transferOwnership(OwnerId::fromString($msg->ownerId()));
+        $this->repo->save($model);
 
-            $model->transferOwnership(OwnerId::fromString($msg->ownerId()));
-            $this->repo->save($model);
-        } catch (DomainException | ApplicationException $e) {
-            $res->addErrorFromException($e);
-        }
-
-        return $res;
+        return new CommandResponse($msg->aggregateRootId());
     }
 }

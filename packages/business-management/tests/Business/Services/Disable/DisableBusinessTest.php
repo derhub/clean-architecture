@@ -3,6 +3,7 @@
 namespace Tests\BusinessManagement\Business\Services\Disable;
 
 use Derhub\BusinessManagement\Business\Model\Business;
+use Derhub\BusinessManagement\Business\Services\CommandResponse;
 use Derhub\BusinessManagement\Business\Services\Disable\DisableBusiness;
 use Derhub\BusinessManagement\Business\Services\Disable\DisableBusinessHandler;
 use Derhub\BusinessManagement\Business\Services\Disable\DisableBusinessResponse;
@@ -17,7 +18,7 @@ class DisableBusinessTest extends BaseServiceTestCase
     {
         $this->givenExisting(Business::class)
             ->when(new DisableBusiness($this->lastId->toString()))
-            ->then(DisableBusinessResponse::class)
+            ->then(CommandResponse::class)
         ;
     }
     protected function getHandler(): object

@@ -11,6 +11,7 @@ use Derhub\BusinessManagement\Business\Model\Values\Name;
 use Derhub\BusinessManagement\Business\Model\Values\OnBoardStatus;
 use Derhub\BusinessManagement\Business\Model\Values\OwnerId;
 use Derhub\BusinessManagement\Business\Model\Values\Slug;
+use Derhub\BusinessManagement\Business\Services\CommandResponse;
 use Derhub\Shared\Exceptions\DomainException;
 
 final class OnBoardBusinessHandler
@@ -22,34 +23,34 @@ final class OnBoardBusinessHandler
     ) {
     }
 
+    /**
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\InvalidOwnerIdException
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\AlreadyOnBoardException
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\SlugAlreadyExist
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\NameAlreadyExist
+     * @throws \Derhub\BusinessManagement\Business\Model\Exception\ChangesToDisabledBusinessException
+     */
     public function __invoke(
         OnBoardBusiness $message
-    ): OnBoardBusinessResponse {
-        $response = new OnBoardBusinessResponse(null);
+    ): \Derhub\Shared\Message\Command\CommandResponse {
+        $id = $this->repo->getNextId();
 
-        try {
-            $id = $this->repo->getNextId();
-            $response->setAggregateRootId($id->toString());
+        $model = new Business();
 
-            $model = new Business();
-
-            $model->onBoard(
-                $this->uniqueNameSpec,
-                $this->uniqueSlugSpec,
-                id: $id,
-                ownerId: OwnerId::fromString($message->ownerId()),
-                name: Name::fromString($message->name()),
-                slug: Slug::fromString($message->slug()),
-                country: Country::fromString($message->country()),
-                boardingStatus:
-                OnBoardStatus::fromString($message->onboardStatus()),
-            );
-            $this->repo->save($model);
-        } catch (DomainException $e) {
-            $response->addErrorFromException($e);
-        }
+        $model->onBoard(
+            $this->uniqueNameSpec,
+            $this->uniqueSlugSpec,
+            id: $id,
+            ownerId: OwnerId::fromString($message->ownerId()),
+            name: Name::fromString($message->name()),
+            slug: Slug::fromString($message->slug()),
+            country: Country::fromString($message->country()),
+            boardingStatus:
+            OnBoardStatus::fromString($message->onboardStatus()),
+        );
+        $this->repo->save($model);
 
 
-        return $response;
+        return new CommandResponse($id->toString());
     }
 }

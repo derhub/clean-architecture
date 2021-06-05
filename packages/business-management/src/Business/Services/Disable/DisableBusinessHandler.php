@@ -4,8 +4,7 @@ namespace Derhub\BusinessManagement\Business\Services\Disable;
 
 use Derhub\BusinessManagement\Business\Model\BusinessRepository;
 use Derhub\BusinessManagement\Business\Model\Values\BusinessId;
-use Derhub\Shared\Exceptions\ApplicationException;
-use Derhub\Shared\Exceptions\DomainException;
+use Derhub\BusinessManagement\Business\Services\CommandResponse;
 
 final class DisableBusinessHandler
 {
@@ -14,23 +13,17 @@ final class DisableBusinessHandler
     ) {
     }
 
-    public function __invoke(DisableBusiness $msg): DisableBusinessResponse
+    public function __invoke(DisableBusiness $msg): CommandResponse
     {
-        $response = new DisableBusinessResponse($msg->aggregateRootId());
+        $id = BusinessId::fromString($msg->aggregateRootId());
 
-        try {
-            $id = BusinessId::fromString($msg->aggregateRootId());
+        /** @var \Derhub\BusinessManagement\Business\Model\Business $model */
+        $model = $this->repo->get($id);
 
-            /** @var \Derhub\BusinessManagement\Business\Model\Business $model */
-            $model = $this->repo->get($id);
+        $model->disable();
 
-            $model->disable();
+        $this->repo->save($model);
 
-            $this->repo->save($model);
-        } catch (DomainException | ApplicationException $e) {
-            $response->addErrorFromException($e);
-        }
-
-        return $response;
+        return new CommandResponse($msg->aggregateRootId());
     }
 }

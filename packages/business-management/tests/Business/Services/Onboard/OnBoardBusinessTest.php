@@ -7,9 +7,9 @@ use Derhub\BusinessManagement\Business\Model\Exception\NameAlreadyExist;
 use Derhub\BusinessManagement\Business\Model\Exception\SlugAlreadyExist;
 use Derhub\BusinessManagement\Business\Model\Values\OnBoardStatus;
 use Derhub\BusinessManagement\Business\Model\Values\OwnerId;
+use Derhub\BusinessManagement\Business\Services\CommandResponse;
 use Derhub\BusinessManagement\Business\Services\Onboard\OnBoardBusiness;
 use Derhub\BusinessManagement\Business\Services\Onboard\OnBoardBusinessHandler;
-use Derhub\BusinessManagement\Business\Services\Onboard\OnBoardBusinessResponse;
 use Tests\BusinessManagement\Business\Services\BaseServiceTestCase;
 
 class OnBoardBusinessTest extends BaseServiceTestCase
@@ -21,10 +21,9 @@ class OnBoardBusinessTest extends BaseServiceTestCase
     {
         $this->mockUniqueNameSpec->method('isSatisfiedBy')->willReturn(false);
         $this->mockUniqueSlugSpec->method('isSatisfiedBy')->willReturn(true);
-
+        $this->expectException(NameAlreadyExist::class);
         $this->prepareTest()
-            ->expectExceptionErrors(NameAlreadyExist::class)
-            ->then(OnBoardBusinessResponse::class)
+            ->then(CommandResponse::class)
         ;
     }
 
@@ -36,11 +35,12 @@ class OnBoardBusinessTest extends BaseServiceTestCase
         $this->mockUniqueNameSpec->method('isSatisfiedBy')->willReturn(true);
         $this->mockUniqueSlugSpec->method('isSatisfiedBy')->willReturn(false);
 
+        $this->expectException(SlugAlreadyExist::class);
         $this->prepareTest()
-            ->expectExceptionErrors(SlugAlreadyExist::class)
-            ->then(OnBoardBusinessResponse::class)
+            ->then(CommandResponse::class)
         ;
     }
+
     /**
      * @test
      */
@@ -50,7 +50,7 @@ class OnBoardBusinessTest extends BaseServiceTestCase
         $this->mockUniqueSlugSpec->method('isSatisfiedBy')->willReturn(true);
 
         $this->prepareTest()
-            ->then(OnBoardBusinessResponse::class)
+            ->then(CommandResponse::class)
         ;
     }
 
@@ -68,6 +68,7 @@ class OnBoardBusinessTest extends BaseServiceTestCase
             )
             ;
     }
+
     protected function getHandler(): object
     {
         return new OnBoardBusinessHandler(

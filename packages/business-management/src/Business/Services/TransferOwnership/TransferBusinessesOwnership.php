@@ -10,14 +10,14 @@ class TransferBusinessesOwnership extends BaseMessage implements Command
     private int $version = 1;
 
     public function __construct(
-        private string $aggregateRootId,
+        private string $businessId,
         private string $ownerId,
     ) {
     }
 
     public function aggregateRootId(): string
     {
-        return $this->aggregateRootId;
+        return $this->businessId;
     }
 
     public function ownerId(): string

@@ -10,13 +10,13 @@ final class DisableBusiness implements Command
 {
     private int $version = 1;
 
-    public function __construct(private string $aggregateRootId)
+    public function __construct(private string $businessId)
     {
     }
 
     public function aggregateRootId(): string
     {
-        return $this->aggregateRootId;
+        return $this->businessId;
     }
 
     public function version(): int
