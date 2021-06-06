@@ -7,6 +7,15 @@ use Illuminate\Support\Facades\Schema;
 class CreateUsersTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+    /**
      * Run the migrations.
      *
      * @return void
@@ -22,15 +31,5 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('users');
     }
 }

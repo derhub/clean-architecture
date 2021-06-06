@@ -2,7 +2,6 @@
 
 
 
-Route::get('/api/business',\App\Actions\BusinessManagement\GetBusinessesAction::class);
 
 Route::get(
     '/api/business/{id}',

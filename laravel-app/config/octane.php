@@ -1,5 +1,15 @@
 <?php
 
+use App\EndDoctrineConnectionForOctane;
+use App\StartDoctrineConnectionForOctane;
+use Derhub\Integration\ModuleService\ModuleList;
+use Derhub\Integration\ModuleService\ModuleService;
+use Derhub\Shared\Message\Command\CommandListenerProvider;
+use Derhub\Shared\Message\Event\EventBus;
+use Derhub\Shared\Message\Event\EventListenerProvider;
+use Derhub\Shared\Message\Query\QueryBus;
+use Derhub\Shared\Message\Query\QueryListenerProvider;
+use Doctrine\ORM\EntityManagerInterface;
 use Laravel\Octane\Contracts\OperationTerminated;
 use Laravel\Octane\Events\RequestHandled;
 use Laravel\Octane\Events\RequestReceived;
@@ -16,6 +26,7 @@ use Laravel\Octane\Listeners\FlushTemporaryContainerInstances;
 use Laravel\Octane\Listeners\ReportException;
 use Laravel\Octane\Listeners\StopWorkerIfNecessary;
 use Laravel\Octane\Octane;
+use League\Tactician\CommandBus;
 
 return [
 
@@ -66,7 +77,7 @@ return [
         RequestReceived::class => [
             ...Octane::prepareApplicationForNextOperation(),
             ...Octane::prepareApplicationForNextRequest(),
-            //
+            StartDoctrineConnectionForOctane::class,
         ],
 
         RequestHandled::class => [
@@ -74,7 +85,6 @@ return [
         ],
 
         RequestTerminated::class => [
-            //
         ],
 
         TaskReceived::class => [
@@ -90,7 +100,8 @@ return [
         OperationTerminated::class => [
             FlushTemporaryContainerInstances::class,
             // DisconnectFromDatabases::class,
-            // CollectGarbage::class,
+            EndDoctrineConnectionForOctane::class,
+            CollectGarbage::class,
         ],
 
         WorkerErrorOccurred::class => [
@@ -116,10 +127,18 @@ return [
 
     'warm' => [
         ...Octane::defaultServicesToWarm(),
+        EventListenerProvider::class,
+        QueryListenerProvider::class,
+        CommandListenerProvider::class,
+        CommandBus::class,
+        QueryBus::class,
+        EventBus::class,
+        ModuleList::class,
+        ModuleService::class,
+        EntityManagerInterface::class,
     ],
 
     'flush' => [
-        //
     ],
 
     /*
@@ -177,7 +196,7 @@ return [
         'routes',
         'composer.lock',
         '.env',
-        'vendor/derhub/**/*.php'
+        'vendor/derhub/**/*.php',
     ],
 
     /*
@@ -191,7 +210,7 @@ return [
     |
     */
 
-    'garbage' => 50,
+    'garbage' => 30,
 
     /*
     |--------------------------------------------------------------------------

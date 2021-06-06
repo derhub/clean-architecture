@@ -2,8 +2,6 @@
 
 include_once __DIR__.'/business_management/api.php';
 
-use App\Actions\BusinessManagement\OnBoardBusinessAction;
-use Derhub\Shared\Message\Command\CommandBus;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,27 +21,5 @@ Route::get(
         return view('welcome');
     }
 );
-
-Route::get(
-    '/business-generate',
-    function (CommandBus $bus) {
-        $company = \Faker\Factory::create()->company;
-        /** @var \Derhub\BusinessManagement\Business\Services\Onboard\OnBoardBusinessResponse $result */
-        $result = $bus->dispatch(
-            new \Derhub\BusinessManagement\Business\Services\Onboard\OnBoardBusiness(
-                name: $company,
-                ownerId: \Derhub\Shared\Utils\Uuid::generate()->toString(),
-                slug: Str::slug($company),
-                country: 'PH',
-                onboardStatus: 'onboard-sales',
-            ),
-        );
-        return [
-            'aggregateId' => (string)$result->aggregateRootId(),
-            'success' => $result->isSuccess(),
-            'errors' => array_column($result->errors(), 'message'),
-        ];
-    }
-);
-
-Route::get('/business-generate-action', OnBoardBusinessAction::class);
+Route::get('/api/business', \App\Actions\BusinessManagement\GetBusinessesAction::class);
+Route::get('/business-generate', \App\Actions\BusinessManagement\OnBoardBusinessAction::class);

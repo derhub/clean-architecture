@@ -1,6 +1,5 @@
 <?php
 
-use EB\Integration\MessageBus\MessageBus;
 use Illuminate\Support\Facades\Route;
 
 /*

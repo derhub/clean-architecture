@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'dev_mode' => env('APP_ENV') !== 'production',
+    'dev_mode' => false, //env('APP_ENV') !== 'production',
     'proxy_dir' => storage_path('doctrine_cache'),
     'metadata' => glob(base_path('vendor/derhub/*/configs/mapping')) ?? [],
     'connection' => [
