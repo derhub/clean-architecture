@@ -1,6 +1,7 @@
 {
     "private": true,
     "scripts": {
+        "grunt:oa": "grunt --watch",
         "dev": "npm run development",
         "development": "mix",
         "watch": "mix watch",
@@ -10,12 +11,19 @@
         "production": "mix --production"
     },
     "devDependencies": {
+        "@babel/preset-react": "^7.13.13",
         "axios": "^0.21",
+        "grunt": "^1.4.1",
+        "grunt-tidy-annotations": "^0.0.1",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
         "postcss": "^8.1.14"
     },
     "dependencies": {
-        "chokidar": "^3.5.1"
+        "chokidar": "^3.5.1",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "swagger-ui-react": "^3.50.0",
+        "swagger-ui-themes": "^3.0.1"
     }
 }

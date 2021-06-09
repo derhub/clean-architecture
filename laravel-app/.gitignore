@@ -15,3 +15,6 @@ rr
 .rr.yaml
 _ide_helper.php
 _ide_*
+
+# temporary ignore generator actions
+app/Actions

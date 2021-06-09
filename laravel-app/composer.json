@@ -9,6 +9,7 @@
   "license": "MIT",
   "require": {
     "php": "^7.4|^8.0",
+    "cebe/php-openapi": "^1.5",
     "derhub/business-management": "dev-master",
     "derhub/integration": "dev-master",
     "derhub/shared": "dev-master",
@@ -37,7 +38,7 @@
     "nunomaduro/collision": "^5.0",
     "phpunit/phpunit": "^9.3.3",
     "roave/security-advisories": "dev-latest",
-    "wulfheart/laravel-actions-ide-helper": "dev-main"
+    "zircote/swagger-php": "^3.2"
   },
   "autoload": {
     "psr-4": {
@@ -54,6 +55,7 @@
   "scripts": {
     "code:fix": "php-cs-fixer fix",
     "code:fix-actions": "php-cs-fixer fix app/Actions",
+    "code:fix-actions-routes": "php-cs-fixer fix routes/actions",
     "phinx": "phinx",
     "db:migrate": "phinx migrate",
     "db:rollback": "phinx rollback",

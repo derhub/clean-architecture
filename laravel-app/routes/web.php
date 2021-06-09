@@ -1,7 +1,5 @@
 <?php
 
-include_once __DIR__.'/business_management/api.php';
-
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,5 +19,7 @@ Route::get(
         return view('welcome');
     }
 );
-Route::get('/api/business', \App\Actions\BusinessManagement\GetBusinessesAction::class);
-Route::get('/business-generate', \App\Actions\BusinessManagement\OnBoardBusinessAction::class);
+
+Route::get('/api', \App\Http\Controllers\ApiDocsController::class)->name('api.docs-api');
+Route::get('/api/docs', [\App\Http\Controllers\ApiDocsController::class, 'swaggerUI'])->name('api.docs-ui');
+Route::get('/api/validate', [\App\Http\Controllers\ApiDocsController::class, 'validateOpenApi'])->name('api.validateOpenApi');

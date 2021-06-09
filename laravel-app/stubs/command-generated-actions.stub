@@ -1,0 +1,42 @@
+<?php
+/**
+ * DON'T MODIFY THIS GENERATOR FILE
+ */
+
+namespace __namespace__;
+
+abstract class __class__
+{
+    public const MODULE = '__module__';
+    public const ROUTE = '/api/__module__/__action_slug__';
+    public const ROUTE_NAME = 'action.__module__.__action_slug__';
+    public const ROUTE_METHOD = '__http_method__';
+    public const FIELDS = __fields__;
+    public const COMMAND_CLASS = \__commandClass__::class;
+    public const COMMAND_TYPE = "__command_type__";
+
+    // public static function routes(): void
+    // {
+    //     $method = static::ROUTE_METHOD;
+    //     \Illuminate\Support\Facades\Route::{$method}(static::ROUTE, static::class)
+    //         ->name(static::ROUTE_NAME)
+    //     ;
+    // }
+
+    public static function withMessageClass(): string
+    {
+        return static::COMMAND_CLASS;
+    }
+
+    public function __invoke(...$args): mixed
+    {
+        return $this->dispatch()->toJsonResponse();
+    }
+
+    abstract public function dispatch(): \App\BuildingBlocks\Actions\ApiResponse;
+
+    public function authorize(array $payload): bool
+    {
+        return true;
+    }
+}

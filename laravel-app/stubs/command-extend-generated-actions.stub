@@ -1,0 +1,44 @@
+<?php
+
+namespace __namespace__;
+
+use __namespace__\Generated\__extend_class__;
+use App\BuildingBlocks\Actions\Action;
+use App\BuildingBlocks\Actions\ActionCapabilities;
+use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class __class__ extends __extend_class__ implements Action
+{
+    /**
+     * @see routes()
+     */
+    // TODO: modify generated routes
+    // public const ROUTE = '/api/__module__/__action_slug__';
+    // public const ROUTE_NAME = 'action.__module__.__action_slug__';
+    // public const ROUTE_METHOD = '__http_method__';
+
+    use ActionCapabilities {
+        ActionCapabilities::validationRules as private defaultRules;
+    }
+
+    public static function fields(array $payload): array
+    {
+        $fields = static::FIELDS;
+        // TODO: Modify the auto generated fields
+        return $fields;
+    }
+
+    public function validationRules(array $payload): array
+    {
+        $rules = $this->defaultRules($payload);
+        // TODO: Modify or replace the auto generated validation rules
+        return $rules;
+    }
+
+    public function authorize(array $payload): bool
+    {
+        // TODO: Modify or replace generated authorization method
+        return parent::authorize($payload);
+    }
+}

@@ -2,7 +2,9 @@
 
 namespace App\Console;
 
-use App\Console\Commands\GenerateActionsFromCommands;
+use App\Console\Commands\GenerateActionsConsole;
+use App\Console\Commands\ModuleListConsole;
+use App\Console\Commands\ModuleListServicesConsole;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,7 +16,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        GenerateActionsFromCommands::class,
+        GenerateActionsConsole::class,
+        ModuleListConsole::class,
+        ModuleListServicesConsole::class,
     ];
 
     /**

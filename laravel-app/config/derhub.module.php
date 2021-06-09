@@ -5,6 +5,5 @@ return [
     'modules' => [
         Derhub\BusinessManagement\Business\Module::class,
         Derhub\BusinessManagement\Employee\Module::class,
-        Derhub\Shared\Database\Module::class,
     ],
 ];

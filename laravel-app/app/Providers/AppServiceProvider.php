@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\BuildingBlocks\LaravelContainer;
 use App\DoctrineEntityManagerDecorator;
 use App\EntityManagerFactory;
-use Derhub\Integration\ModuleService\ModuleService;
+use Derhub\Shared\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Illuminate\Container\Container;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,6 +15,69 @@ use function config;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+        \Validator::extend(
+            \App\Rules\SlugRule::NAME, \App\Rules\SlugRule::class
+        );
+    }
+
+    public function register(): void
+    {
+        $this->app->register(
+            \App\BuildingBlocks\LaravelEventBus\LaravelEventBusServiceProvider::class
+        );
+
+        $this->app->singleton(
+            EntityManagerInterface::class,
+            function ($app) {
+                $factory = $app->make(EntityManagerFactory::class);
+
+                return new DoctrineEntityManagerDecorator($factory);
+            }
+        );
+
+        $this->app->singleton(
+            ContainerInterface::class,
+            static fn ($app) => new LaravelContainer(
+                static fn () => Container::getInstance()
+            )
+        );
+
+        $this->boostrapModules();
+        $this->registerDebugBar();
+    }
+
+    private function boostrapModules(): void
+    {
+        // iterate to boostrap and require them
+        $moduleBootstraps = config()->get('derhub.module.bootstraps', []);
+
+        // expose container to list of module bootstrap
+        $container =
+            $this->app->get(\Derhub\Shared\Container\ContainerInterface::class);
+        foreach ($moduleBootstraps as $bootstrap) {
+            require_once $bootstrap;
+        }
+
+        $services = $this->app->get(
+            \Derhub\Integration\ModuleService\ModuleService::class
+        );
+
+        $modules = config()->get('derhub.module.modules', []);
+        foreach ($modules as $module) {
+            $services->register($this->app->make($module));
+        }
+
+        $services->start();
+    }
+
+
     /**
      * @throws \DebugBar\DebugBarException
      */
@@ -35,41 +100,4 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot(): void
-    {
-        $moduleBootstraps = config()->get('derhub.module.bootstraps', []);
-        foreach ($moduleBootstraps as $bootstrap) {
-            include_once $bootstrap;
-        }
-    }
-
-    public function register(): void
-    {
-        $this->app->singleton(
-            EntityManagerInterface::class,
-            function ($app) {
-                $factory = $app->make(EntityManagerFactory::class);
-
-                return new DoctrineEntityManagerDecorator($factory);
-            }
-        );
-
-
-        $this->app->register(
-            \Derhub\Integration\Laravel\LaravelServiceProvider::class,
-        );
-
-        /** @var ModuleService $moduleService */
-        $moduleService = $this->app->make(ModuleService::class);
-        foreach (config('derhub.module.modules', []) as $module) {
-            $moduleService->register($this->app->make($module));
-        }
-        $moduleService->start();
-//        $this->registerDebugBar();
-    }
 }

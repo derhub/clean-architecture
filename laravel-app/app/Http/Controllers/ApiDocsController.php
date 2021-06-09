@@ -1,0 +1,285 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\BuildingBlocks\Actions\ApiResponseFactory;
+use cebe\openapi\spec\Components;
+use cebe\openapi\spec\OpenApi;
+use cebe\openapi\spec\Server;
+use cebe\openapi\Writer;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\Finder\Finder;
+
+use function base_path;
+use function response;
+
+class ApiDocsController extends Controller
+{
+    public function __invoke(): JsonResponse
+    {
+        $openApi = $this->createOpenApiObject();
+        $apiJson = Writer::writeToJson($openApi);
+
+        return JsonResponse::fromJsonString($apiJson);
+//
+//        $finder = (new Finder())
+//            ->in(base_path('openapi-spec'))
+//            ->in(base_path('app/Actions'))
+//            ->name('*.php')
+//            ->ignoreDotFiles(true)
+//        ;
+//
+//        $openapi = \OpenApi\Generator::scan($finder);
+//
+//        return JsonResponse::fromJsonString($openapi->toJson());
+    }
+
+    public function validateOpenApi(): JsonResponse
+    {
+        $openApi = $this->createOpenApiObject();
+        $openApi->validate();
+        $errors = $openApi->getErrors();
+        return new JsonResponse(data: $errors);
+    }
+
+    public function swaggerUI(): View
+    {
+        return view('swagger-ui');
+    }
+
+    private function createOpenApiObject(): OpenApi
+    {
+        $paths = $this->findPathsFromActions();
+
+        return new OpenApi(
+            [
+                'openapi' => '3.0.2',
+                'info' => [
+                    'title' => 'Clean Architecture API',
+                    'version' => '0.0.1',
+                ],
+                'servers' => [
+                    new Server(
+                        [
+                            'url' => 'http://127.0.0.1:8000',
+                            'description' => 'Local server',
+                        ]
+                    ),
+                ],
+                'components' => new Components(
+                    [
+                        'responses' =>
+                            $this->openApiResponseSchemas(),
+                    ]
+                ),
+                'paths' => $paths,
+            ]
+        );
+    }
+
+    private function findPathsFromActions(): array
+    {
+        $actionFinder = (new Finder())
+            ->in(base_path('app/Actions'))
+            ->notPath(['#^Samples#'])
+            ->name('*.php')
+            ->notName('/Generated/')
+            ->ignoreDotFiles(true)
+        ;
+
+        $paths = [];
+
+        /** @var \Symfony\Component\Finder\SplFileInfo $info */
+        foreach ($actionFinder->getIterator() as $file => $info) {
+            $className = '\App\\'.str_replace(
+                    [base_path('app').'/', '.php', '/'],
+                    ['', '', '\\'],
+                    $info->getRealPath()
+                );
+
+            if (class_exists($className, true)) {
+                $paths[$className::ROUTE] = $className::openApiPathItem();
+            }
+        }
+
+        return $paths;
+    }
+
+    public function openApiResponseSchemas(): array
+    {
+        $errorSchema = new \cebe\openapi\spec\Schema(
+            [
+                'type' => 'array',
+                'items' => new \cebe\openapi\spec\Schema(
+                    [
+                        'type' => 'object',
+                        'properties' => [
+                            'type' => new \cebe\openapi\spec\Schema(
+                                [
+                                    'type' => 'string',
+                                    'enum' => [
+                                        'validation',
+                                        'exception',
+                                        'authorization',
+                                    ],
+                                ]
+                            ),
+                            'field' => new \cebe\openapi\spec\Schema(
+                                ['type' => 'string', 'nullable' => true]
+                            ),
+                            'message' => new \cebe\openapi\spec\Schema(
+                                ['type' => 'string']
+                            ),
+                        ],
+
+                    ]
+                ),
+            ]
+        );
+
+        $defaultSchema = new \cebe\openapi\spec\Schema(
+            [
+                'type' => 'object',
+                'properties' => [
+                    'status' => new \cebe\openapi\spec\Schema(
+                        [
+                            'type' => 'integer',
+                            'enum' => [200, 404, 422, 500],
+                        ]
+                    ),
+                    'data' => new \cebe\openapi\spec\Schema(
+                        ['type' => 'array']
+                    ),
+                    'success' => new \cebe\openapi\spec\Schema(
+                        ['type' => 'boolean']
+                    ),
+                    'errors' => $errorSchema,
+                ],
+            ]
+        );
+
+        return [
+            '2XX' => new \cebe\openapi\spec\Response(
+                [
+                    'content' => [
+                        'application/json' => new \cebe\openapi\spec\MediaType(
+                            [
+                                'schema' => $defaultSchema,
+                                'examples' => [
+                                    'POST' => new \cebe\openapi\spec\Example(
+                                        [
+                                            'value' => [
+                                                'status' => 200,
+                                                'data' => [
+                                                    ['aggregate_root_id' => "string"],
+                                                ],
+                                                'errors' => [],
+                                                'success' => true,
+                                            ],
+                                        ]
+                                    ),
+                                    'GET' => new \cebe\openapi\spec\Example(
+                                        [
+                                            'value' => [
+                                                'status' => 200,
+                                                'data' => [
+                                                    [
+                                                        'sample_filed' => 'sample field value 1',
+                                                    ],
+                                                    [
+                                                        'sample_filed' => 'sample field value 2',
+                                                    ],
+                                                ],
+                                                'errors' => [],
+                                                'success' => true,
+                                            ],
+                                        ]
+                                    ),
+                                ],
+                            ]
+                        ),
+                    ],
+                ]
+            ),
+            '4XX' => new \cebe\openapi\spec\Response(
+                [
+                    'description' => '4xx',
+                    'content' => [
+                        'application/json' => new \cebe\openapi\spec\MediaType(
+                            [
+                                'schema' => $defaultSchema,
+                                'examples' => [
+                                    'validation' => new \cebe\openapi\spec\Example(
+                                        [
+                                            'value' => [
+                                                'status' => 422,
+                                                'data' => [],
+                                                'errors' => [
+                                                    [
+                                                        'type' => 'validation',
+                                                        'field' => 'string',
+                                                        'message' => 'string',
+                                                    ],
+                                                ],
+                                                'success' => false,
+                                            ],
+                                        ]
+                                    ),
+                                    'validation exception 4xx' => new \cebe\openapi\spec\Example(
+                                        [
+                                            'value' => [
+                                                'status' => 422,
+                                                'data' => [],
+                                                'errors' => [
+                                                    [
+                                                        'type' => 'exception',
+                                                        'field' => 'string',
+                                                        'message' => 'string',
+                                                    ],
+                                                ],
+                                                'success' => false,
+                                            ],
+                                        ]
+                                    ),
+                                    'exception 5xx' => new \cebe\openapi\spec\Example(
+                                        [
+                                            'value' => [
+                                                'status' => 500,
+                                                'data' => [],
+                                                'errors' => [
+                                                    [
+                                                        'type' => 'exception',
+                                                        'field' => null,
+                                                        'message' => 'string',
+                                                    ],
+                                                ],
+                                                'success' => false,
+                                            ],
+                                        ]
+                                    ),
+                                    'authorization' => new \cebe\openapi\spec\Example(
+                                        [
+                                            'value' => [
+                                                'status' => 403,
+                                                'data' => [],
+                                                'errors' => [
+                                                    [
+                                                        'type' => 'authorization',
+                                                        'field' => null,
+                                                        'message' => 'string',
+                                                    ],
+                                                ],
+                                                'success' => false,
+                                            ],
+                                        ]
+                                    ),
+                                ],
+                            ]
+                        ),
+                    ],
+                ]
+            ),
+        ];
+    }
+}
