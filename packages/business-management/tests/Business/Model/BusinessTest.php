@@ -136,8 +136,7 @@ class BusinessTest extends ModuleTestCase
             ownerId: $ownerId,
             name: Name::fromString('test 1'),
             slug: Slug::fromString('test-2-s-f-g'),
-            country: Country::fromAlpha2('PH'),
-            boardingStatus: OnBoardStatus::byOwner(),
+            country: Country::fromAlpha2('PH')
         );
         $this->assertEvents(
             [

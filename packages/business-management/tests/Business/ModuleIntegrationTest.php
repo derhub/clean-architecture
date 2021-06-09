@@ -4,7 +4,7 @@ namespace Tests\BusinessManagement\Business;
 
 use Derhub\BusinessManagement\Business\Module;
 use Derhub\Integration\TestUtils\ModuleIntegrationTestCaseCase;
-use Derhub\Shared\ModuleInterface;
+use Derhub\Shared\Module\ModuleInterface;
 
 class ModuleIntegrationTest extends ModuleIntegrationTestCaseCase
 {

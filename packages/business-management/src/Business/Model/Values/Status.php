@@ -61,7 +61,7 @@ class Status implements ValueObjectInt, ValueObjectStr
 
     public function __toString(): string
     {
-        return sprintf('business-management status is %s', $this->toString());
+        return sprintf('business status is %s', $this->toString());
     }
 
     public function isDisabled(): bool

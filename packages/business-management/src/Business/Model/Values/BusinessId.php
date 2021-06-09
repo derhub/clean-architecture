@@ -12,7 +12,7 @@ final class BusinessId implements AggregateRootId
     public function __toString(): string
     {
         if ($value = $this->toString()) {
-            return sprintf('business-management id %s', $value);
+            return sprintf('business id %s', $value);
         }
 
         return 'empty business-management id';

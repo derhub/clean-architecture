@@ -10,7 +10,7 @@ use Derhub\BusinessManagement\Business\Model\Values\BusinessId;
 use Derhub\BusinessManagement\Business\Module;
 use Derhub\BusinessManagement\Business\Services\BusinessQueryItem;
 use Derhub\Integration\TestUtils\MessageTestCase;
-use Derhub\Shared\ModuleInterface;
+use Derhub\Shared\Module\ModuleInterface;
 use Tests\BusinessManagement\Business\Fixtures\Services\BusinessQueryItemMapper;
 use Tests\BusinessManagement\Business\Fixtures\Services\QueryRepositoryStub;
 

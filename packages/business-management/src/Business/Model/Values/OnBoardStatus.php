@@ -2,35 +2,40 @@
 
 namespace Derhub\BusinessManagement\Business\Model\Values;
 
+use Derhub\BusinessManagement\Business\Shared\BoardingStatusValues;
 use Derhub\Shared\Utils\Assert;
 use Derhub\Shared\Values\ValueObject;
 use Derhub\Shared\Values\ValueObjectInt;
-use Derhub\Shared\Values\ValueObjectStr;
 
-class OnBoardStatus implements
-    ValueObjectStr,
-    ValueObjectInt
+class OnBoardStatus implements ValueObjectInt
 {
-    public const NONE = 0;
-    public const ONBOARD_OWNER = 2;
-    public const ONBOARD_SALES = 1;
-
     public const STATUES = [
-        self::NONE => 'none',
-        self::ONBOARD_SALES => 'onboard-sales',
-        self::ONBOARD_OWNER => 'onboard-owner',
+        BoardingStatusValues::START,
+        BoardingStatusValues::IN_PROGRESS,
+        BoardingStatusValues::FINISH,
+        BoardingStatusValues::APPROVED,
     ];
 
     private int $value;
 
-    public static function byOwner(): self
+    public static function start(): self
     {
-        return self::init(self::ONBOARD_OWNER);
+        return self::init(BoardingStatusValues::START);
     }
 
-    public static function bySales(): self
+    public static function inProgress(): self
     {
-        return self::init(self::ONBOARD_SALES);
+        return self::init(BoardingStatusValues::IN_PROGRESS);
+    }
+
+    public static function finish(): self
+    {
+        return self::init(BoardingStatusValues::FINISH);
+    }
+
+    public static function approved(): self
+    {
+        return self::init(BoardingStatusValues::APPROVED);
     }
 
     public static function fromInt(int $value): self
@@ -38,19 +43,9 @@ class OnBoardStatus implements
         return self::init($value);
     }
 
-    public static function fromString(string $value): self
-    {
-        Assert::inArray($value, self::STATUES);
-
-        /** @var int $intVal */
-        $intVal = array_search($value, self::STATUES, true);
-
-        return self::init($intVal);
-    }
-
     private static function init(int $value): self
     {
-        Assert::keyExists(self::STATUES, $value);
+        Assert::inArray($value, self::STATUES);
 
         $self = new self();
         $self->value = $value;
@@ -58,34 +53,29 @@ class OnBoardStatus implements
         return $self;
     }
 
-    public static function none(): self
-    {
-        return self::init(self::NONE);
-    }
-
     public function __construct()
     {
-        $this->value = self::NONE;
+        $this->value = BoardingStatusValues::START;
     }
 
     public function __toString()
     {
-        return sprintf('business-management on-boarding status %s', $this->toString());
+        return sprintf('business on-boarding status %s', $this->toInt());
     }
 
-    public function isNone(): bool
+    public function isStarted(): bool
     {
-        return $this->value === self::NONE;
+        return $this->value === BoardingStatusValues::START;
     }
 
-    public function isOwner(): bool
+    public function isInProgress(): bool
     {
-        return $this->value === self::ONBOARD_OWNER;
+        return $this->value === BoardingStatusValues::IN_PROGRESS;
     }
 
-    public function isSales(): bool
+    public function isFinish(): bool
     {
-        return $this->value === self::ONBOARD_SALES;
+        return $this->value === BoardingStatusValues::FINISH;
     }
 
     public function sameAs(ValueObject $other): bool
@@ -97,10 +87,5 @@ class OnBoardStatus implements
     public function toInt(): int
     {
         return $this->value;
-    }
-
-    public function toString(): string
-    {
-        return self::STATUES[$this->value];
     }
 }

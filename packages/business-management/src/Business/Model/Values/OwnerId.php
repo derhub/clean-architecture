@@ -25,7 +25,7 @@ class OwnerId implements ValueObjectStr
     public function __toString()
     {
         if ($value = $this->toString()) {
-            return sprintf('business-management owner id %s', $value);
+            return sprintf('business owner id %s', $value);
         }
 
         return 'empty business-management owner id';

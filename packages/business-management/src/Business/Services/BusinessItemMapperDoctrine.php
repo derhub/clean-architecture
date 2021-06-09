@@ -13,7 +13,7 @@ final class BusinessItemMapperDoctrine implements BusinessQueryItemMapper
             country: $data['info.country']->toString(),
             name: $data['info.name']->toString(),
             status: $data['info.status']->toString(),
-            onBoardStatus: $data['onBoardStatus']->toString(),
+            onBoardStatus: $data['onBoardStatus']->toInt(),
             createdAt: $data['createdAt']->toString(),
             updatedAt: $data['updatedAt']->toString(),
         );

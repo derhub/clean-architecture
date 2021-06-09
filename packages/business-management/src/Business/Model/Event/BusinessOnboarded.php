@@ -14,7 +14,6 @@ final class BusinessOnboarded implements DomainEvent
         private string $name,
         private string $slug,
         private string $country,
-        private string $boardingStatus,
         private string $createdAt,
     ) {
     }
@@ -22,11 +21,6 @@ final class BusinessOnboarded implements DomainEvent
     public function aggregateRootId(): string
     {
         return $this->aggregateRootId;
-    }
-
-    public function boardingStatus(): int
-    {
-        return $this->boardingStatus;
     }
 
     public function country(): string

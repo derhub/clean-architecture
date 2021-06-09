@@ -4,8 +4,8 @@ namespace Tests\BusinessManagement\Business\Services\TransferOwnership;
 
 use Derhub\BusinessManagement\Business\Model\Business;
 use Derhub\BusinessManagement\Business\Model\Values\OwnerId;
-use Derhub\BusinessManagement\Business\Services\TransferOwnership\TransferBusinessesOwnership;
-use Derhub\BusinessManagement\Business\Services\TransferOwnership\TransferBusinessesOwnershipHandler;
+use Derhub\BusinessManagement\Business\Services\TransferOwnership\TransferBusinessOwnership;
+use Derhub\BusinessManagement\Business\Services\TransferOwnership\TransferBusinessOwnershipHandler;
 use Derhub\Shared\Message\Command\CommandResponse;
 use Tests\BusinessManagement\Business\Services\BaseServiceTestCase;
 
@@ -18,7 +18,7 @@ class TransferBusinessesOwnershipTest extends BaseServiceTestCase
     {
         $this->givenExisting(Business::class)
             ->when(
-                new TransferBusinessesOwnership(
+                new TransferBusinessOwnership(
                     $this->lastId->toString(),
                     OwnerId::generate()->toString()
                 )
@@ -27,6 +27,6 @@ class TransferBusinessesOwnershipTest extends BaseServiceTestCase
     }
     protected function getHandler(): object
     {
-        return new TransferBusinessesOwnershipHandler($this->repository);
+        return new TransferBusinessOwnershipHandler($this->repository);
     }
 }

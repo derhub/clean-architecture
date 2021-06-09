@@ -62,8 +62,7 @@ class OnBoardBusinessTest extends BaseServiceTestCase
                     name: 'test',
                     ownerId: OwnerId::generate()->toString(),
                     slug: 's-d-f-g',
-                    country: 'PH',
-                    onboardStatus: OnBoardStatus::byOwner()->toString(),
+                    country: 'PH'
                 )
             )
             ;

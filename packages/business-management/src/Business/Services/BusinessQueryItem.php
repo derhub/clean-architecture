@@ -68,7 +68,7 @@ class BusinessQueryItem implements QueryItem
             'name' => $this->name(),
             'country' => $this->country(),
             'status' => $this->status(),
-            'onboard_status' => $this->onBoardStatus(),
+            'boarding_status' => $this->onBoardStatus(),
             'created_at' => $this->createdAt(),
             'updated_at' => $this->updatedAt(),
         ];

@@ -17,9 +17,13 @@ class BusinessPersistenceRepository implements BusinessRepository
         $this->persistence->setAggregateClass(Business::class);
     }
 
+    /**
+     * @param BusinessId $id
+     * @return \Derhub\BusinessManagement\Business\Model\Business
+     */
     public function get(AggregateRootId $id): Business
     {
-        return $this->persistence->findById($id->toString());
+        return $this->persistence->findById($id->toBytes());
     }
 
     public function getNextId(): BusinessId

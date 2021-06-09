@@ -5,7 +5,7 @@ namespace Derhub\BusinessManagement\Business\Services\TransferOwnership;
 use Derhub\BusinessManagement\Business\Services\BaseMessage;
 use Derhub\Shared\Message\Command\Command;
 
-class TransferBusinessesOwnership extends BaseMessage implements Command
+class TransferBusinessOwnership extends BaseMessage implements Command
 {
     private int $version = 1;
 

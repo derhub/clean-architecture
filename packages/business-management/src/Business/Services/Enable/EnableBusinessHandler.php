@@ -19,24 +19,13 @@ class EnableBusinessHandler
     {
         $id = BusinessId::fromString($msg->aggregateRootId());
 
-        $model = $this->getModel($id);
+        /** @var ?\Derhub\BusinessManagement\Business\Model\Business $model */
+        $model = $this->repo->get($id);
 
         $model->enable();
 
         $this->repo->save($model);
 
         return new CommandResponse($msg->aggregateRootId());
-    }
-
-    private function getModel(BusinessId $id): Business
-    {
-        /** @var ?\Derhub\BusinessManagement\Business\Model\Business $model */
-        $model = $this->repo->get($id);
-
-        if (! $model) {
-            throw BusinessNotFound::fromId($id);
-        }
-
-        return $model;
     }
 }

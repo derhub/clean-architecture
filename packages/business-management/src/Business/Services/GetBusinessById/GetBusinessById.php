@@ -1,19 +1,19 @@
 <?php
 
-namespace Derhub\BusinessManagement\Business\Services\GetByAggregateId;
+namespace Derhub\BusinessManagement\Business\Services\GetBusinessById;
 
 use Derhub\Shared\Message\Query\Query;
 
-class GetByAggregateId implements Query
+class GetBusinessById implements Query
 {
     private int $version = 1;
 
     public function __construct(
-        private string|array $businessId,
+        private array|string $businessId,
     ) {
     }
 
-    public function aggregateRootId(): ?string
+    public function aggregateRootId(): array|string
     {
         return $this->businessId;
     }

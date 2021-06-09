@@ -2,8 +2,8 @@
 
 namespace Derhub\BusinessManagement\Business;
 
-use Derhub\Shared\Capabilities\ModuleCapabilities;
-use Derhub\Shared\ModuleInterface;
+use Derhub\Shared\Module\ModuleCapabilities;
+use Derhub\Shared\Module\ModuleInterface;
 
 final class Module implements ModuleInterface
 {
@@ -55,20 +55,20 @@ final class Module implements ModuleInterface
             Services\Onboard\OnBoardBusinessHandler::class
         );
         $this->addCommand(
-            Services\TransferOwnership\TransferBusinessesOwnership::class,
-            Services\TransferOwnership\TransferBusinessesOwnershipHandler::class,
+            Services\TransferOwnership\TransferBusinessOwnership::class,
+            Services\TransferOwnership\TransferBusinessOwnershipHandler::class,
         );
 
         /**
          * Queries
          */
         $this->addQuery(
-            Services\GetBusinesses\GetBusinesses::class,
-            Services\GetBusinesses\GetBusinessesHandler::class
+            Services\BusinessList\BusinessList::class,
+            Services\BusinessList\BusinessListHandler::class
         );
         $this->addQuery(
-            Services\GetByAggregateId\GetByAggregateId::class,
-            Services\GetByAggregateId\GetByAggregateIdHandler::class
+            Services\GetBusinessById\GetBusinessById::class,
+            Services\GetBusinessById\GetBusinessByIdHandler::class
         );
 
         /**

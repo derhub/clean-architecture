@@ -1,6 +1,6 @@
 <?php
 
-namespace Derhub\BusinessManagement\Employee\Services\GetBusinessEmployees;
+namespace Derhub\BusinessManagement\Employee\Services\EmployeeListByBusiness;
 
 use Derhub\BusinessManagement\Employee\Infrastructure\Database\EmployeeQueryRepository;
 use Derhub\BusinessManagement\Employee\Model\Values\EmployerId;
@@ -9,14 +9,14 @@ use Derhub\Shared\Query\Filters\OperationFilter;
 use Derhub\Shared\Query\Filters\PaginationFilter;
 use Derhub\Shared\Query\Filters\SortFilter;
 
-class GetBusinessEmployeesHandler
+class EmployeeListByBusinessHandler
 {
     public function __construct(
         private EmployeeQueryRepository $repo
     ) {
     }
 
-    public function __invoke(GetBusinessEmployees $q): EmployeeQueryResponse
+    public function __invoke(EmployeeListByBusiness $q): EmployeeQueryResponse
     {
         $businessId = EmployerId::fromString($q->businessId());
         $query = $this->repo

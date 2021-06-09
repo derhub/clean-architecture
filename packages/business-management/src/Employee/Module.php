@@ -5,8 +5,8 @@ namespace Derhub\BusinessManagement\Employee;
 use Derhub\BusinessManagement\Employee\Infrastructure;
 use Derhub\BusinessManagement\Employee\Model;
 use Derhub\BusinessManagement\Employee\Services;
-use Derhub\Shared\Capabilities\ModuleCapabilities;
-use Derhub\Shared\ModuleInterface;
+use Derhub\Shared\Module\ModuleCapabilities;
+use Derhub\Shared\Module\ModuleInterface;
 
 class Module implements ModuleInterface
 {
@@ -52,8 +52,8 @@ class Module implements ModuleInterface
     private function registerQuery(): void
     {
         $this->addQuery(
-            Services\GetBusinessEmployees\GetBusinessEmployees::class,
-            Services\GetBusinessEmployees\GetBusinessEmployeesHandler::class
+            Services\EmployeeListByBusiness\EmployeeListByBusiness::class,
+            Services\EmployeeListByBusiness\EmployeeListByBusinessHandler::class
         );
     }
 }

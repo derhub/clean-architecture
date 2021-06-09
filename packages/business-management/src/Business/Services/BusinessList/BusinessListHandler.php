@@ -1,50 +1,43 @@
 <?php
 
-namespace Derhub\BusinessManagement\Business\Services\GetBusinesses;
+namespace Derhub\BusinessManagement\Business\Services\BusinessList;
 
 use Derhub\BusinessManagement\Business\Infrastructure\Database\QueryBusinessRepository;
 use Derhub\BusinessManagement\Business\Model\Values\BusinessId;
+use Derhub\BusinessManagement\Business\Model\Values\OnBoardStatus;
 use Derhub\BusinessManagement\Business\Model\Values\Slug;
 use Derhub\BusinessManagement\Business\Model\Values\Status;
+use Derhub\BusinessManagement\Business\Services\QueryResponse;
 use Derhub\BusinessManagement\Business\Shared\SharedValues;
-use Derhub\Shared\Exceptions\LayeredException;
 use Derhub\Shared\Query\Filters\InArrayFilter;
 use Derhub\Shared\Query\Filters\OperationFilter;
 use Derhub\Shared\Query\Filters\PaginationFilter;
 use Derhub\Shared\Query\Filters\SortFilter;
 
-class GetBusinessesHandler
+class BusinessListHandler
 {
     public function __construct(private QueryBusinessRepository $repository)
     {
     }
 
-    public function __invoke(GetBusinesses $msg): GetBusinessesResponse
+    public function __invoke(BusinessList $msg): QueryResponse
     {
-        $response = new GetBusinessesResponse();
+        $filters = [
+            new SortFilter(SharedValues::COL_CREATED_AT, 'desc'),
+            new PaginationFilter($msg->page(), $msg->perPage()),
+        ];
 
-        try {
-            $filters = [
-                new SortFilter(SharedValues::COL_CREATED_AT, 'desc'),
-                new PaginationFilter($msg->page(), $msg->perPage()),
-            ];
+        $filters = $this->filterForId($filters, $msg->aggregateIds());
+        $filters = $this->filterForSlugs($filters, $msg->slugs());
+        $filters = $this->filterForStatus($filters, $msg->enabled());
+        $filters = $this->filterForBoarding($filters, $msg->boardingStatus());
 
-            $filters =
-                $this->addFilterForAggregateId($filters, $msg->aggregateIds());
-            $filters = $this->addFilterForSlugs($filters, $msg->slugs());
-            $filters = $this->addFilterForStatus($filters, $msg->enabled());
-            $query = $this->repository
-                ->addFilters($filters);
+        $query = $this->repository->addFilters($filters);
 
-            $response->setResults($query->iterableResult());
-        } catch (LayeredException $e) {
-            $response->addError($e::class, $e->getMessage(), $e);
-        }
-
-        return $response;
+        return new QueryResponse($query->iterableResult());
     }
 
-    private function addFilterForAggregateId(
+    private function filterForId(
         array $prevFilters,
         string|array|null $aggregateIds,
     ): array {
@@ -52,12 +45,8 @@ class GetBusinessesHandler
             return $prevFilters;
         }
 
-        if (! is_array($aggregateIds)) {
-            $aggregateIds = [$aggregateIds];
-        }
-
         $idAsBytes = [];
-        foreach ($aggregateIds as $aggregateId) {
+        foreach ((array)$aggregateIds as $aggregateId) {
             $idAsBytes[] = BusinessId::fromString($aggregateId)->toBytes();
         }
 
@@ -69,7 +58,7 @@ class GetBusinessesHandler
         return $prevFilters;
     }
 
-    private function addFilterForSlugs(
+    private function filterForSlugs(
         array $prevFilters,
         ?array $slugs
     ): array {
@@ -86,7 +75,7 @@ class GetBusinessesHandler
         return $prevFilters;
     }
 
-    private function addFilterForStatus(
+    private function filterForStatus(
         array $prevFilters,
         string|int|null $status,
     ): array {
@@ -117,5 +106,21 @@ class GetBusinessesHandler
             $values,
             InArrayFilter::OPERATION_IN
         );
+    }
+
+    private function filterForBoarding(
+        array $prevFilters,
+        string|int|null $boardingStatus
+    ): array {
+        if ($boardingStatus === null) {
+            return $prevFilters;
+        }
+
+        $status = OnBoardStatus::fromInt((int)$boardingStatus)->toInt();
+
+        $prevFilters[] =
+            OperationFilter::eq(SharedValues::COL_ONBOARD_STATUS, $status);
+
+        return $prevFilters;
     }
 }

@@ -1,16 +1,15 @@
 <?php
 
-namespace Derhub\BusinessManagement\Employee\Services\GetBusinessEmployees;
+namespace Derhub\BusinessManagement\Employee\Services\EmployeeListByBusiness;
 
-use Derhub\BusinessManagement\Employee\Model\Values\EmployerId;
 use Derhub\Shared\Message\Query\Query;
 
-class GetBusinessEmployees implements Query
+class EmployeeListByBusiness implements Query
 {
     private int $version = 1;
 
     public function __construct(
-        private EmployerId $businessId,
+        private string $businessId,
         private int $page = 0,
         private int $perPage = 100,
     ) {
@@ -21,7 +20,7 @@ class GetBusinessEmployees implements Query
         return $this->version;
     }
 
-    public function businessId(): EmployerId
+    public function businessId(): string
     {
         return $this->businessId;
     }

@@ -1,25 +1,25 @@
 <?php
 
-namespace Derhub\BusinessManagement\Business\Services\GetBusinesses;
+namespace Derhub\BusinessManagement\Business\Services\BusinessList;
 
 use Derhub\BusinessManagement\Business\Services\BaseMessage;
 use Derhub\Shared\Message\Query\Query;
 
-final class GetBusinesses extends BaseMessage implements Query
+final class BusinessList extends BaseMessage implements Query
 {
     private int $version = 1;
 
     public function __construct(
-        private int $page,
-        private int $perPage,
-        private ?array $businessId = null,
-        private ?array $slug = null,
-        private null|bool|int $enabled = null,
-        private null|string|int|array $onBoardType = null,
+        private int $page = 0,
+        private int $perPage = 100,
+        private array|string|null $businessId = null,
+        private array|string|null $slug = null,
+        private int|null $enabled = null,
+        private int|null $boardingStatus = null,
     ) {
     }
 
-    public function aggregateIds(): ?array
+    public function aggregateIds(): array|string|null
     {
         return $this->businessId;
     }
@@ -29,9 +29,9 @@ final class GetBusinesses extends BaseMessage implements Query
         return $this->enabled;
     }
 
-    public function onBoardType(): null|string|int|array
+    public function boardingStatus(): int|null
     {
-        return $this->onBoardType;
+        return $this->boardingStatus;
     }
 
     public function page(): int
@@ -44,7 +44,7 @@ final class GetBusinesses extends BaseMessage implements Query
         return $this->perPage;
     }
 
-    public function slugs(): ?array
+    public function slugs(): array|string|null
     {
         return $this->slug;
     }

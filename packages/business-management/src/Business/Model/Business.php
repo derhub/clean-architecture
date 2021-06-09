@@ -182,7 +182,6 @@ final class Business implements AggregateRoot
         Name $name,
         Slug $slug,
         Country $country,
-        OnBoardStatus $boardingStatus,
     ): self {
         if ($this->onBoardStatus->toInt() > 0) {
             throw AlreadyOnBoardException::fromOnboardStatus(
@@ -207,7 +206,7 @@ final class Business implements AggregateRoot
             ->newCountry($country)
         ;
         $this->slug = $slug;
-        $this->onBoardStatus = $boardingStatus;
+        $this->onBoardStatus = OnBoardStatus::start();
         $this->createdAt = DateTimeLiteral::now();
 
         $this->record(
@@ -217,7 +216,6 @@ final class Business implements AggregateRoot
                 name: $this->info->name()->toString(),
                 slug: $this->slug->toString(),
                 country: $this->info->country()->toString(),
-                boardingStatus: $this->onBoardStatus->toString(),
                 createdAt: $this->createdAt->toString(),
             )
         );

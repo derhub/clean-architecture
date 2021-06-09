@@ -51,7 +51,7 @@ class Slug implements ValueObjectStr
 
     public function __toString()
     {
-        return sprintf('business-management slug %s', $this->toString());
+        return sprintf('business slug %s', $this->toString());
     }
 
     public function isEmpty(): bool

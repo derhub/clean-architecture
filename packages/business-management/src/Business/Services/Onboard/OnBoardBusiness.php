@@ -12,8 +12,7 @@ class OnBoardBusiness implements Command
         private string $name,
         private string $ownerId,
         private string $slug,
-        private string $country,
-        private string|int $onboardStatus,
+        private string $country
     ) {
     }
 
@@ -25,11 +24,6 @@ class OnBoardBusiness implements Command
     public function name(): string
     {
         return $this->name;
-    }
-
-    public function onboardStatus(): string
-    {
-        return $this->onboardStatus;
     }
 
     public function ownerId(): string

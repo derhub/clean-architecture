@@ -9,7 +9,7 @@ use Derhub\BusinessManagement\Business\Model\Values\BusinessId;
 use Derhub\BusinessManagement\Business\Model\Values\OwnerId;
 use Derhub\BusinessManagement\Business\Services\CommandResponse;
 
-final class TransferBusinessesOwnershipHandler
+final class TransferBusinessOwnershipHandler
 {
     public function __construct(
         private BusinessRepository $repo
@@ -21,7 +21,7 @@ final class TransferBusinessesOwnershipHandler
      * @throws \Derhub\BusinessManagement\Business\Model\Exception\ChangesToDisabledBusinessException
      */
     public function __invoke(
-        TransferBusinessesOwnership $msg
+        TransferBusinessOwnership $msg
     ): CommandResponse {
         $id = BusinessId::fromString($msg->aggregateRootId());
         /** @var \Derhub\BusinessManagement\Business\Model\Business $model */

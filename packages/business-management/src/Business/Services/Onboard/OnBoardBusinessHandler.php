@@ -45,8 +45,6 @@ final class OnBoardBusinessHandler
             name: Name::fromString($message->name()),
             slug: Slug::fromString($message->slug()),
             country: Country::fromString($message->country()),
-            boardingStatus:
-            OnBoardStatus::fromString($message->onboardStatus()),
         );
         $this->repo->save($model);
 

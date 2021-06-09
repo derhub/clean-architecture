@@ -41,7 +41,7 @@ class Name implements ValueObjectStr
 
     public function __toString(): string
     {
-        return 'business-management name '.$this->value ?? '';
+        return 'business name '.$this->value ?? '';
     }
 
     public function isEmpty(): bool
