@@ -22,7 +22,7 @@ class __class__ extends __extend_class__ implements Action
         ActionCapabilities::validationRules as private defaultRules;
     }
 
-    public static function fields(array $payload): array
+    public static function fields(): array
     {
         $fields = static::FIELDS;
         // TODO: Modify the auto generated fields

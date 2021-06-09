@@ -2,8 +2,6 @@
 
 namespace App\BuildingBlocks\Actions\Capabilities;
 
-use function request;
-
 /**
  * Trait WithPayload
  * @package App\BuildingBlocks\Actions\Capabilities
@@ -40,7 +38,7 @@ trait WithPayload
     public function withQueries(): array
     {
         $results = [];
-        foreach (static::fields([]) as $field => $config) {
+        foreach (static::fields() as $field => $config) {
             [
                 'default' => $default,
                 'required' => $isRequired,
@@ -50,6 +48,7 @@ trait WithPayload
             $hidden = $config['hidden'] ?? false;
             if ($hidden) {
                 $results[$field] = $config['default'];
+
                 continue;
             }
 
@@ -76,7 +75,7 @@ trait WithPayload
      * then the segments will be ['userId' => 1]
      *
      * Note:
-     *  - you should not use field alias in segment
+     *  - you should not use field alias in segment because they will be ignored here
      *
      * @return array<string, string>
      */
@@ -88,7 +87,7 @@ trait WithPayload
             return [];
         }
 
-        $fields = static::fields([]);
+        $fields = static::fields();
         $results = [];
 
         foreach ($segment as $key => $value) {

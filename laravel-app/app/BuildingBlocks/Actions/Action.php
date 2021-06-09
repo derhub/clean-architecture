@@ -10,6 +10,21 @@ use Derhub\Shared\Message\Query\QueryResponse;
 interface Action
 {
     /**
+     * Return field configuration
+     * example:
+     * [
+     *  'fieldName' => [
+     *      'required' => boolean,
+     *      'default' => mixed,
+     *      'rules' => array,
+     *  ]
+     * ]
+     * ]
+     * @return array
+     */
+    public static function fields(): array;
+
+    /**
      * Register routes
      */
     public static function routes(): void;
@@ -20,6 +35,8 @@ interface Action
      */
     public static function withMessageClass(): string;
 
+    public function authorize(array $payload): bool;
+
     /**
      * Handle validation and user request
      * @return \App\BuildingBlocks\Actions\ApiResponse
@@ -27,27 +44,11 @@ interface Action
     public function dispatch(): ApiResponse;
 
     /**
-     * Return field configuration
-     * format:
-     * [
-     *  'fieldName' => [
-     *      'required' => boolean,
-     *      'default' => mixed,
-     *      'rules' => array,
-     *  ]
-     * ]
-     * example:
-     * [
-     *  'aggregateRootId' => [
-     *      'required' => true,
-     *      'default' => null,
-     *      'rules' => ['required', 'uuid'],
-     *  ]
-     * ]
-     * @param array $payload
+     * List of data found in post body, query and url segment
+     * filter by fields key
      * @return array
      */
-    public static function fields(array $payload): array;
+    public function getPayload(): array;
 
     /**
      * Dispatch message
@@ -57,6 +58,7 @@ interface Action
      * @throws
      */
     public function handle(mixed ...$args): CommandResponse|QueryResponse;
+
     /**
      * Return true of pass and Response when fails
      * @param array $payload
@@ -69,13 +71,4 @@ interface Action
      * @return array
      */
     public function validationRules(array $payload): array;
-
-    public function authorize(array $payload): bool;
-
-    /**
-     * List of data found in post body, query and url segment
-     * filter by fields key
-     * @return array
-     */
-    public function getPayload(): array;
 }

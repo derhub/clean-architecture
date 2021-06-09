@@ -2,124 +2,57 @@
 
 namespace App\BuildingBlocks\Actions\Capabilities;
 
+use cebe\openapi\spec\Operation;
+use cebe\openapi\spec\Parameter;
+use cebe\openapi\spec\PathItem;
+use cebe\openapi\spec\Reference;
+use cebe\openapi\spec\Responses;
+use cebe\openapi\spec\Schema;
+use Derhub\Shared\Utils\ClassName;
+
 /**
  * Converts fields to Open api schema using cebe/php-openapi
+ * To overwrite open api parameter override the method defineParameters()
  */
 trait WithOpenApiSchema
 {
     /**
-     * @throws \cebe\openapi\exceptions\TypeErrorException
+     * example:
+     * [
+     *  .....
+     *  'fieldNameHere' => new Schema([
+     *      'type' => 'array',
+     *      'items' => new Schema(['type' => 'object'])
+     *  ])
+     * ]
      */
-    public static function openApiSchema(): \cebe\openapi\spec\Schema
+    public static function defineParameters(): array
     {
-        $required = [];
-        $properties = [];
-        foreach (static::fields([]) as $field => $config) {
-            ['required' => $isRequired] = $config;
-            if ($isRequired) {
-                $required[] = $field;
-            }
-        }
-
-        return new \cebe\openapi\spec\Schema(
-            [
-                'type' => 'object',
-                'required' => $required,
-                'properties' => $properties,
-            ]
-        );
-    }
-
-    public static function openApiPathItem(): \cebe\openapi\spec\PathItem
-    {
-        return new \cebe\openapi\spec\PathItem(
-            [
-                static::ROUTE_METHOD => new \cebe\openapi\spec\Operation(
-                    [
-                        'tags' => [static::MODULE],
-                        // 'operationId' => self::class,
-                        'responses' => new \cebe\openapi\spec\Responses(
-                            [
-                                '2XX' => new \cebe\openapi\spec\Reference(
-                                    ['$ref' => '#/components/responses/2XX']
-                                ),
-                                '4XX' => new \cebe\openapi\spec\Reference(
-                                    ['$ref' => '#/components/responses/4XX']
-                                ),
-                            ]
-                        ),
-                    ]
-                ),
-                'parameters' => self::openApiParameters(),
-            ]
-        );
-    }
-
-    public static function openApiParameters(): array
-    {
-        $parameters = [];
-        foreach (static::fields([]) as $field => $config) {
-            [
-                'types' => $types,
-                'alias' => $alias,
-                'required' => $required,
-            ] = $config;
-
-            $hidden = $config['hidden'] ?? false;
-            if ($hidden) {
-                continue;
-            }
-
-            $fieldName = $alias;
-            $inPath = \str_contains(static::ROUTE, $field);
-            if ($inPath) {
-                $fieldName = $field;
-            }
-            $isArray = ! $inPath && \in_array('array', $types, true);
-            $parameter = [
-                'name' => $fieldName.($isArray ? '[]' : ''),
-                'in' => $inPath ? 'path' : 'query',
-                'schema' => self::guessParameterType($isArray, $config),
-                'required' => $required,
-                'allowEmptyValue' => \in_array('null', $types, true),
-                'description' => $config['description'] ?? '',
-            ];
-
-            $deprecated = $config['deprecated'] ?? false;
-            if ($deprecated) {
-                $parameter['deprecated'] = $deprecated;
-            }
-
-            if (! $inPath && $isArray) {
-                $parameter['style'] = 'form';
-                $parameter['explode'] = true;
-                $parameter['allowReserved'] = true;
-            }
-
-            $parameters[] = new \cebe\openapi\spec\Parameter($parameter);
-        }
-
-        return $parameters;
+        return [];
     }
 
     private static function guessParameterType(
         bool $isArray,
         array $config
-    ): \cebe\openapi\spec\Schema {
-        $schema = [];
-
+    ): Schema {
         [
             'required' => $required,
             'types' => $types,
             'default' => $default,
         ] = $config;
 
-        $noneNullType = 'string'; // unknown types is already string
+        $schema = [];
+
+        $phpTypeToOpenApi = [
+            'int' => 'integer',
+            'bool' => 'boolean',
+        ];
+        $noneNullType = 'string'; // default type string
         foreach ($types as $val) {
             if ($val === 'array' || $val === 'null') {
                 continue;
             }
-            $noneNullType = $val;
+            $noneNullType = $phpTypeToOpenApi[$val] ?? $val;
         }
 
         $schema['type'] = $isArray ? 'array' : $noneNullType;
@@ -129,7 +62,7 @@ trait WithOpenApiSchema
             ];
 
             $schema['items'] =
-                new \cebe\openapi\spec\Schema($itemsSchema);
+                new Schema($itemsSchema);
         }
 
         if (! $required && $default !== null) {
@@ -145,6 +78,104 @@ trait WithOpenApiSchema
             $schema['enum'] = $options;
         }
 
-        return new \cebe\openapi\spec\Schema($schema);
+        return new Schema($schema);
+    }
+
+    public static function openApiParameters(): array
+    {
+        $definedFieldParameters = self::defineParameters();
+        $parameters = [];
+        foreach (static::fields() as $field => $config) {
+            [
+                'types' => $types,
+                'alias' => $alias,
+                'required' => $required,
+            ] = $config;
+
+            $hidden = $config['hidden'] ?? false;
+            if ($hidden) {
+                continue;
+            }
+
+            $fieldName = $alias;
+            $inPath = str_contains(static::ROUTE, $field);
+            if ($inPath) {
+                $fieldName = $field;
+            }
+            $isArray = ! $inPath && in_array('array', $types, true);
+            $parameter = [
+                'name' => $fieldName.($isArray ? '[]' : ''),
+                'in' => $inPath ? 'path' : 'query',
+                'schema' => $definedFieldParameters[$field] ?? self::guessParameterType($isArray, $config),
+                'required' => $required,
+                'allowEmptyValue' => in_array('null', $types, true),
+                'description' => $config['description'] ?? '',
+            ];
+
+            $deprecated = $config['deprecated'] ?? false;
+            if ($deprecated) {
+                $parameter['deprecated'] = $deprecated;
+            }
+
+            if (! $inPath && $isArray) {
+                $parameter['style'] = 'form';
+                $parameter['explode'] = true;
+                $parameter['allowReserved'] = true;
+            }
+
+            $parameters[] = new Parameter($parameter);
+        }
+
+        return $parameters;
+    }
+
+    public static function openApiPathItem(): PathItem
+    {
+        return new PathItem(
+            [
+                static::ROUTE_METHOD => new Operation(
+                    [
+                        'tags' => [static::MODULE],
+                        'operationId' => ClassName::for(
+                            static::COMMAND_CLASS
+                        ),
+                        'responses' => new Responses(
+                            [
+                                '2XX' => new Reference(
+                                    ['$ref' => '#/components/responses/2XX']
+                                ),
+                                '4XX' => new Reference(
+                                    ['$ref' => '#/components/responses/4XX']
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
+                'parameters' => self::openApiParameters(),
+            ]
+        );
+    }
+
+    /**
+     * @throws \cebe\openapi\exceptions\TypeErrorException
+     */
+    public static function openApiSchema(): Schema
+    {
+        $required = [];
+        $properties = [];
+        foreach (static::fields() as $field => $config) {
+            ['required' => $isRequired] = $config;
+            if ($isRequired) {
+                $required[] = $field;
+            }
+        }
+
+        return new Schema(
+            [
+                'type' => 'object',
+                'required' => $required,
+                'properties' => $properties,
+            ]
+        );
     }
 }

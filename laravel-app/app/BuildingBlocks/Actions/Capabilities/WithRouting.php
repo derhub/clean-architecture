@@ -8,7 +8,7 @@ trait WithRouting
     {
         return false;
     }
-    
+
     public static function routes(): void
     {
         $method = static::ROUTE_METHOD;
@@ -23,7 +23,8 @@ trait WithRouting
 //            }
 //        );
         \Illuminate\Support\Facades\Route::{$method}(
-            static::ROUTE, static::class
+            static::ROUTE,
+            static::class
         )
             ->name(static::ROUTE_NAME)
         ;

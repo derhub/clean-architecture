@@ -9,7 +9,6 @@
   "license": "MIT",
   "require": {
     "php": "^7.4|^8.0",
-    "cebe/php-openapi": "^1.5",
     "derhub/business-management": "dev-master",
     "derhub/integration": "dev-master",
     "derhub/shared": "dev-master",
@@ -30,6 +29,7 @@
   "require-dev": {
     "barryvdh/laravel-debugbar": "dev-master",
     "barryvdh/laravel-ide-helper": "^2.10",
+    "cebe/php-openapi": "^1.5",
     "facade/ignition": "^2.5",
     "fakerphp/faker": "^1.9.1",
     "friendsofphp/php-cs-fixer": "^3.0",
@@ -37,8 +37,7 @@
     "mockery/mockery": "^1.4.2",
     "nunomaduro/collision": "^5.0",
     "phpunit/phpunit": "^9.3.3",
-    "roave/security-advisories": "dev-latest",
-    "zircote/swagger-php": "^3.2"
+    "roave/security-advisories": "dev-latest"
   },
   "autoload": {
     "psr-4": {

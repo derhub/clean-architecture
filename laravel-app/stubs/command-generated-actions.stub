@@ -15,14 +15,6 @@ abstract class __class__
     public const COMMAND_CLASS = \__commandClass__::class;
     public const COMMAND_TYPE = "__command_type__";
 
-    // public static function routes(): void
-    // {
-    //     $method = static::ROUTE_METHOD;
-    //     \Illuminate\Support\Facades\Route::{$method}(static::ROUTE, static::class)
-    //         ->name(static::ROUTE_NAME)
-    //     ;
-    // }
-
     public static function withMessageClass(): string
     {
         return static::COMMAND_CLASS;
