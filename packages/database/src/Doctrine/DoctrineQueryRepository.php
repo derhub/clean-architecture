@@ -3,7 +3,10 @@
 namespace Derhub\Shared\Database\Doctrine;
 
 use Derhub\Shared\Query\FailedQueryException;
+use Derhub\Shared\Query\QueryFilterFactory;
+use Derhub\Shared\Query\QueryItem;
 use Derhub\Shared\Query\QueryItemMapper;
+use Derhub\Shared\Query\QueryItemMapperRepositoryCapabilities;
 use Derhub\Shared\Query\QueryRepositoryFilterCapabilities;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,12 +16,15 @@ use Doctrine\ORM\Query;
 use Derhub\Shared\Query\Filters\OperationFilter;
 use Derhub\Shared\Query\NotSingleResultException;
 use Derhub\Shared\Query\QueryRepository;
+use Doctrine\ORM\QueryBuilder;
+use Generator;
 
 /**
  * @template T
  */
 abstract class DoctrineQueryRepository implements QueryRepository
 {
+    use QueryItemMapperRepositoryCapabilities;
     use QueryRepositoryFilterCapabilities;
 
     /**
@@ -32,17 +38,21 @@ abstract class DoctrineQueryRepository implements QueryRepository
      */
     public function __construct(
         protected EntityManagerInterface $entityManager,
-        protected ?QueryItemMapper $mapper = null,
+        ?QueryItemMapper $mapper = null,
     ) {
         $this->doctrineRepo = $this->getRepository();
-        $this->setFilterFactory(
-            new DoctrineQueryBuilderFilterFactory($this->doctrineRepo)
-        );
+
+        if ($mapper !== null) {
+            $this->setMapper($mapper);
+        }
     }
 
-    public function setMapper(QueryItemMapper $mapper): void
+    public function applyFilterAndReturnQueryBuilder(): QueryBuilder
     {
-        $this->mapper = $mapper;
+        /** @var DoctrineQueryBuilderFilterFactory $filter */
+        $filter = $this->applyFilters();
+
+        return $filter->getQueryBuilder();
     }
 
     /**
@@ -75,7 +85,7 @@ abstract class DoctrineQueryRepository implements QueryRepository
     public function findBy(string $field, mixed $value): array
     {
         return $this
-            ->addFilter(new OperationFilter($field, 'equal', $value))
+            ->addFilter(OperationFilter::eq($field, $value))
             ->results()
             ;
     }
@@ -83,11 +93,11 @@ abstract class DoctrineQueryRepository implements QueryRepository
     /**
      * @throws \Derhub\Shared\Query\NotSingleResultException
      */
-    public function findOne(string $field, mixed $value): mixed
+    public function findOne(string $field, mixed $value): QueryItem|array|null
     {
         try {
             $find = $this
-                ->addFilter(new OperationFilter($field, 'equal', $value))
+                ->addFilter(OperationFilter::eq($field, $value))
                 ->singleResult()
             ;
 
@@ -101,11 +111,20 @@ abstract class DoctrineQueryRepository implements QueryRepository
         }
     }
 
-    public function iterableResult(): \Generator
+    public function getFilterFactory(): QueryFilterFactory
     {
-        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
-        $queryBuilder = $this->applyFilters();
-        $raw = $queryBuilder->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        return new DoctrineQueryBuilderFilterFactory($this->getRepository());
+    }
+
+    /**
+     * @return \Generator<QueryItem|array|null>
+     */
+    public function iterableResult(): Generator
+    {
+        $raw = $this->applyFilterAndReturnQueryBuilder()
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY)
+        ;
         foreach ($raw as $result) {
             yield $this->mapResult($result);
         }
@@ -119,10 +138,10 @@ abstract class DoctrineQueryRepository implements QueryRepository
     /**
      * @throws \Derhub\Shared\Query\NotSingleResultException
      */
-    public function singleResult(): mixed
+    public function singleResult(): QueryItem|array|null
     {
         try {
-            $queryBuilder = $this->applyFilters();
+            $queryBuilder = $this->applyFilterAndReturnQueryBuilder();
             $find = $queryBuilder
                 ->getQuery()
                 ->getOneOrNullResult(Query::HYDRATE_ARRAY)
@@ -144,9 +163,4 @@ abstract class DoctrineQueryRepository implements QueryRepository
     abstract protected function getRepository(): EntityRepository;
 
     abstract protected function getTableName(): string;
-
-    protected function mapResult(array $data): mixed
-    {
-        return $this->mapper?->fromArray($data) ?? $data;
-    }
 }

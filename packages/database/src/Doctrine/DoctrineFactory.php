@@ -34,13 +34,12 @@ class DoctrineFactory
         array $config,
         CacheItemPoolInterface $cachePool,
     ): EntityManagerInterface {
-        $cache = DoctrineProvider::wrap($cachePool);
 
         $setup = Setup::createXMLMetadataConfiguration(
             $config['metadata'],
             $config['dev_mode'],
             $config['proxy_dir'] ?? null,
-            $cache
+            DoctrineProvider::wrap($cachePool)
         );
 
         return EntityManager::create(

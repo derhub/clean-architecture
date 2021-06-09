@@ -4,7 +4,7 @@ namespace Derhub\Shared\Database\Doctrine;
 
 use Derhub\Shared\Database\Exceptions\AggregateNotFound;
 use Derhub\Shared\Database\Exceptions\FailedToSaveAggregate;
-use Derhub\Shared\Persistence\DatabasePersistenceRepository;
+use Derhub\Shared\Persistence\PersistenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -13,7 +13,7 @@ use Doctrine\ORM\ORMException;
 /**
  * @template T
  */
-class DoctrinePersistenceRepository implements DatabasePersistenceRepository
+class DoctrinePersistenceRepository implements PersistenceRepository
 {
     /**
      * @var \Doctrine\ORM\EntityRepository<T>|null
@@ -71,7 +71,6 @@ class DoctrinePersistenceRepository implements DatabasePersistenceRepository
     public function setAggregateClass(string $className): void
     {
         $this->aggregateClassName = $className;
-        $this->doctrineRepo = $this->entityManager->getRepository($className);
     }
 
     /**
@@ -84,6 +83,6 @@ class DoctrinePersistenceRepository implements DatabasePersistenceRepository
             throw MissingAggregateClassNameException::notProvided();
         }
 
-        return $this->doctrineRepo;
+        return $this->entityManager->getRepository($this->aggregateClassName);
     }
 }

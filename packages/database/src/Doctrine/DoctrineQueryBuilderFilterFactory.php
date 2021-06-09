@@ -19,7 +19,7 @@ use Doctrine\Persistence\ObjectRepository;
 class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
 {
     private const ALIAS = 'b';
-    private int $loopKey;
+    private int|string $loopKey;
     private QueryBuilder $queryBuilder;
 
     /**
@@ -69,6 +69,7 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
     {
         return self::ALIAS.'.'.$filter->field();
     }
+
     public function createForInArray(
         QueryBuilder $queryBuilder,
         InArrayFilter $filter
@@ -80,11 +81,7 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
             ->where(
                 "{$this->createField($filter)} $symbol (:$lookupField)"
             )
-            ->setParameter(
-                $lookupField,
-                $filter->value(),
-//                \Doctrine\DBAL\Connection::PARAM_STR_ARRAY
-            )
+            ->setParameter($lookupField, $filter->value())
             ;
     }
 
@@ -168,5 +165,10 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
         QueryFilter $filter,
     ): string {
         return $filter->field().$this->loopKey;
+    }
+
+    public function getQueryBuilder(): QueryBuilder
+    {
+        return $this->queryBuilder;
     }
 }
