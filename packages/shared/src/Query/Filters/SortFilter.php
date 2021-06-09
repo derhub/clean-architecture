@@ -10,6 +10,16 @@ class SortFilter implements QueryFilter
     public const ASC = 'asc';
     public const DESC = 'desc';
 
+    public static function desc(string $field): self
+    {
+        return new self($field, self::DESC);
+    }
+
+    public static function asc(string $field): self
+    {
+        return new self($field, self::ASC);
+    }
+
     public function __construct(
         private string $field,
         private string $value

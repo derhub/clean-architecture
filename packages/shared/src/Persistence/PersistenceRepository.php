@@ -5,7 +5,7 @@ namespace Derhub\Shared\Persistence;
 /**
  * @template T
  */
-interface DatabasePersistenceRepository
+interface PersistenceRepository
 {
     /**
      * @param string|int $aggregateRootId
@@ -18,6 +18,7 @@ interface DatabasePersistenceRepository
      * @param object $aggregateRoot
      */
     public function persist(object $aggregateRoot): void;
+    
     /**
      * @param class-string<T> $className
      */

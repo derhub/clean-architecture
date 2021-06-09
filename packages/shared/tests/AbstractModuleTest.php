@@ -2,7 +2,7 @@
 
 namespace Tests\Shared;
 
-use Derhub\Shared\AbstractModule;
+use Derhub\Shared\Module\AbstractModule;
 use PHPUnit\Framework\TestCase;
 use Tests\Shared\Fixtures\TestClass2;
 use Tests\Shared\Fixtures\TestMessage;
@@ -10,7 +10,7 @@ use Tests\Shared\Fixtures\TestMessage;
 class AbstractModuleTest extends TestCase
 {
     /**
-     * @var \Derhub\Shared\AbstractModule
+     * @var \Derhub\Shared\Module\AbstractModule
      */
     private $module;
 
@@ -91,28 +91,28 @@ class AbstractModuleTest extends TestCase
                     \Tests\Shared\Fixtures\TestMessage::class,
                 ],
             ],
-            $services[\Derhub\Shared\ModuleInterface::SERVICE_LISTENERS]
+            $services[\Derhub\Shared\Module\ModuleInterface::SERVICE_LISTENERS]
         );
 
         self::assertEquals(
             [
                 \Tests\Shared\Fixtures\TestMessage::class => \Tests\Shared\Fixtures\TestMessage::class,
             ],
-            $services[\Derhub\Shared\ModuleInterface::SERVICE_COMMANDS]
+            $services[\Derhub\Shared\Module\ModuleInterface::SERVICE_COMMANDS]
         );
 
         self::assertEquals(
             [
                 \Tests\Shared\Fixtures\TestMessage::class => \Tests\Shared\Fixtures\TestMessage::class,
             ],
-            $services[\Derhub\Shared\ModuleInterface::SERVICE_QUERIES]
+            $services[\Derhub\Shared\Module\ModuleInterface::SERVICE_QUERIES]
         );
 
         self::assertEquals(
             [
                 \Tests\Shared\Fixtures\TestMessage::class => \Tests\Shared\Fixtures\TestMessage::class,
             ],
-            $services[\Derhub\Shared\ModuleInterface::SERVICE_EVENTS]
+            $services[\Derhub\Shared\Module\ModuleInterface::SERVICE_EVENTS]
         );
     }
 
@@ -152,7 +152,7 @@ class AbstractModuleTest extends TestCase
                 TestClass2::class,
                 TestMessage::class,
             ],
-            $services[\Derhub\Shared\ModuleInterface::DEPENDENCY_BIND]
+            $services[\Derhub\Shared\Module\ModuleInterface::DEPENDENCY_BIND]
         );
 
         self::assertEquals(
@@ -164,7 +164,7 @@ class AbstractModuleTest extends TestCase
                 TestClass2::class,
                 TestMessage::class,
             ],
-            $services[\Derhub\Shared\ModuleInterface::DEPENDENCY_SINGLETON]
+            $services[\Derhub\Shared\Module\ModuleInterface::DEPENDENCY_SINGLETON]
         );
     }
 }

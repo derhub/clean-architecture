@@ -1,8 +1,8 @@
 <?php
 
-namespace Derhub\Shared;
+namespace Derhub\Shared\Module;
 
-use Derhub\Shared\Capabilities\ModuleCapabilities;
+use Derhub\Shared\Module\ModuleCapabilities;
 
 abstract class AbstractModule implements ModuleInterface
 {

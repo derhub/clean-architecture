@@ -10,6 +10,16 @@ class InArrayFilter implements QueryFilter
     public const OPERATION_IN = 'IN';
     public const OPERATION_NOT_IN = 'NOT IN';
 
+    public static function in(string $field, array $value): self
+    {
+        return new self($field, $value, self::OPERATION_IN);
+    }
+
+    public static function notIn(string $field, array $value): self
+    {
+        return new self($field, $value, self::OPERATION_NOT_IN);
+    }
+
     public function __construct(
         private string $field,
         private array $value,

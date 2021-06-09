@@ -1,6 +1,6 @@
 <?php
 
-namespace Derhub\Shared\Capabilities;
+namespace Derhub\Shared\Utils;
 
 class ClassName
 {

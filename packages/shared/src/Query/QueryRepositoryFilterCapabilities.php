@@ -2,12 +2,11 @@
 
 namespace Derhub\Shared\Query;
 
-use function array_merge;
-
 trait QueryRepositoryFilterCapabilities
 {
-    protected ?QueryFilterFactory $filterFactory = null;
     protected array $filters = [];
+
+    abstract public function getFilterFactory(): QueryFilterFactory;
 
     public function addFilter(QueryFilter $filter): static
     {
@@ -21,8 +20,7 @@ trait QueryRepositoryFilterCapabilities
      */
     public function addFilters(array $filters): static
     {
-        $this->filters = array_merge($this->filters, $filters);
-
+        $this->filters = \array_merge($this->filters, $filters);
         return $this;
     }
 
@@ -30,18 +28,13 @@ trait QueryRepositoryFilterCapabilities
      * Return's filter factory result
      * @return mixed
      */
-    public function applyFilters(): mixed
+    public function applyFilters(): QueryFilterFactory
     {
-        $lastFilterFactoryResult = null;
+        $factory = $this->getFilterFactory();
         foreach ($this->filters as $key => $filter) {
-            $lastFilterFactoryResult = $this->filterFactory->create($key, $filter);
+            $factory->create($key, $filter);
         }
 
-        return $lastFilterFactoryResult;
-    }
-
-    protected function setFilterFactory(QueryFilterFactory $filterFactory): void
-    {
-        $this->filterFactory = $filterFactory;
+        return $factory;
     }
 }

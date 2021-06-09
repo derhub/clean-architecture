@@ -1,8 +1,9 @@
 <?php
 
-namespace Derhub\Shared\Capabilities;
+namespace Derhub\Shared\Module;
 
-use Derhub\Shared\ModuleInterface as MI;
+use Derhub\Shared\Message\MessageName;
+use Derhub\Shared\Module\ModuleInterface as MI;
 
 trait ModuleCapabilities
 {

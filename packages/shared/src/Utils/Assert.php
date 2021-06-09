@@ -91,14 +91,20 @@ class Assert extends BaseAssertion
                 $value,
             );
 
-            if (! $isValidPattern || ReservedWords::isReserved($value)) {
-                throw static::createException(
-                    value: $value,
-                    message: $message,
-                    code: self::INVALID_STRING,
-                    propertyPath: $propertyPath
-                );
+            if ($isValidPattern) {
+                continue;
             }
+
+            if (! $isValidPattern || ReservedWords::isReserved($value)) {
+                $message ??= "Value '$value' is not a valid slug.";
+            }
+
+            throw static::createException(
+                value: $value,
+                message: $message,
+                code: self::INVALID_STRING,
+                propertyPath: $propertyPath
+            );
         }
     }
 }

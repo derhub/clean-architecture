@@ -1,8 +1,9 @@
 <?php
 
-namespace Derhub\Shared\Capabilities;
+namespace Derhub\Shared\Message;
 
-use Derhub\Shared\ModuleInterface;
+use Derhub\Shared\Module\ModuleInterface;
+use Derhub\Shared\Utils\ClassName;
 
 class MessageName
 {
