@@ -9,7 +9,7 @@ use Derhub\Shared\Message\MessageResponse;
 use Derhub\Shared\Model\AggregateRepository;
 use Derhub\Shared\Model\AggregateRoot;
 use Derhub\Shared\Model\DomainEvent;
-use Derhub\Shared\ModuleInterface;
+use Derhub\Shared\Module\ModuleInterface;
 
 abstract class MessageTestCase extends ModuleTestCase
 {

@@ -12,7 +12,7 @@ use Tests\Integration\Fixtures\MessageWithFactory\CmdMessageWithFactoryTest;
 use Tests\Integration\Fixtures\Query\QueryMessageFixture;
 use Tests\Integration\Fixtures\Query\QueryMessageFixtureHandler;
 
-class TestModule extends \Derhub\Shared\AbstractModule
+class TestModule extends \Derhub\Shared\Module\AbstractModule
 {
     public const ID = 'test_module';
 

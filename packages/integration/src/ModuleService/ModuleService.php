@@ -2,7 +2,8 @@
 
 namespace Derhub\Integration\ModuleService;
 
-use Derhub\Shared\ModuleInterface;
+use Derhub\Shared\Module\ModuleInterface;
+use Derhub\Shared\Module\ModuleRegistry;
 
 interface ModuleService
 {
@@ -11,7 +12,7 @@ interface ModuleService
      * @return bool
      */
     public function isStarted(): bool;
-    public function list(): ModuleList;
+    public function list(): ModuleRegistry;
 
     public function register(ModuleInterface ...$module): void;
 

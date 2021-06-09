@@ -72,7 +72,9 @@ class ModuleTestCase extends TestCase
 //        );
         $this->serializer = new SimpleSerializer();
         $this->outboxWrapper = new InMemoryOutboxMessageWrapper();
-        $this->outboxRepo = new InMemoryOutboxRepository($this->serializer, $this->outboxWrapper);
+        $this->outboxRepo = new InMemoryOutboxRepository(
+            $this->serializer, $this->outboxWrapper
+        );
 
         $this->eventBus = $this->createEventBus();
 
@@ -82,12 +84,16 @@ class ModuleTestCase extends TestCase
 
     private function createModuleService(): ModuleService
     {
+        $registrar = new \Derhub\Shared\Message\MessageListenerProviderRegister(
+            $this->eventProvider,
+            $this->commandProvider,
+            $this->queryProvider,
+        );
+        
         return new ModuleServiceImpl(
             $this->container,
             $this->moduleList,
-            $this->commandProvider,
-            $this->queryProvider,
-            $this->eventProvider
+            $registrar,
         );
     }
 

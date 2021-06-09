@@ -2,7 +2,8 @@
 
 namespace Derhub\Integration\TestUtils;
 
-use Derhub\Shared\ModuleInterface;
+use Derhub\Shared\Message\MessageName;
+use Derhub\Shared\Module\ModuleInterface;
 
 abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
 {
@@ -53,11 +54,11 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
         if (! in_array(
             $name,
             [
-            ModuleInterface::SERVICE_EVENTS,
-            ModuleInterface::SERVICE_QUERIES,
-            ModuleInterface::SERVICE_COMMANDS,
-            ModuleInterface::SERVICE_LISTENERS,
-        ],
+                ModuleInterface::SERVICE_EVENTS,
+                ModuleInterface::SERVICE_QUERIES,
+                ModuleInterface::SERVICE_COMMANDS,
+                ModuleInterface::SERVICE_LISTENERS,
+            ],
             true
         )) {
             return;
@@ -85,6 +86,7 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
 
         $this->testClassHandler($name, $handlers);
     }
+
     public function test_module_id(): void
     {
         self::assertIsString($this->getModule()->getId());
@@ -114,7 +116,7 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
         $serviceValues = $module->services();
         // test query
         foreach ($serviceValues['queries'] as $className => $query) {
-            $messageName = \Derhub\Shared\Capabilities\MessageName::forQuery(
+            $messageName = MessageName::forQuery(
                 $this->getModule()->getId(),
                 $className
             );
@@ -129,8 +131,7 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
 
         // test commands
         foreach ($serviceValues['commands'] as $className => $handler) {
-            $messageName =
-                \Derhub\Shared\Capabilities\MessageName::forCommand(
+            $messageName = MessageName::forCommand(
                     $this->getModule()->getId(),
                     $className
                 );
@@ -147,7 +148,7 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
 
         // test events
         foreach ($serviceValues['events'] as $className) {
-            $messageName = \Derhub\Shared\Capabilities\MessageName::forEvent(
+            $messageName = MessageName::forEvent(
                 $this->getModule()->getId(),
                 $className
             );
@@ -190,5 +191,6 @@ abstract class ModuleIntegrationTestCaseCase extends ModuleTestCase
             $this->testServiceMessageValue($name, $services[$name]);
         }
     }
+
     abstract protected function getModule(): ModuleInterface;
 }

@@ -2,9 +2,10 @@
 
 namespace Derhub\Integration\ModuleService;
 
-use Derhub\Shared\ModuleInterface;
 
-class ModuleAlreadyRegistered extends \Exception
+use Derhub\Shared\Module\ModuleInterface;
+
+class ModuleAlreadyRegistered extends \Exception implements \Derhub\Shared\Module\ModuleAlreadyRegistered
 {
     public static function withModule(ModuleInterface $module): self
     {

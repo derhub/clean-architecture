@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Derhub\Integration\ModuleService;
 
-use Derhub\Shared\ModuleInterface;
 
-class ModuleListImpl implements ModuleList
+use Derhub\Shared\Module\ModuleInterface;
+use Derhub\Shared\Module\ModuleRegistry;
+
+class ModuleListImpl implements ModuleRegistry
 {
     /**
      * @var ModuleInterface[]

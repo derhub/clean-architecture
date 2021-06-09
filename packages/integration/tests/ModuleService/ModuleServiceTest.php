@@ -4,7 +4,7 @@ namespace Tests\Integration\ModuleService;
 
 use Derhub\Integration\ModuleService\ModuleAlreadyRegistered;
 use Derhub\Integration\TestUtils\ModuleIntegrationTestCaseCase;
-use Derhub\Shared\ModuleInterface;
+use Derhub\Shared\Module\ModuleInterface;
 use Tests\Integration\Fixtures\MessageWithFactory\CmdMessageWithFactoryTest;
 use Tests\Integration\Fixtures\TestModule;
 
