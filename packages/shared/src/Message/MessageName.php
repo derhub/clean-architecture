@@ -7,6 +7,10 @@ use Derhub\Shared\Utils\ClassName;
 
 class MessageName
 {
+    public const COMMAND = 'commands';
+    public const QUERY = 'queries';
+    public const EVENT = 'events';
+
     public static function for(
         string $moduleId,
         string $serviceType,

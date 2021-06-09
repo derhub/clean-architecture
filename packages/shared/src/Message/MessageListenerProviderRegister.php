@@ -10,9 +10,9 @@ use Derhub\Shared\Utils\Assert;
 
 final class MessageListenerProviderRegister
 {
-    public const COMMAND = 'command';
-    public const QUERY = 'query';
-    public const EVENT = 'event';
+    public const COMMAND = MessageName::COMMAND;
+    public const QUERY = MessageName::QUERY;
+    public const EVENT = MessageName::EVENT;
 
     public function __construct(
         private EventListenerProvider $eventListener,
@@ -120,10 +120,6 @@ final class MessageListenerProviderRegister
     ): void {
         Assert::notNull(
             $handler, 'handler is required when type is command or query'
-        );
-
-        Assert::isArray(
-            $handler, 'multiple handlers is not allowed for Command and Query'
         );
     }
 }

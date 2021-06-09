@@ -2,14 +2,16 @@
 
 namespace Derhub\Shared\Module;
 
+use Derhub\Shared\Message\MessageName;
+
 interface ModuleInterface
 {
     public const DEPENDENCY_BIND = 'bind';
     public const DEPENDENCY_SINGLETON = 'singleton';
-    public const SERVICE_COMMANDS = 'commands';
-    public const SERVICE_EVENTS = 'events';
+    public const SERVICE_COMMANDS = MessageName::COMMAND;
+    public const SERVICE_QUERIES = MessageName::QUERY;
+    public const SERVICE_EVENTS = MessageName::EVENT;
     public const SERVICE_LISTENERS = 'listeners';
-    public const SERVICE_QUERIES = 'queries';
 
     public const INITIAL_SERVICES = [
         self::DEPENDENCY_BIND => [],
