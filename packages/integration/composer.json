@@ -8,17 +8,13 @@
     }
   ],
   "require": {
-    "league/fractal": "^0.19.2",
     "league/tactician": "^1.1",
     "jms/serializer": "^3.12"
   },
   "require-dev": {
     "derhub/shared": "dev-master",
     "roave/security-advisories": "dev-latest",
-    "phpunit/phpunit": "^9.5",
-    "fakerphp/faker": "^1.14",
-    "illuminate/bus": "^8.43",
-    "illuminate/queue": "^8.43"
+    "phpunit/phpunit": "^9.5"
   },
   "autoload": {
     "psr-4": {
