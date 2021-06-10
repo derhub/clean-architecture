@@ -164,7 +164,7 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
     public function createLookupField(
         QueryFilter $filter,
     ): string {
-        return $filter->field().$this->loopKey;
+        return $filter->field()[0].$this->loopKey;
     }
 
     public function getQueryBuilder(): QueryBuilder
