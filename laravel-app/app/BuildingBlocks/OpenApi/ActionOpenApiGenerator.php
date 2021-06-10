@@ -1,52 +1,41 @@
 <?php
 
-namespace App\BuildingBlocks\Actions\Capabilities;
+namespace App\BuildingBlocks\OpenApi;
 
+use App\BuildingBlocks\Actions\Action;
+use App\BuildingBlocks\Actions\Field;
+use App\BuildingBlocks\Actions\Fields\ArrayField;
 use cebe\openapi\spec\Operation;
 use cebe\openapi\spec\Parameter;
 use cebe\openapi\spec\PathItem;
 use cebe\openapi\spec\Reference;
 use cebe\openapi\spec\Responses;
 use cebe\openapi\spec\Schema;
+
 use Derhub\Shared\Utils\ClassName;
 
-/**
- * Converts fields to Open api schema using cebe/php-openapi
- * To overwrite open api parameter override the method defineParameters()
- */
-trait WithOpenApiSchema
+class ActionOpenApiGenerator
 {
-    /**
-     * example:
-     * [
-     *  .....
-     *  'fieldNameHere' => new Schema([
-     *      'type' => 'array',
-     *      'items' => new Schema(['type' => 'object'])
-     *  ])
-     * ]
-     */
-    public static function defineParameters(): array
+    public function __construct(private Action|string $action)
     {
-        return [];
     }
 
-    private static function guessParameterType(
-        bool $isArray,
-        array $config
-    ): Schema {
+    private function getParameterType(bool $isArray, Field $config): Schema
+    {
         [
             'required' => $required,
             'types' => $types,
             'default' => $default,
-        ] = $config;
+        ] = $config->all();
 
         $schema = [];
 
         $phpTypeToOpenApi = [
             'int' => 'integer',
             'bool' => 'boolean',
+            'string' => 'string',
         ];
+
         $noneNullType = 'string'; // default type string
         foreach ($types as $val) {
             if ($val === 'array' || $val === 'null') {
@@ -81,36 +70,39 @@ trait WithOpenApiSchema
         return new Schema($schema);
     }
 
-    public static function openApiParameters(): array
+    public function openApiParameters(): array
     {
-        $definedFieldParameters = self::defineParameters();
         $parameters = [];
-        foreach (static::fields() as $field => $config) {
+        /** @var \App\BuildingBlocks\Actions\Field $config */
+        foreach ($this->action::getComputedFields() as $field => $config) {
             [
                 'types' => $types,
                 'alias' => $alias,
                 'required' => $required,
-            ] = $config;
+            ] = $config->all();
 
-            $hidden = $config['hidden'] ?? false;
+            $hidden = $config->hidden();
             if ($hidden) {
                 continue;
             }
 
             $fieldName = $alias;
-            $inPath = str_contains(static::ROUTE, $field);
-            if ($inPath) {
-                $fieldName = $field;
-            }
+            $inPath = str_contains($this->action::getRoutePath(), $field) ||
+                str_contains($this->action::getRoutePath(), $alias);
+
             $isArray = ! $inPath && in_array('array', $types, true);
-            $parameter = [
-                'name' => $fieldName.($isArray ? '[]' : ''),
-                'in' => $inPath ? 'path' : 'query',
-                'schema' => $definedFieldParameters[$field] ?? self::guessParameterType($isArray, $config),
-                'required' => $required,
-                'allowEmptyValue' => in_array('null', $types, true),
-                'description' => $config['description'] ?? '',
-            ];
+
+            $parameter = array_merge(
+                [
+                    'name' => $fieldName.($isArray ? '[]' : ''),
+                    'in' => $inPath ? 'path' : 'query',
+                    'schema' => $this->getParameterType($isArray, $config),
+                    'required' => $required,
+                    'allowEmptyValue' => in_array('null', $types, true),
+                    'description' => $config['description'] ?? '',
+                ],
+                $config->openApiParameter()
+            );
 
             $deprecated = $config['deprecated'] ?? false;
             if ($deprecated) {
@@ -129,15 +121,17 @@ trait WithOpenApiSchema
         return $parameters;
     }
 
-    public static function openApiPathItem(): PathItem
+    public function openApiPathItem(): PathItem
     {
         return new PathItem(
             [
-                static::ROUTE_METHOD => new Operation(
+                $this->action::getRouteMethod() => new Operation(
                     [
-                        'tags' => [static::MODULE],
+                        'tags' => [$this->action::getModuleId()],
                         'operationId' => ClassName::for(
-                            static::COMMAND_CLASS
+                            \is_object($this->action)
+                                ? $this->action::class
+                                : $this->action
                         ),
                         'responses' => new Responses(
                             [
@@ -151,7 +145,7 @@ trait WithOpenApiSchema
                         ),
                     ]
                 ),
-                'parameters' => self::openApiParameters(),
+                'parameters' => $this->openApiParameters(),
             ]
         );
     }
@@ -159,13 +153,13 @@ trait WithOpenApiSchema
     /**
      * @throws \cebe\openapi\exceptions\TypeErrorException
      */
-    public static function openApiSchema(): Schema
+    public function openApiSchema(): Schema
     {
         $required = [];
         $properties = [];
-        foreach (static::fields() as $field => $config) {
-            ['required' => $isRequired] = $config;
-            if ($isRequired) {
+        /** @var \App\BuildingBlocks\Actions\Field $config */
+        foreach ($this->action::getComputedFields() as $field => $config) {
+            if ($config->required()) {
                 $required[] = $field;
             }
         }

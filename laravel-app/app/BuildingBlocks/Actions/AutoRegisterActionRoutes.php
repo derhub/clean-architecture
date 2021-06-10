@@ -8,7 +8,6 @@ class AutoRegisterActionRoutes
 {
     public static function routes(): void
     {
-        // TODO: cache auto load action routes
         $actionFinder = (new Finder())
             ->in(base_path('app/Actions/*'))
             ->notPath(['#^Samples#'])
@@ -16,20 +15,20 @@ class AutoRegisterActionRoutes
             ->notName(['/Generated/', '/SampleAction/'])
             ->ignoreDotFiles(true)
         ;
-//        \dd(\array_keys(\iterator_to_array($actionFinder->getIterator())));
+
         /** @var \Symfony\Component\Finder\SplFileInfo $info */
-        foreach ($actionFinder->getIterator() as $file => $info) {
+        foreach ($actionFinder as $info) {
             $className = '\App\\'.str_replace(
-                    [base_path('app').'/', '.php', '/'],
-                    ['', '', '\\'],
-                    $info->getRealPath()
-                );
+                [base_path('app').'/', '.php', '/'],
+                ['', '', '\\'],
+                $info->getRealPath()
+            );
 
             if (! class_exists($className, true)) {
                 continue;
             }
 
-            if ($className::disableRoutesAutoLoad()) {
+            if ($className::disableAutoRegisterRoutes()) {
                 continue;
             }
 

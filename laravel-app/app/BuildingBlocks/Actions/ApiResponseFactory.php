@@ -4,38 +4,41 @@ namespace App\BuildingBlocks\Actions;
 
 use Derhub\Shared\Message\Command\CommandResponse;
 use Derhub\Shared\Message\Query\QueryResponse;
+use Derhub\Shared\Utils\ClassName;
+use Derhub\Shared\Utils\Str;
 use Illuminate\Validation\Validator;
+use Throwable;
 
 class ApiResponseFactory
 {
     public static function create(
         null|CommandResponse|QueryResponse $response
-    ): ApiMessageResponse {
-        return new ApiMessageResponse($response);
+    ): DispatcherSuccessResponse {
+        return new DispatcherSuccessResponse($response);
     }
 
     public static function fromCommand(
         CommandResponse $response
-    ): ApiMessageResponse {
-        return new ApiMessageResponse($response);
+    ): DispatcherSuccessResponse {
+        return new DispatcherSuccessResponse($response);
     }
 
     public static function fromMessageResponse(
         CommandResponse|QueryResponse $response
-    ): ApiMessageResponse {
-        return new ApiMessageResponse($response);
+    ): DispatcherSuccessResponse {
+        return new DispatcherSuccessResponse($response);
     }
 
     public static function fromQuery(
         QueryResponse $response,
-    ): ApiMessageResponse {
-        return new ApiMessageResponse($response);
+    ): DispatcherSuccessResponse {
+        return new DispatcherSuccessResponse($response);
     }
 
     public static function fromValidation(
         Validator $validator
-    ): ApiErrorResponse {
-        $self = new ApiErrorResponse();
+    ): DispatcherErrorResponse {
+        $self = new DispatcherErrorResponse();
         $errors = [];
         foreach ($validator->errors()->toArray() as $field => $errMessage) {
             $errors[] = [
@@ -50,12 +53,12 @@ class ApiResponseFactory
     }
 
     public static function fromException(
-        \Throwable $e,
+        Throwable $e,
         string $moduleId = null
-    ): ApiErrorResponse {
-        $self = new ApiErrorResponse();
-        $for = \Derhub\Shared\Utils\Str::snake(
-            \Derhub\Shared\Capabilities\ClassName::for($e::class)
+    ): DispatcherErrorResponse {
+        $self = new DispatcherErrorResponse();
+        $for = Str::snake(
+            ClassName::for($e::class)
         );
         $errors = [
             [
@@ -71,10 +74,10 @@ class ApiResponseFactory
     }
 
 
-    public static function fromUnAuthorizeRequest(): ApiErrorResponse
+    public static function fromUnAuthorizeRequest(): DispatcherErrorResponse
     {
-        $self = new ApiErrorResponse();
-        $self->setStatus(ApiErrorResponse::HTTP_ACCESS_DENIED);
+        $self = new DispatcherErrorResponse();
+        $self->setStatus(DispatcherErrorResponse::HTTP_ACCESS_DENIED);
         $errors = [
             [
                 'type' => 'authorization',

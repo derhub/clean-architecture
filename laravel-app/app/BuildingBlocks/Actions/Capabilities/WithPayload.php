@@ -6,64 +6,68 @@ namespace App\BuildingBlocks\Actions\Capabilities;
  * Trait WithPayload
  * @package App\BuildingBlocks\Actions\Capabilities
  *
- * Handle all user inputs from url segment and queries
+ * Handle all user inputs from url segment, query and post body
  */
 trait WithPayload
 {
-    /**
-     * Return combined result from segment, url query and post body
-     * @return array
-     */
-    public function getPayload(): array
+    private static ?iterable $computedPayload = null;
+
+    public function computePayload(): array
     {
-        $segmentData = $this->withSegments();
-        $queryData = $this->withQueries();
-        if (empty($queryData)) {
-            return $segmentData;
+        $computedFields = self::getComputedFields();
+        $segments = $this->getSegments();
+        $payload = [];
+
+        /** @var \App\BuildingBlocks\Actions\Fields\BaseField $config */
+        foreach ($computedFields as $field => $config) {
+            $alias = $config->alias();
+
+            if (isset($segments[$alias])) {
+                $payload[$field] = $config->applyPayloadModifications(
+                    $segments[$alias]
+                );
+                continue;
+            }
+
+            if (isset($segments[$field])) {
+                $payload[$field] = $config->applyPayloadModifications(
+                    $segments[$field]
+                );
+                continue;
+            }
+
+            $value = $config->default();
+
+            if ($config->hidden()) {
+                continue;
+            }
+
+            $hasInput = $this->inputHas($alias);
+            if (! $hasInput && $config->required()) {
+                continue;
+            }
+
+            if ($hasInput) {
+                $value = $this->input($alias);
+            }
+
+            $payload[$field] = $config->applyPayloadModifications($value);
         }
 
-        if (empty($segmentData)) {
-            return $queryData;
-        }
+        return $payload;
+    }
 
-        return array_merge($queryData, $segmentData);
+    public function setPayload(iterable $payload): void
+    {
+        self::$computedPayload = $payload;
     }
 
     /**
-     * Return all array of fields value
-     * if field not required the default value is use
-     * if field is required it will not include in the result
-     * @return array
+     * @inherited
      */
-    public function withQueries(): array
+    public function getPayload(): array
     {
-        $results = [];
-        foreach (static::fields() as $field => $config) {
-            [
-                'default' => $default,
-                'required' => $isRequired,
-                'alias' => $alias,
-            ] = $config;
-
-            $hidden = $config['hidden'] ?? false;
-            if ($hidden) {
-                $results[$field] = $config['default'];
-
-                continue;
-            }
-
-            $hasField = $this->inputHas($field);
-            $hasAlias = $this->inputHas($alias);
-            if ($isRequired && ! $hasField && ! $hasAlias) {
-                continue;
-            }
-
-            $results[$field] = $hasAlias
-                ? $this->input($alias, $default)
-                : $this->input($field, $default);
-        }
-
-        return $results;
+        return self::$computedPayload ?? $this->computePayload();
     }
 
     /**
@@ -79,23 +83,8 @@ trait WithPayload
      *
      * @return array<string, string>
      */
-    public function withSegments(): array
+    private function getSegments(): array
     {
-        $segment = $this->getRequest()->route()?->parameters() ?? [];
-
-        if (empty($segment)) {
-            return [];
-        }
-
-        $fields = static::fields();
-        $results = [];
-
-        foreach ($segment as $key => $value) {
-            if (isset($fields[$key])) {
-                $results[$key] = $value;
-            }
-        }
-
-        return $results;
+        return $this->getRequest()->route()?->parameters() ?? [];
     }
 }

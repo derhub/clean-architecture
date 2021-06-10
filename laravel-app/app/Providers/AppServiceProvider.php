@@ -23,7 +23,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         \Validator::extend(
-            \App\Rules\SlugRule::NAME, \App\Rules\SlugRule::class
+            \App\Rules\SlugRule::NAME,
+            \App\Rules\SlugRule::class
         );
     }
 
@@ -50,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->boostrapModules();
-        $this->registerDebugBar();
+//        $this->registerDebugBar();
     }
 
     private function boostrapModules(): void
@@ -99,5 +100,4 @@ class AppServiceProvider extends ServiceProvider
             );
         }
     }
-
 }

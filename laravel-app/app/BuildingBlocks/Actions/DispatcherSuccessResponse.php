@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use function is_array;
 use function json_encode;
 
-class ApiMessageResponse implements ApiResponse
+class DispatcherSuccessResponse implements DispatcherResponse
 {
     private Generator | array $data;
     private array $errors;

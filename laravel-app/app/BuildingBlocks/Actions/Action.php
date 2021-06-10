@@ -20,9 +20,11 @@ interface Action
      *  ]
      * ]
      * ]
-     * @return array
+     * @return FieldManager
      */
-    public static function fields(): array;
+    public static function fields(): FieldManager;
+
+    public static function getComputedFields(): FieldManager;
 
     /**
      * Register routes
@@ -33,20 +35,18 @@ interface Action
      * Return message class
      * @return class-string<Query|Command>
      */
-    public static function withMessageClass(): string;
+    public static function getCommandClass(): string;
 
-    public function authorize(array $payload): bool;
+    public function authorize(): bool;
 
     /**
      * Handle validation and user request
-     * @return \App\BuildingBlocks\Actions\ApiResponse
+     * @return \App\BuildingBlocks\Actions\DispatcherResponse
      */
-    public function dispatch(): ApiResponse;
+    public function dispatch(): DispatcherResponse;
 
     /**
-     * List of data found in post body, query and url segment
-     * filter by fields key
-     * @return array
+     * Array of sanitize field value found in segment, query and post body
      */
     public function getPayload(): array;
 
@@ -71,4 +71,16 @@ interface Action
      * @return array
      */
     public function validationRules(array $payload): array;
+
+    public static function getActionId(): string;
+
+    public static function getModuleId(): string;
+
+    public static function getCommandType(): string;
+
+    public static function getRoutePath(): string;
+
+    public static function getRouteName(): string;
+
+    public static function getRouteMethod(): string;
 }

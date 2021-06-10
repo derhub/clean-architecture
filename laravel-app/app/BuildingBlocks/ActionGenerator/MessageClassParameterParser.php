@@ -33,11 +33,6 @@ class MessageClassParameterParser
 {
     private array $config;
 
-    public function __construct(private string $message, private array $params)
-    {
-        $this->config = config('derhub.generator.parameters');
-    }
-
     public static function for(string $message): self
     {
         try {
@@ -56,6 +51,11 @@ class MessageClassParameterParser
         }
 
         return new self($message, $constructor->getParameters());
+    }
+
+    public function __construct(private string $message, private array $params)
+    {
+        $this->config = config('derhub.generator.parameters');
     }
 
     public function params(): Generator
@@ -122,5 +122,4 @@ class MessageClassParameterParser
 
         return null;
     }
-
 }

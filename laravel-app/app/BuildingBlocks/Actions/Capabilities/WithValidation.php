@@ -14,33 +14,30 @@ trait WithValidation
      * @return \Illuminate\Validation\Validator
      */
     public function askForValidator(
-        array $payload,
+        iterable $payload,
         array $rules,
     ): \Illuminate\Validation\Validator {
         return Validator::make($payload, $rules);
     }
 
-    public function validate(array $payload): \Illuminate\Validation\Validator
-    {
+    public function validate(
+        iterable $payload
+    ): \Illuminate\Validation\Validator {
         return $this->askForValidator(
             $payload,
             $this->validationRules($payload)
         );
     }
 
-    public function validationRules(array $payload): array
+    public function validationRules(iterable $payload): array
     {
-        $fields = static::fields($payload);
+        $fields = static::getComputedFields();
 
         $rulesByFiled = [];
-        foreach ($fields as $field => $config) {
-            [
-                'rules' => $rules,
-                'alias' => $alias,
-            ] = $config;
 
-            $hidden = $config['hidden'] ?? false;
-            if ($hidden) {
+        /** @var \App\BuildingBlocks\Actions\Fields\BaseField $config */
+        foreach ($fields as $field => $config) {
+            if ($config->hidden()) {
                 continue;
             }
 
@@ -49,12 +46,12 @@ trait WithValidation
             // to support both we will set the default rule key to alias
             // and then only use field name if its in payload
 
-            $key = $alias;
+            $key = $config->alias();
             if (isset($payload[$field])) {
                 $key = $field;
             }
 
-            $rulesByFiled[$key] = $rules;
+            $rulesByFiled[$key] = $config->validationRules();
         }
 
         return $rulesByFiled;

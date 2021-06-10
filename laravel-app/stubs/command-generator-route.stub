@@ -1,3 +1,0 @@
-if (@class_exists(\__namespace__\__class__::class, true)) {
-    \__namespace__\__class__::routes();
-}

@@ -2,9 +2,10 @@
 
 namespace App\BuildingBlocks\Actions\Capabilities;
 
-use App\BuildingBlocks\Actions\ApiResponse;
+use App\BuildingBlocks\Actions\DispatcherResponse;
 use App\BuildingBlocks\Actions\ApiResponseFactory;
-use Derhub\Shared\Exceptions\LayeredException;
+use Derhub\Shared\Exceptions\ApplicationException;
+use Derhub\Shared\Exceptions\DomainException;
 use Derhub\Shared\Message\Command\Command;
 use Derhub\Shared\Message\Command\CommandBus;
 use Derhub\Shared\Message\Command\CommandResponse;
@@ -23,15 +24,14 @@ trait WithMessageDispatcher
      *
      * @return class-string<Query|Command>
      */
-    abstract public static function withMessageClass(): string;
+    abstract public static function getCommandClass(): string;
 
-    public function dispatch(): ApiResponse
+    public function dispatch(): DispatcherResponse
     {
         try {
             $payload = $this->getPayload();
 
-            $isAuthorize = $this->authorize($payload);
-            if (! $isAuthorize) {
+            if (! $this->authorize()) {
                 return ApiResponseFactory::fromUnAuthorizeRequest();
             }
 
@@ -43,7 +43,7 @@ trait WithMessageDispatcher
             $response = $this->handle(...$payload);
 
             return ApiResponseFactory::fromMessageResponse($response);
-        } catch (LayeredException $e) {
+        } catch (DomainException | ApplicationException $e) {
             return ApiResponseFactory::fromException($e, self::MODULE);
         }
     }
@@ -58,12 +58,9 @@ trait WithMessageDispatcher
         return $this->queryBus ??= app()->get(QueryBus::class);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function handle(...$args): CommandResponse|QueryResponse
     {
-        $class = static::withMessageClass();
+        $class = static::getCommandClass();
         $message = new $class(...$args);
         if ($message instanceof Query) {
             return $this->getQueryBus()->dispatch($message);

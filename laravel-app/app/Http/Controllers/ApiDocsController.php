@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\BuildingBlocks\Actions\ApiResponseFactory;
+use App\BuildingBlocks\OpenApi\ActionOpenApiGenerator;
 use cebe\openapi\spec\Components;
 use cebe\openapi\spec\Example;
 use cebe\openapi\spec\MediaType;
@@ -14,9 +14,6 @@ use cebe\openapi\Writer;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\Finder\Finder;
-
-use function base_path;
-use function response;
 
 class ApiDocsController extends Controller
 {
@@ -33,6 +30,7 @@ class ApiDocsController extends Controller
         $openApi = $this->createOpenApiObject();
         $openApi->validate();
         $errors = $openApi->getErrors();
+
         return new JsonResponse(data: $errors);
     }
 
@@ -84,15 +82,16 @@ class ApiDocsController extends Controller
         $paths = [];
 
         /** @var \Symfony\Component\Finder\SplFileInfo $info */
-        foreach ($actionFinder->getIterator() as $file => $info) {
+        foreach ($actionFinder->getIterator() as $info) {
             $className = '\App\\'.str_replace(
-                    [base_path('app').'/', '.php', '/'],
-                    ['', '', '\\'],
-                    $info->getRealPath()
-                );
+                [base_path('app').'/', '.php', '/'],
+                ['', '', '\\'],
+                $info->getRealPath()
+            );
 
             if (class_exists($className, true)) {
-                $paths[$className::ROUTE] = $className::openApiPathItem();
+                $action = new ActionOpenApiGenerator($className);
+                $paths[$className::ROUTE] = $action->openApiPathItem();
             }
         }
 

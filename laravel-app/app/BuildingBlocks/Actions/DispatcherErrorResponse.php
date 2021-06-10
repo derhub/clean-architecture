@@ -4,7 +4,7 @@ namespace App\BuildingBlocks\Actions;
 
 use Illuminate\Http\JsonResponse;
 
-class ApiErrorResponse implements ApiResponse
+class DispatcherErrorResponse implements DispatcherResponse
 {
     private array $errors = [];
     private int $status = self::HTTP_SUCCESS;

@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'country' => env('APP_COUNTRY', 'PH'),
+    'country' => env('GENERAL_COUNTRY', 'PH'),
 ];

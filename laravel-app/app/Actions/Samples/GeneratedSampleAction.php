@@ -2,7 +2,7 @@
 
 namespace App\Actions\Samples;
 
-use App\BuildingBlocks\Actions\ApiResponse;
+use App\BuildingBlocks\Actions\DispatcherResponse;
 
 abstract class GeneratedSampleAction
 {
@@ -26,7 +26,7 @@ abstract class GeneratedSampleAction
         return \Derhub\BusinessManagement\Business\Services\GetBusinesses\GetBusinesses::class;
     }
 
-    abstract public function dispatch(): ApiResponse;
+    abstract public function dispatch(): DispatcherResponse;
     public function __invoke(...$args): mixed
     {
         return $this->dispatch()->toJsonResponse();

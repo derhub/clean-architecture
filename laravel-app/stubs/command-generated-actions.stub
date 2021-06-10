@@ -5,19 +5,29 @@
 
 namespace __namespace__;
 
+use App\BuildingBlocks\Actions\FieldManager;
+
 abstract class __class__
 {
+    public const ACTION_ID = '__action_id__';
     public const MODULE = '__module__';
+    public const COMMAND_TYPE = '__command_type__';
     public const ROUTE = '/api/__module__/__action_slug__';
-    public const ROUTE_NAME = 'action.__module__.__action_slug__';
+    public const ROUTE_NAME = self::ACTION_ID;
+    public const COMMAND_CLASS = \__commandClass__::class;
     public const ROUTE_METHOD = '__http_method__';
     public const FIELDS = __fields__;
-    public const COMMAND_CLASS = \__commandClass__::class;
-    public const COMMAND_TYPE = "__command_type__";
 
     public static function withMessageClass(): string
     {
         return static::COMMAND_CLASS;
+    }
+
+    public static function fields(): FieldManager
+    {
+        return new FieldManager(
+            __field_manager_params__
+        );
     }
 
     public function __invoke(...$args): mixed
@@ -25,9 +35,9 @@ abstract class __class__
         return $this->dispatch()->toJsonResponse();
     }
 
-    abstract public function dispatch(): \App\BuildingBlocks\Actions\ApiResponse;
+    abstract public function dispatch(): \App\BuildingBlocks\Actions\DispatcherResponse;
 
-    public function authorize(array $payload): bool
+    public function authorize(): bool
     {
         return true;
     }

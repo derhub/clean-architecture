@@ -2,7 +2,8 @@
 
 namespace App\BuildingBlocks\Actions;
 
-use App\BuildingBlocks\Actions\Capabilities\WithHelpers;
+use App\BuildingBlocks\Actions\Capabilities\WithFields;
+use App\BuildingBlocks\Actions\Capabilities\WithGeneratedProperties;
 use App\BuildingBlocks\Actions\Capabilities\WithMessageDispatcher;
 use App\BuildingBlocks\Actions\Capabilities\WithOpenApiSchema;
 use App\BuildingBlocks\Actions\Capabilities\WithPayload;
@@ -17,6 +18,6 @@ trait ActionCapabilities
     use WithRequest;
     use WithRouting;
     use WithValidation;
-    use WithOpenApiSchema;
-    use WithHelpers;
+    use WithFields;
+    use WithGeneratedProperties;
 }
