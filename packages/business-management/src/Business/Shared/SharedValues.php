@@ -12,7 +12,7 @@ class SharedValues
     public const COL_ONBOARD_STATUS = 'onBoardStatus';
     public const COL_OWNER_ID = 'info.ownerId';
     public const COL_SLUG = 'slug';
-    public const COL_STATUS = 'status';
+    public const COL_STATUS = 'info.status';
     public const COL_UPDATED_AT = 'updatedAt';
     public const TABLE_NAME = 'business';
 }

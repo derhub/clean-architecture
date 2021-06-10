@@ -24,7 +24,7 @@ final class BusinessList extends BaseMessage implements Query
         return $this->businessId;
     }
 
-    public function enabled(): ?bool
+    public function enabled(): int|null
     {
         return $this->enabled;
     }

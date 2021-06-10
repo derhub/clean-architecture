@@ -77,18 +77,13 @@ class BusinessListHandler
 
     private function filterForStatus(
         array $prevFilters,
-        string|int|null $status,
+        int|null $status,
     ): array {
         if ($status === null) {
             return $prevFilters;
         }
 
-        if (is_string($status)) {
-            $statusObj = Status::fromString($status);
-        } else {
-            $statusObj = Status::fromInt($status);
-        }
-
+        $statusObj = Status::fromInt($status);
         $prevFilters[] =
             new OperationFilter(
                 SharedValues::COL_STATUS,
