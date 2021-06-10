@@ -9,7 +9,7 @@ use Derhub\Shared\Database\Doctrine\DatabaseDoctrineTypes;
 DatabaseDoctrineTypes::register();
 
 $container->bind(
-    \Derhub\Shared\Persistence\DatabasePersistenceRepository::class,
+    \Derhub\Shared\Persistence\PersistenceRepository::class,
     \Derhub\Shared\Database\Doctrine\DoctrinePersistenceRepository::class
 );
 

@@ -7,12 +7,12 @@ use Derhub\BusinessManagement\Business\Model\BusinessRepository;
 use Derhub\BusinessManagement\Business\Model\Values\BusinessId;
 use Derhub\Shared\Model\AggregateRoot;
 use Derhub\Shared\Model\AggregateRootId;
-use Derhub\Shared\Persistence\DatabasePersistenceRepository;
+use Derhub\Shared\Persistence\PersistenceRepository;
 
 class BusinessPersistenceRepository implements BusinessRepository
 {
     public function __construct(
-        private DatabasePersistenceRepository $persistence
+        private PersistenceRepository $persistence
     ) {
         $this->persistence->setAggregateClass(Business::class);
     }
