@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Derhub\IdentityAccess\Account\Model\UserAccount"
+            table="user_account">
+
+        <indexes>
+            <index columns="user_id"/>
+            <index columns="status"/>
+        </indexes>
+
+        <id type="id" name="internalId" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        
+        <field type="user_account_id" name="userId" column="user_id"
+               unique="true"/>
+        <field type="user_account_status" name="status" column="status"/>
+
+        <embedded name="info"
+                  class="Derhub\BusinessManagement\Business\Model\BusinessInfo"
+                  use-column-prefix="false"/>
+
+        <field type="datetime_literal" name="createdAt" column="created_at"
+               nullable="true"/>
+        <field type="datetime_literal" name="updatedAt" column="updated_at"
+               nullable="true"/>
+
+    </entity>
+
+</doctrine-mapping>
