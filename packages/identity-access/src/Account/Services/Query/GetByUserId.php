@@ -1,16 +1,15 @@
 <?php
 
-namespace Derhub\IdentityAccess\Account\Services\Authorization;
+namespace Derhub\IdentityAccess\Account\Services\Query;
 
-use Derhub\Shared\Message\Command\Command;
+use Derhub\Shared\Message\Query\Query;
 
-class AssignRolesToUser implements Command
+class GetByUserId implements Query
 {
     private int $version = 1;
 
     public function __construct(
         private string $userId,
-        private array $roles,
     ) {
     }
 
@@ -22,10 +21,5 @@ class AssignRolesToUser implements Command
     public function version(): int
     {
         return $this->version;
-    }
-
-    public function roles(): array
-    {
-        return $this->roles;
     }
 }

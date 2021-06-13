@@ -2,10 +2,11 @@
 
 namespace Derhub\IdentityAccess\Account\Model;
 
+use Derhub\IdentityAccess\Account\Model\Values\UserId;
 use Derhub\Shared\Values\ValueObject;
 use Derhub\IdentityAccess\Account\Model\Values\Role;
 
-class Roles implements ValueObject
+class UserAccountRoles implements ValueObject
 {
     /**
      * @var Role[]
@@ -22,7 +23,7 @@ class Roles implements ValueObject
         return $other instanceof self;
     }
 
-    public function remove(Role ...$roles): self
+    public function AssignRoles(UserId $userId, Role ...$roles): self
     {
         $self = clone $this;
         foreach ($roles as $role) {

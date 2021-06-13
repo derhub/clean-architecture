@@ -25,21 +25,18 @@ class UserAccount implements AggregateRoot
     use UseAggregateRoot;
     use UseTimestamps;
 
-    private TenantId $tenantId;
     private UserId $userId;
     private Credentials $credentials;
-    private Roles $roles;
+    private UserAccountRoles $roles;
     private Status $status;
 
     public function __construct(
         ?UserId $userId = null,
-        ?TenantId $tenantId = null
     ) {
         $this->userId = $userId ?? new UserId();
-        $this->roles = new Roles();
+        $this->roles = new UserAccountRoles();
         $this->status = Status::activated();
         $this->credentials = new Credentials();
-        $this->tenantId = $tenantId ?? new TenantId();
         $this->initTimestamps();
     }
 
@@ -48,23 +45,15 @@ class UserAccount implements AggregateRoot
         return $this->userId;
     }
 
-    public function tenantId(): tenantId
-    {
-        return $this->tenantId;
-    }
-
     public static function register(
         UserId $userId,
-        TenantId $tenantId,
         Email $email,
         Username $username,
         Password $password,
-        Roles $roles,
     ): self {
         $self = new self($userId);
         $self->credentials =
             Credentials::with($username, $email, $password);
-        $self->roles = $roles;
 
         $self->record(
             new UserAccountRegistered(
@@ -107,30 +96,6 @@ class UserAccount implements AggregateRoot
         $this->record(
             new UserAccountPasswordChanged(
                 $this->userId->toString()
-            )
-        );
-        return $this;
-    }
-
-    public function assignRoles(Role ...$roles): self
-    {
-        $this->roles = $this->roles->add(...$roles);
-        $this->record(
-            new UserAccountRolesChanged(
-                $this->userId->toString(),
-                $this->roles->toArray()
-            )
-        );
-        return $this;
-    }
-
-    public function removeRoles(Role ...$roles): self
-    {
-        $this->roles = $this->roles->remove(...$roles);
-        $this->record(
-            new UserAccountRolesChanged(
-                $this->userId->toString(),
-                $this->roles->toArray()
             )
         );
         return $this;

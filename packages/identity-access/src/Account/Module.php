@@ -2,6 +2,8 @@
 
 namespace Derhub\IdentityAccess\Account;
 
+use Derhub\IdentityAccess\Account\Infrastructure\Database\Doctrine\DoctrineQueryUserAccountRepository;
+use Derhub\IdentityAccess\Account\Infrastructure\Database\QueryUserAccountRepository;
 use Derhub\Shared\Module\ModuleCapabilities;
 use Derhub\Shared\Module\ModuleInterface;
 use Derhub\IdentityAccess\Account\Infrastructure\Database\UserAccountPersistenceRepository;
@@ -25,53 +27,48 @@ final class Module implements ModuleInterface
             UserAccountRepository::class,
             UserAccountPersistenceRepository::class,
         );
-        
-        $this->addCommand(
-            Services\Authentication\AuthenticateUser::class,
-            Services\Authentication\AuthenticateUserHandler::class,
+
+        $this->addDependency(
+            QueryUserAccountRepository::class,
+            DoctrineQueryUserAccountRepository::class,
         );
 
-        $this->registerAuthorization();
-        $this->registerRoles();
+        $this->registerCommands();
+        $this->registerQueries();
     }
 
-    public function registerAuthorization(): void
+    private function registerCommands(): void
     {
         $this
             ->addCommand(
-                Services\Authorization\AssignRolesToUser::class,
-                Services\Authorization\AssignRolesToUserHandler::class,
+                Services\Registration\RegisterUserAccount::class,
+                Services\Registration\RegisterUserAccountHandler::class,
             )
             ->addCommand(
-                Services\Authorization\AuthorizeUserResource::class,
-                Services\Authorization\AuthorizeUserResourceHandler::class,
-            )
-            ->addCommand(
-                Services\Authorization\RemoveRolesToUser::class,
-                Services\Authorization\RemoveRolesToUserHandler::class,
+                Services\Details\UserAccountChangeUserName::class,
+                Services\Details\UserAccountChangeUserNameHandler::class,
+            )->addCommand(
+                Services\Details\UserAccountChangeEmail::class,
+                Services\Details\UserAccountChangeEmailHandler::class,
+            )->addCommand(
+                Services\Details\UserAccountChangePassword::class,
+                Services\Details\UserAccountChangePasswordHandler::class,
             )
         ;
     }
 
-    private function registerRoles(): void
+    private function registerQueries(): void
     {
         $this
-            ->addCommand(
-                Services\RoleAndPermissions\AssignPermissionsToRole::class,
-                Services\RoleAndPermissions\AssignPermissionsToRoleHandler::class,
+            ->addQuery(
+                Services\Query\GetByCredentials::class,
+                Services\Query\GetByCredentialsHandler::class,
             )
-            ->addCommand(
-                Services\RoleAndPermissions\NewRole::class,
-                Services\RoleAndPermissions\NewRoleHandler::class,
-            )
-            ->addCommand(
-                Services\RoleAndPermissions\RemoveRole::class,
-                Services\RoleAndPermissions\RemoveRoleHandler::class,
-            )
-            ->addCommand(
-                Services\RoleAndPermissions\RemoveRolePermissions::class,
-                Services\RoleAndPermissions\RemoveRolePermissionsHandler::class,
+            ->addQuery(
+                Services\Query\GetByUserId::class,
+                Services\Query\GetByUserIdHandler::class,
             )
         ;
     }
+
 }
