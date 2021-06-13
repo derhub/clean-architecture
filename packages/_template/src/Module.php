@@ -2,18 +2,13 @@
 
 namespace Derhub\Template;
 
-use Derhub\Shared\Capabilities\ModuleCapabilities;
-use Derhub\Shared\ModuleInterface;
+use Derhub\Shared\Module\AbstractModule;
 use Derhub\Template\AggregateExample\Infrastructure;
-use Derhub\Template\AggregateExample\Listeners\PublishWhenTemplateNameChangedHandler;
-use Derhub\Template\AggregateExample\Model;
 use Derhub\Template\AggregateExample\Services;
 
-final class Module implements ModuleInterface
+final class Module extends AbstractModule
 {
-    use ModuleCapabilities;
-
-    public const ID = 'template';
+    public const ID = 'id here';
 
     public function getId(): string
     {
@@ -22,71 +17,47 @@ final class Module implements ModuleInterface
 
     public function start(): void
     {
-        $this->addDependency(
-            Services\TemplateQueryItemMapper::class,
-            Services\TemplateItemMapperImpl::class
-        );
-        $this->addDependency(
-            Model\TemplateRepository::class,
-            Infrastructure\Database\TemplatePersistenceRepository::class,
-        );
-        $this->addDependency(
-            Infrastructure\Database\TemplateQueryRepository::class,
-            Infrastructure\Database\Doctrine\DoctrineTemplateQueryRepository::class,
-        );
-        $this->addDependency(
-            Model\Specification\UniqueNameSpec::class,
-            Infrastructure\Specifications\QueryUniqueNameSpec::class,
-        );
+        // You can also register dependencies here or in bootstrap.php file
+        //$this->addDependency(
+        //    Services\TemplateQueryItemMapper::class,
+        //    Services\TemplateItemMapperImpl::class
+        //);
 
         /**
-         * Commands
+         * Register Commands
          */
-        $this->addCommand(
-            Services\Restore\RestoreTemplate::class,
-            Services\Restore\RestoreTemplateHandler::class
-        );
-        $this->addCommand(
-            Services\ChangeName\ChangeTemplateName::class,
-            Services\ChangeName\ChangeTemplateNameHandler::class
-        );
-        $this->addCommand(
-            Services\Publish\PublishTemplate::class,
-            Services\Publish\PublishTemplateHandler::class
-        );
-
+        //$this->addCommand(
+        //    Services\Restore\RestoreTemplate::class,
+        //    Services\Restore\RestoreTemplateHandler::class
+        //);
 
         /**
-         * Queries
+         * Register Queries
          */
         $this->addQuery(
-            Services\GetTemplates\GetTemplates::class,
-            Services\GetTemplates\GetTemplatesHandler::class
-        );
-        $this->addQuery(
-            Services\GetByAggregateId\GetByAggregateId::class,
-            Services\GetByAggregateId\GetByAggregateIdHandler::class
+            Services\Query\GetById::class,
+            Services\Query\GetByIdHandler::class
         );
 
         /**
-         * Events
+         * Register events
          */
-        $this->addEvent(
-            Model\Event\TemplateRestored::class,
-            Model\Event\TemplateNameChanged::class,
-            Model\Event\TemplateStatusChanged::class,
-        );
+        //$this->addEvent(
+        //    Model\Events\TemplateRestored::class,
+        //    Model\Events\TemplateNameChanged::class,
+        //    Model\Events\TemplateStatusChanged::class,
+        //);
 
         // if the event is from this module you can register using class name
-        $this->addEventListener(
-            Model\Event\TemplateNameChanged::class,
-            [PublishWhenTemplateNameChangedHandler::class]
-        );
+        //$this->addEventListener(
+        //    Model\Events\TemplateNameChanged::class,
+        //    [PublishWhenTemplateNameChangedHandler::class]
+        //);
 
-//        // if the event is from outside you should register by name
-//        $this->addEventListener(
-//            'business.events.BusinessNameChanged',
-//            [AlwaysPublishWhenTemplateNameChange::class]
-//        );
+        // if the event is from outside you should register by name
+        //$this->addEventListener(
+        //    'business.events.BusinessNameChanged',
+        //    [AlwaysPublishWhenTemplateNameChange::class]
+        //);
     }
 }
