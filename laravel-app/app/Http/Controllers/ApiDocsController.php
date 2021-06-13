@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BuildingBlocks\Actions\Action;
 use App\BuildingBlocks\OpenApi\ActionOpenApiGenerator;
 use cebe\openapi\spec\Components;
 use cebe\openapi\spec\Example;
@@ -10,6 +11,7 @@ use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\Response;
 use cebe\openapi\spec\Schema;
 use cebe\openapi\spec\Server;
+use cebe\openapi\spec\ServerVariable;
 use cebe\openapi\Writer;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -50,14 +52,7 @@ class ApiDocsController extends Controller
                     'title' => 'Clean Architecture API',
                     'version' => '0.0.1',
                 ],
-                'servers' => [
-                    new Server(
-                        [
-                            'url' => 'http://127.0.0.1:8000',
-                            'description' => 'Local server',
-                        ]
-                    ),
-                ],
+                'servers' => $this->servers(),
                 'components' => new Components(
                     [
                         'responses' =>
@@ -83,16 +78,23 @@ class ApiDocsController extends Controller
 
         /** @var \Symfony\Component\Finder\SplFileInfo $info */
         foreach ($actionFinder->getIterator() as $info) {
-            $className = '\App\\'.str_replace(
-                [base_path('app').'/', '.php', '/'],
-                ['', '', '\\'],
-                $info->getRealPath()
-            );
+            $className = '\App\\'
+                .str_replace(
+                    [base_path('app').'/', '.php', '/'],
+                    ['', '', '\\'],
+                    $info->getRealPath()
+                );
 
-            if (class_exists($className, true)) {
-                $action = new ActionOpenApiGenerator($className);
-                $paths[$className::ROUTE] = $action->openApiPathItem();
+            if (! class_exists($className, true)) {
+                continue;
             }
+
+            if (! \is_a($className, Action::class, true)) {
+                continue;
+            }
+
+            $action = new ActionOpenApiGenerator($className);
+            $paths[$className::getRoutePath()] = $action->openApiPathItem();
         }
 
         return $paths;
@@ -283,6 +285,26 @@ class ApiDocsController extends Controller
                         ],
                         'errors' => [],
                         'success' => true,
+                    ],
+                ]
+            ),
+        ];
+    }
+
+    private function servers(): array
+    {
+        return [
+            new Server(
+                [
+                    'url' => '{schema}://{host}',
+                    'description' => 'Local server',
+                    'variables' => [
+                        'schema' => new ServerVariable(
+                            ['default' => 'http'],
+                        ),
+                        'host' => new ServerVariable(
+                            ['default' => '127.0.0.1:8000']
+                        ),
                     ],
                 ]
             ),

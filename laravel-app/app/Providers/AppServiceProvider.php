@@ -2,13 +2,18 @@
 
 namespace App\Providers;
 
+use App\BuildingBlocks\LaravelAuthDriver\UserIdentityProvider;
 use App\BuildingBlocks\LaravelContainer;
+use App\DoctrineLoggerWithSource;
+use App\LaravelDoctrineDebugBar;
 use App\DoctrineEntityManagerDecorator;
 use App\EntityManagerFactory;
+use Barryvdh\Debugbar\LaravelDebugbar;
 use Derhub\Shared\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Container\Container;
 use Illuminate\Foundation\AliasLoader;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 use function config;
@@ -25,6 +30,20 @@ class AppServiceProvider extends ServiceProvider
         \Validator::extend(
             \App\Rules\SlugRule::NAME,
             \App\Rules\SlugRule::class
+        );
+
+        Auth::provider(
+            UserIdentityProvider::NAME,
+            static function ($app, $config) {
+                return $app->make(UserIdentityProvider::class);
+            },
+        );
+
+        Auth::extend(
+            UserIdentityProvider::NAME,
+            static function ($app, $config) {
+                return $app->make(UserIdentityProvider::class);
+            },
         );
     }
 
@@ -51,7 +70,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->boostrapModules();
-//        $this->registerDebugBar();
+        $this->registerDebugBar();
     }
 
     private function boostrapModules(): void
@@ -84,20 +103,36 @@ class AppServiceProvider extends ServiceProvider
      */
     private function registerDebugBar(): void
     {
-        if (! $this->app->isProduction() && ! $this->app->runningInConsole()) {
+        if (! $this->app->isProduction()) {
             $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
 
             $loader = AliasLoader::getInstance();
             $loader->alias('Debugbar', \Barryvdh\Debugbar\Facade::class);
             $this->app->singleton(
                 'doctrine_debug_stack',
-                fn () => new \Doctrine\DBAL\Logging\DebugStack()
+                fn () => new DoctrineLoggerWithSource()
             );
-            \Debugbar::addCollector(
-                new \DebugBar\Bridge\DoctrineCollector(
-                    $this->app->get('doctrine_debug_stack')
-                )
+
+            $this->booting(
+                function () {
+                    /** @var LaravelDebugbar $debugbar */
+                    $debugbar = $this->app->get('debugbar');
+
+                    $doctrineCollector =
+                        $this->app->get('doctrine_debug_stack');
+                    $em = $this->app->get(EntityManagerInterface::class);
+                    $debugbar->addCollector(
+                        LaravelDoctrineDebugBar::create($debugbar, $doctrineCollector, $em)
+                    );
+                }
             );
+
+
+//            \Debugbar::addCollector(
+//                new LaravelDoctrineDebugBar(
+//                    $this->app->get('doctrine_debug_stack')
+//                )
+//            );
         }
     }
 }

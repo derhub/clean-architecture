@@ -14,14 +14,14 @@ trait WithValidation
      * @return \Illuminate\Validation\Validator
      */
     public function askForValidator(
-        iterable $payload,
+        array $payload,
         array $rules,
     ): \Illuminate\Validation\Validator {
         return Validator::make($payload, $rules);
     }
 
     public function validate(
-        iterable $payload
+        array $payload
     ): \Illuminate\Validation\Validator {
         return $this->askForValidator(
             $payload,
@@ -29,7 +29,7 @@ trait WithValidation
         );
     }
 
-    public function validationRules(iterable $payload): array
+    public function validationRules(array $payload): array
     {
         $fields = static::getComputedFields();
 

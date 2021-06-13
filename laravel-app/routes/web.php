@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +18,24 @@ use Illuminate\Support\Facades\Route;
 Route::get(
     '/',
     function () {
-        return view('welcome');
+        return Inertia::render(
+            'Welcome',
+            [
+                'canLogin' => Route::has('login'),
+                'canRegister' => Route::has('register'),
+                'laravelVersion' => Application::VERSION,
+                'phpVersion' => PHP_VERSION,
+            ]
+        );
     }
 );
 
-Route::get('/api', \App\Http\Controllers\ApiDocsController::class)->name('api.docs-api');
-Route::get('/api/docs', [\App\Http\Controllers\ApiDocsController::class, 'swaggerUI'])->name('api.docs-ui');
-Route::get('/api/validate', [\App\Http\Controllers\ApiDocsController::class, 'validateOpenApi'])->name('api.validateOpenApi');
+Route::get(
+    '/dashboard',
+    function () {
+        return Inertia::render('Dashboard');
+    }
+)->middleware(['auth', 'verified'])->name('dashboard')
+;
+
+require __DIR__.'/auth.php';

@@ -1,6 +1,6 @@
 <?php
 
-use Symfony\Component\Finder\Finder;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,3 +12,6 @@ use Symfony\Component\Finder\Finder;
 */
 
 \App\BuildingBlocks\Actions\AutoRegisterActionRoutes::routes();
+
+Route::get('/api', \App\Http\Controllers\ApiDocsController::class)->name('api.docs-api');
+Route::get('/api/docs', [\App\Http\Controllers\ApiDocsController::class, 'swaggerUI'])->name('api.docs-ui');

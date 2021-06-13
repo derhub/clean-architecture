@@ -3,7 +3,7 @@
 namespace App\BuildingBlocks\Actions\Capabilities;
 
 use App\BuildingBlocks\Actions\DispatcherResponse;
-use App\BuildingBlocks\Actions\ApiResponseFactory;
+use App\BuildingBlocks\Actions\DispatcherResponseFactory;
 use Derhub\Shared\Exceptions\ApplicationException;
 use Derhub\Shared\Exceptions\DomainException;
 use Derhub\Shared\Message\Command\Command;
@@ -32,20 +32,38 @@ trait WithMessageDispatcher
             $payload = $this->getPayload();
 
             if (! $this->authorize()) {
-                return ApiResponseFactory::fromUnAuthorizeRequest();
+                return DispatcherResponseFactory::fromUnAuthorizeRequest();
             }
 
             $validate = $this->validate($payload);
             if ($validate->fails()) {
-                return ApiResponseFactory::fromValidation($validate);
+                return DispatcherResponseFactory::fromValidation($validate);
             }
 
-            $response = $this->handle(...$payload);
+            $filteredPayload = $this->sanitizePayload($payload);
+            $response = $this->handle(...$filteredPayload);
 
-            return ApiResponseFactory::fromMessageResponse($response);
+            return DispatcherResponseFactory::fromMessageResponse($response);
         } catch (DomainException | ApplicationException $e) {
-            return ApiResponseFactory::fromException($e, self::MODULE);
+            return DispatcherResponseFactory::fromException($e, self::MODULE);
         }
+    }
+
+    private function sanitizePayload(array $payload): array
+    {
+        $fields = static::getComputedFields();
+        $results = [];
+        foreach ($payload as $key => $value) {
+            if (! isset($fields[$key])) {
+                continue;
+            }
+
+            /** @var \App\BuildingBlocks\Actions\Fields\BaseField $field */
+            $field = $fields[$key];
+            $results[$key] = $field->applyPayloadModifications($value);
+        }
+
+        return $results;
     }
 
     public function getCommandBus(): CommandBus

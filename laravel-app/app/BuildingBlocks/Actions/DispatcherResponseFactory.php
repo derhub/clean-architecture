@@ -9,7 +9,7 @@ use Derhub\Shared\Utils\Str;
 use Illuminate\Validation\Validator;
 use Throwable;
 
-class ApiResponseFactory
+class DispatcherResponseFactory
 {
     public static function create(
         null|CommandResponse|QueryResponse $response

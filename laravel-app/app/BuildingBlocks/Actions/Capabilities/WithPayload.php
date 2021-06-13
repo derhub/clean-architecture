@@ -10,7 +10,7 @@ namespace App\BuildingBlocks\Actions\Capabilities;
  */
 trait WithPayload
 {
-    private static ?iterable $computedPayload = null;
+    private static ?array $computedPayload = null;
 
     public function computePayload(): array
     {
@@ -23,16 +23,12 @@ trait WithPayload
             $alias = $config->alias();
 
             if (isset($segments[$alias])) {
-                $payload[$field] = $config->applyPayloadModifications(
-                    $segments[$alias]
-                );
+                $payload[$field] = $segments[$alias];
                 continue;
             }
 
             if (isset($segments[$field])) {
-                $payload[$field] = $config->applyPayloadModifications(
-                    $segments[$field]
-                );
+                $payload[$field] = $segments[$field];
                 continue;
             }
 
@@ -43,6 +39,12 @@ trait WithPayload
             }
 
             $hasInput = $this->inputHas($alias);
+
+            $aliasConfirm = $alias.'_confirmation';
+            if ($this->inputHas($aliasConfirm)) {
+                $payload[$aliasConfirm] = $this->input($aliasConfirm);
+            }
+
             if (! $hasInput && $config->required()) {
                 continue;
             }
@@ -51,20 +53,17 @@ trait WithPayload
                 $value = $this->input($alias);
             }
 
-            $payload[$field] = $config->applyPayloadModifications($value);
+            $payload[$field] = $value;
         }
 
         return $payload;
     }
 
-    public function setPayload(iterable $payload): void
+    public function setPayload(array $payload): void
     {
         self::$computedPayload = $payload;
     }
 
-    /**
-     * @inherited
-     */
     public function getPayload(): array
     {
         return self::$computedPayload ?? $this->computePayload();

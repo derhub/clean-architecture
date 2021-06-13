@@ -3,7 +3,8 @@
 return [
     'bootstraps' => glob(base_path('vendor/derhub/*/configs/bootstrap.php')) ?? [],
     'modules' => [
-        Derhub\BusinessManagement\Business\Module::class,
-        Derhub\BusinessManagement\Employee\Module::class,
+        \Derhub\BusinessManagement\Business\Module::class,
+        \Derhub\BusinessManagement\Employee\Module::class,
+        \Derhub\IdentityAccess\Account\Module::class,
     ],
 ];

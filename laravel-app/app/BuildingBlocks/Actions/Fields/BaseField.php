@@ -12,9 +12,7 @@ class BaseField implements ArrayAccess, Field
     /**
      * @var array<string, callable>
      */
-    protected array $events = [
-        'payloadModifiers' => [],
-    ];
+    protected array $modifiers = [];
 
     public function __construct(private array $config)
     {
@@ -159,18 +157,18 @@ class BaseField implements ArrayAccess, Field
 
     public function addPayloadModifier(callable $callback): self
     {
-        $this->events['payloadModifiers'][] = $callback;
+        $this->modifiers[] = $callback;
 
         return $this;
     }
 
     public function applyPayloadModifications(mixed $payload): mixed
     {
-        if (empty($this->events['payloadModifiers'])) {
+        if (empty($this->modifiers)) {
             return $payload;
         }
 
-        foreach ($this->events['payloadModifiers'] as $modifier) {
+        foreach ($this->modifiers as $modifier) {
             $payload = $modifier($payload);
         }
 

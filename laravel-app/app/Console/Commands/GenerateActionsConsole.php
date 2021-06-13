@@ -245,10 +245,21 @@ class GenerateActionsConsole extends BaseCommand
         $actionNameExtract = explode('_', Str::snakeCase($commandClassName));
         $possibleModuleIdWords = array_merge(
             Str::pluralize($moduleId),
-            Str::pluralize($moduleId),
+            Str::singularize($moduleId),
             [$moduleId],
             ['command', 'query']
         );
+        $moduleIdExtracts = explode('_', Str::snake($moduleId));
+        foreach ($moduleIdExtracts as $extract) {
+            $possibleModuleIdWords[] = $extract;
+            foreach (Str::pluralize($extract) as $value) {
+                $possibleModuleIdWords[] = $value;
+            }
+            foreach (Str::singularize($extract) as $value) {
+                $possibleModuleIdWords[] = $value;
+            }
+        }
+
         $cleanActionName = implode(
             '-',
             array_diff($actionNameExtract, $possibleModuleIdWords)
@@ -362,11 +373,11 @@ class GenerateActionsConsole extends BaseCommand
             };
 
             $result .= sprintf(
-                '\'%s\' => new \%s(self::FIELDS[\'%s\']),',
-                $fieldName,
-                $fieldTypes[$fieldType],
-                $fieldName,
-            ).PHP_EOL;
+                    '\'%s\' => new \%s(self::FIELDS[\'%s\']),',
+                    $fieldName,
+                    $fieldTypes[$fieldType],
+                    $fieldName,
+                ).PHP_EOL;
         }
         $result .= ']';
 

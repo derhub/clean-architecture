@@ -2,10 +2,10 @@
 
 namespace App\BuildingBlocks\Actions;
 
+use App\BuildingBlocks\Actions\Capabilities\WithLaravelController;
 use App\BuildingBlocks\Actions\Capabilities\WithFields;
 use App\BuildingBlocks\Actions\Capabilities\WithGeneratedProperties;
 use App\BuildingBlocks\Actions\Capabilities\WithMessageDispatcher;
-use App\BuildingBlocks\Actions\Capabilities\WithOpenApiSchema;
 use App\BuildingBlocks\Actions\Capabilities\WithPayload;
 use App\BuildingBlocks\Actions\Capabilities\WithRequest;
 use App\BuildingBlocks\Actions\Capabilities\WithRouting;
@@ -20,4 +20,5 @@ trait ActionCapabilities
     use WithValidation;
     use WithFields;
     use WithGeneratedProperties;
+    use WithLaravelController;
 }

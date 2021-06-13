@@ -30,11 +30,6 @@ abstract class __class__
         );
     }
 
-    public function __invoke(...$args): mixed
-    {
-        return $this->dispatch()->toJsonResponse();
-    }
-
     abstract public function dispatch(): \App\BuildingBlocks\Actions\DispatcherResponse;
 
     public function authorize(): bool

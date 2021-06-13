@@ -19,6 +19,11 @@ class DispatcherErrorResponse implements DispatcherResponse
         return $this->errors;
     }
 
+    public function firstError(): array
+    {
+        return $this->errors[0];
+    }
+
     public function setErrors(array $errors): self
     {
         $this->errors = $errors;

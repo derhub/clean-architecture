@@ -1,5 +1,7 @@
 <?php
 
+use App\BuildingBlocks\LaravelAuthDriver\UserIdentityProvider;
+
 return [
 
     /*
@@ -15,7 +17,8 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        //'passwords' => 'users',
+        'passwords' => UserIdentityProvider::NAME,
     ],
 
     /*
@@ -38,12 +41,14 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            //'provider' => 'users',
+            'provider' => UserIdentityProvider::NAME,
         ],
 
         'api' => [
             'driver' => 'token',
-            'provider' => 'users',
+            //'provider' => 'users',
+            'provider' => UserIdentityProvider::NAME,
             'hash' => false,
         ],
     ],
@@ -71,10 +76,11 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        UserIdentityProvider::NAME => [
+            //'driver' => '',
+            'driver' => UserIdentityProvider::NAME,
+            'provider' => UserIdentityProvider::NAME,
+        ],
     ],
 
     /*

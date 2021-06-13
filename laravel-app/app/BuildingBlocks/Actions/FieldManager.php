@@ -23,6 +23,11 @@ class FieldManager implements IteratorAggregate, Countable, \ArrayAccess
         return \iterator_to_array($this->iterator());
     }
 
+    public function keys(): array
+    {
+        return \array_keys($this->items);
+    }
+
     public function iterator(string $keyBy = null): Generator
     {
         foreach ($this->items as $key => $field) {

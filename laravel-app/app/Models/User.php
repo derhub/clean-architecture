@@ -11,6 +11,8 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
 
+    protected $table = 'user_accounts';
+
     /**
      * The attributes that should be cast to native types.
      *
