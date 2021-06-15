@@ -1,18 +1,17 @@
 <?php
 
-namespace Tests\UserAccess\Account\Model;
+namespace Tests\IdentityAccess\Account\Model;
 
 use Derhub\Shared\Model\DomainEvent;
-use Derhub\UserAccess\Account\Model\Event\UserAccountEmailChanged;
-use Derhub\UserAccess\Account\Model\Event\UserAccountPasswordChanged;
-use Derhub\UserAccess\Account\Model\Event\UserAccountRegistered;
-use Derhub\UserAccess\Account\Model\Event\UserAccountUsernameChanged;
-use Derhub\UserAccess\Account\Model\Roles;
-use Derhub\UserAccess\Account\Model\UserAccount;
-use Derhub\UserAccess\Account\Model\Values\Email;
-use Derhub\UserAccess\Account\Model\Values\Password;
-use Derhub\UserAccess\Account\Model\Values\UserId;
-use Derhub\UserAccess\Account\Model\Values\Username;
+use Derhub\IdentityAccess\Account\Model\Event\UserAccountEmailChanged;
+use Derhub\IdentityAccess\Account\Model\Event\UserAccountPasswordChanged;
+use Derhub\IdentityAccess\Account\Model\Event\UserAccountRegistered;
+use Derhub\IdentityAccess\Account\Model\Event\UserAccountUsernameChanged;
+use Derhub\IdentityAccess\Account\Model\UserAccount;
+use Derhub\IdentityAccess\Account\Model\Values\Email;
+use Derhub\IdentityAccess\Account\Model\Values\Password;
+use Derhub\IdentityAccess\Account\Model\Values\UserId;
+use Derhub\IdentityAccess\Account\Model\Values\Username;
 use PHPUnit\Framework\TestCase;
 
 class UserAccountTest extends TestCase
@@ -41,7 +40,6 @@ class UserAccountTest extends TestCase
             email: Email::fromString('test@test.com'),
             username: Username::fromString('test12'),
             password: Password::fromString('test'),
-            roles: new Roles(),
         );
 
         self::assertEvents(

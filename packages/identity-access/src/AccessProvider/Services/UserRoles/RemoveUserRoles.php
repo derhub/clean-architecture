@@ -1,16 +1,16 @@
 <?php
 
-namespace Derhub\IdentityAccess\Account\Services\Details;
+namespace Derhub\IdentityAccess\AccessProvider\Services\UserRoles;
 
 use Derhub\Shared\Message\Command\Command;
 
-class UserAccountChangePassword implements Command
+class RemoveUserRoles implements Command
 {
     private int $version = 1;
 
     public function __construct(
         private string $userId,
-        private string $password,
+        private array|string $roles
     ) {
     }
 
@@ -19,9 +19,9 @@ class UserAccountChangePassword implements Command
         return $this->userId;
     }
 
-    public function password(): string
+    public function roles(): array|string
     {
-        return $this->password;
+        return $this->roles;
     }
 
     public function version(): int

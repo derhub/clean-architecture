@@ -6,23 +6,19 @@
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity name="Derhub\IdentityAccess\Account\Model\UserAccount"
-            table="user_account">
+            table="user_accounts">
 
         <indexes>
-            <index columns="user_id"/>
             <index columns="status"/>
         </indexes>
 
-        <id type="id" name="internalId" column="id">
-            <generator strategy="AUTO"/>
+        <id type="user_account_id" name="userId" column="id">
+            <generator strategy="NONE"/>
         </id>
-        
-        <field type="user_account_id" name="userId" column="user_id"
-               unique="true"/>
         <field type="user_account_status" name="status" column="status"/>
 
-        <embedded name="info"
-                  class="Derhub\BusinessManagement\Business\Model\BusinessInfo"
+        <embedded name="credentials"
+                  class="Derhub\IdentityAccess\Account\Model\Credentials"
                   use-column-prefix="false"/>
 
         <field type="datetime_literal" name="createdAt" column="created_at"

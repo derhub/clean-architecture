@@ -45,14 +45,14 @@ final class Module implements ModuleInterface
                 Services\Registration\RegisterUserAccountHandler::class,
             )
             ->addCommand(
-                Services\Details\UserAccountChangeUserName::class,
-                Services\Details\UserAccountChangeUserNameHandler::class,
+                Services\DetailsUpdate\ChangeUserAccountUsername::class,
+                Services\DetailsUpdate\ChangeUserAccountUsernameHandler::class,
             )->addCommand(
-                Services\Details\UserAccountChangeEmail::class,
-                Services\Details\UserAccountChangeEmailHandler::class,
+                Services\DetailsUpdate\ChangeUserAccountEmail::class,
+                Services\DetailsUpdate\ChangeUserAccountEmailHandler::class,
             )->addCommand(
-                Services\Details\UserAccountChangePassword::class,
-                Services\Details\UserAccountChangePasswordHandler::class,
+                Services\DetailsUpdate\ChangeUserAccountPassword::class,
+                Services\DetailsUpdate\ChangeUserAccountPasswordHandler::class,
             )
         ;
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Derhub\IdentityAccess\Account\Model\Event;
 

@@ -1,5 +1,5 @@
 <?php
 
-use Derhub\UserAccess\Account\Infrastructure\Database\Doctrine\UserAccountDoctrineTypes;
+use Derhub\IdentityAccess\Account\Infrastructure\Database\Doctrine\UserAccountDoctrineTypes;
 
 UserAccountDoctrineTypes::register();

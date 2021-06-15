@@ -1,16 +1,16 @@
 <?php
 
-namespace Derhub\IdentityAccess\Account\Services\Details;
+namespace Derhub\IdentityAccess\Account\Services\DetailsUpdate;
 
 use Derhub\Shared\Message\Command\Command;
 
-class UserAccountChangeUserName implements Command
+class ChangeUserAccountEmail implements Command
 {
     private int $version = 1;
 
     public function __construct(
         private string $userId,
-        private string $username,
+        private string $email,
     ) {
     }
 
@@ -19,9 +19,9 @@ class UserAccountChangeUserName implements Command
         return $this->userId;
     }
 
-    public function username(): string
+    public function email(): string
     {
-        return $this->username;
+        return $this->email;
     }
 
     public function version(): int
