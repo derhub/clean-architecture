@@ -2,12 +2,10 @@
 
 namespace Derhub\IdentityAccess\Account;
 
-use Derhub\IdentityAccess\Account\Infrastructure\Database\Doctrine\DoctrineQueryUserAccountRepository;
-use Derhub\IdentityAccess\Account\Infrastructure\Database\QueryUserAccountRepository;
+use Derhub\IdentityAccess\Account\Model;
 use Derhub\Shared\Module\ModuleCapabilities;
 use Derhub\Shared\Module\ModuleInterface;
-use Derhub\IdentityAccess\Account\Infrastructure\Database\UserAccountPersistenceRepository;
-use Derhub\IdentityAccess\Account\Model\UserAccountRepository;
+use Derhub\IdentityAccess\Account\Infrastructure\Database;
 use Derhub\IdentityAccess\Account\Services;
 
 final class Module implements ModuleInterface
@@ -24,13 +22,18 @@ final class Module implements ModuleInterface
     public function start(): void
     {
         $this->addDependency(
-            UserAccountRepository::class,
-            UserAccountPersistenceRepository::class,
+            Model\UserAccountRepository::class,
+            Database\UserAccountPersistenceRepository::class,
         );
 
         $this->addDependency(
-            QueryUserAccountRepository::class,
-            DoctrineQueryUserAccountRepository::class,
+            Database\QueryUserAccountRepository::class,
+            Database\Doctrine\DoctrineQueryUserAccountRepository::class,
+        );
+
+        $this->addDependency(
+            Model\ComparePassword::class,
+            Services\ComparePasswordService::class
         );
 
         $this->registerCommands();
@@ -61,8 +64,12 @@ final class Module implements ModuleInterface
     {
         $this
             ->addQuery(
-                Services\Query\GetByCredentials::class,
-                Services\Query\GetByCredentialsHandler::class,
+                Services\Query\GetByEmail::class,
+                Services\Query\GetByEmailHandler::class,
+            )
+            ->addQuery(
+                Services\Query\GetByUsername::class,
+                Services\Query\GetByUsernameHandler::class,
             )
             ->addQuery(
                 Services\Query\GetByUserId::class,

@@ -9,7 +9,7 @@ use Derhub\IdentityAccess\Account\Model\Event\UserAccountRegistered;
 use Derhub\IdentityAccess\Account\Model\Event\UserAccountUsernameChanged;
 use Derhub\IdentityAccess\Account\Model\UserAccount;
 use Derhub\IdentityAccess\Account\Model\Values\Email;
-use Derhub\IdentityAccess\Account\Model\Values\Password;
+use Derhub\IdentityAccess\Account\Model\Values\HashedPassword;
 use Derhub\IdentityAccess\Account\Model\Values\UserId;
 use Derhub\IdentityAccess\Account\Model\Values\Username;
 use PHPUnit\Framework\TestCase;
@@ -39,7 +39,7 @@ class UserAccountTest extends TestCase
             userId: UserId::generate(),
             email: Email::fromString('test@test.com'),
             username: Username::fromString('test12'),
-            password: Password::fromString('test'),
+            password: HashedPassword::fromString('test'),
         );
 
         self::assertEvents(
@@ -77,7 +77,7 @@ class UserAccountTest extends TestCase
     public function testChangePassword(): void
     {
         $model = $this->createModel();
-        $model->changePassword(Password::fromString('testcom'));
+        $model->changePassword(HashedPassword::fromString('testcom'));
         self::assertEvents(
             [
                 UserAccountPasswordChanged::class,

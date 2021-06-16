@@ -5,7 +5,7 @@ namespace Derhub\IdentityAccess\Account\Model\Values;
 use Derhub\Shared\Utils\Assert;
 use Derhub\Shared\Values\ValueObject;
 use Derhub\Shared\Values\ValueObjectInt;
-use Derhub\IdentityAccess\Account\Shared\UserStatusTypes;
+use Derhub\IdentityAccess\Account\Shared\UserStatus;
 
 class Status implements ValueObjectInt
 {
@@ -13,7 +13,7 @@ class Status implements ValueObjectInt
 
     public function __construct()
     {
-        $this->value = UserStatusTypes::ACTIVATED;
+        $this->value = UserStatus::REGISTERED;
     }
 
     /**
@@ -42,7 +42,11 @@ class Status implements ValueObjectInt
     {
         Assert::inArray(
             $value,
-            [UserStatusTypes::ACTIVATED, UserStatusTypes::ACTIVATED]
+            [
+                UserStatus::ACTIVATED,
+                UserStatus::REGISTERED,
+                UserStatus::DEACTIVATED,
+            ]
         );
 
         return self::init($value);
@@ -50,12 +54,17 @@ class Status implements ValueObjectInt
 
     public static function activated(): self
     {
-        return self::init(UserStatusTypes::ACTIVATED);
+        return self::init(UserStatus::ACTIVATED);
     }
 
     public static function deactivated(): self
     {
-        return self::init(UserStatusTypes::DEACTIVATED);
+        return self::init(UserStatus::DEACTIVATED);
+    }
+
+    public static function registered(): self
+    {
+        return self::init(UserStatus::REGISTERED);
     }
 
     public function toInt(): int

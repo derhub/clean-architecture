@@ -9,6 +9,7 @@
   "license": "MIT",
   "require": {
     "php": "^7.4|^8.0",
+    "ext-pdo": "*",
     "derhub/business-management": "dev-master",
     "derhub/identity-access": "dev-master",
     "derhub/integration": "dev-master",
@@ -25,11 +26,12 @@
     "laravel/octane": "^1.0",
     "laravel/sanctum": "^2.6",
     "laravel/tinker": "^2.5",
+    "nyholm/psr7": "^1.4",
     "predis/predis": "^1.1",
     "spiral/roadrunner": "^2.0",
     "symfony/cache": "^5.3",
-    "tightenco/ziggy": "^1.0",
-    "ext-pdo": "*"
+    "symfony/psr-http-message-bridge": "^2.1",
+    "tightenco/ziggy": "^1.0"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "dev-master",

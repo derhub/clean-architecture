@@ -2,7 +2,7 @@
 
 namespace Derhub\IdentityAccess\Account\Infrastructure\Database\Doctrine\Types;
 
-use Derhub\IdentityAccess\Account\Model\Values\Password;
+use Derhub\IdentityAccess\Account\Model\Values\HashedPassword;
 use Doctrine\DBAL\Types\StringType;
 
 class PasswordType extends StringType
@@ -13,6 +13,6 @@ class PasswordType extends StringType
 
     public function defineClass(): string
     {
-        return Password::class;
+        return HashedPassword::class;
     }
 }

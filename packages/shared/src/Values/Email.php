@@ -4,7 +4,7 @@ namespace Derhub\Shared\Values;
 
 use Derhub\Shared\Utils\Assert;
 
-class Email implements ValueObjectStr
+abstract class Email implements ValueObjectStr
 {
     private ?string $value;
 
@@ -27,11 +27,6 @@ class Email implements ValueObjectStr
         $this->value = null;
     }
 
-    public function __toString()
-    {
-        return $this->toString() ?? '';
-    }
-
     public function sameAs(ValueObject $other): bool
     {
         return $other::class === static::class &&
@@ -41,5 +36,10 @@ class Email implements ValueObjectStr
     public function toString(): ?string
     {
         return $this->value;
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->value);
     }
 }

@@ -4,27 +4,32 @@ namespace Derhub\IdentityAccess\Account\Model;
 
 use Derhub\Shared\Values\ValueObject;
 use Derhub\IdentityAccess\Account\Model\Values\Email;
-use Derhub\IdentityAccess\Account\Model\Values\Password;
+use Derhub\IdentityAccess\Account\Model\Values\HashedPassword;
 use Derhub\IdentityAccess\Account\Model\Values\Username;
 
 class Credentials implements ValueObject
 {
     private Username $username;
-    private Password $password;
+    private HashedPassword $password;
     private Email $email;
-
+    private ?string $rememberToken;
+    private ?string $twoFactorSecrete;
+    private ?string $twoFactorRecoveryCodes;
 
     public function __construct()
     {
         $this->username = new Username();
-        $this->password = new Password();
+        $this->password = new HashedPassword();
         $this->email = new Email();
+        $this->rememberToken = null;
+        $this->twoFactorSecrete = null;
+        $this->twoFactorRecoveryCodes = null;
     }
 
     public static function with(
         Username $username,
         Email $email,
-        Password $password
+        HashedPassword $password
     ): self {
         $self = new self();
         $self->email = $email;
@@ -47,23 +52,9 @@ class Credentials implements ValueObject
         return $this->username;
     }
 
-    public function setUsername(Username $username): self
-    {
-        $self = clone $this;
-        $self->username = $username;
-        return $self;
-    }
-
-    public function password(): Password
+    public function password(): HashedPassword
     {
         return $this->password;
-    }
-
-    public function setPassword(Password $password): self
-    {
-        $self = clone $this;
-        $self->password = $password;
-        return $self;
     }
 
     public function email(): Email
@@ -72,11 +63,56 @@ class Credentials implements ValueObject
     }
 
 
+    public function rememberToken(): ?string
+    {
+        return $this->rememberToken;
+    }
+
+    public function twoFactorSecrete(): ?string
+    {
+        return $this->twoFactorSecrete;
+    }
+
+    public function twoFactorRecoveryCodes(): ?string
+    {
+        return $this->twoFactorRecoveryCodes;
+    }
+
+    public function setUsername(Username $username): self
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+    public function setPassword(HashedPassword $password): self
+    {
+        $this->password = $password;
+        return $this;
+    }
+
     public function setEmail(Email $email): self
     {
-        $self = clone $this;
-        $self->email = $email;
-        return $self;
+        $this->email = $email;
+        return $this;
+    }
+
+    public function setRememberToken(?string $rememberToken): self
+    {
+        $this->rememberToken = $rememberToken;
+        return $this;
+    }
+
+    public function setTwoFactorSecrete(?string $twoFactorSecrete): self
+    {
+        $this->twoFactorSecrete = $twoFactorSecrete;
+        return $this;
+    }
+
+    public function setTwoFactorRecoveryCodes(
+        ?string $twoFactorRecoveryCodes
+    ): self {
+        $this->twoFactorRecoveryCodes = $twoFactorRecoveryCodes;
+        return $this;
     }
 
 

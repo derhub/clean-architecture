@@ -2,20 +2,17 @@
 
 namespace Derhub\IdentityAccess\Account\Model;
 
-use Derhub\IdentityAccess\Account\Model\Values\TenantId;
 use Derhub\Shared\Model\AggregateRoot;
 use Derhub\Shared\Model\UseAggregateRoot;
 use Derhub\Shared\Model\UseTimestamps;
 use Derhub\IdentityAccess\Account\Model\Event\UserAccountEmailChanged;
 use Derhub\IdentityAccess\Account\Model\Event\UserAccountPasswordChanged;
 use Derhub\IdentityAccess\Account\Model\Event\UserAccountRegistered;
-use Derhub\IdentityAccess\Account\Model\Event\UserAccountRolesActivated;
-use Derhub\IdentityAccess\Account\Model\Event\UserAccountRolesChanged;
-use Derhub\IdentityAccess\Account\Model\Event\UserAccountRolesDeactivated;
+use Derhub\IdentityAccess\Account\Model\Event\UserAccountActivated;
+use Derhub\IdentityAccess\Account\Model\Event\UserAccountDeactivated;
 use Derhub\IdentityAccess\Account\Model\Event\UserAccountUsernameChanged;
 use Derhub\IdentityAccess\Account\Model\Values\Email;
-use Derhub\IdentityAccess\Account\Model\Values\Password;
-use Derhub\IdentityAccess\Account\Model\Values\Role;
+use Derhub\IdentityAccess\Account\Model\Values\HashedPassword;
 use Derhub\IdentityAccess\Account\Model\Values\Status;
 use Derhub\IdentityAccess\Account\Model\Values\UserId;
 use Derhub\IdentityAccess\Account\Model\Values\Username;
@@ -35,7 +32,7 @@ class UserAccount implements AggregateRoot
     ) {
         $this->userId = $userId ?? new UserId();
         $this->roles = new UserAccountRoles();
-        $this->status = Status::activated();
+        $this->status = Status::registered();
         $this->credentials = new Credentials();
         $this->initTimestamps();
     }
@@ -49,7 +46,7 @@ class UserAccount implements AggregateRoot
         UserId $userId,
         Email $email,
         Username $username,
-        Password $password,
+        HashedPassword $password,
     ): self {
         $self = new self($userId);
         $self->credentials =
@@ -90,7 +87,7 @@ class UserAccount implements AggregateRoot
         return $this;
     }
 
-    public function changePassword(Password $password): self
+    public function changePassword(HashedPassword $password): self
     {
         $this->credentials = $this->credentials->setPassword($password);
         $this->record(
@@ -105,7 +102,7 @@ class UserAccount implements AggregateRoot
     {
         $this->status = Status::activated();
         $this->record(
-            new UserAccountRolesActivated(
+            new UserAccountActivated(
                 $this->userId->toString()
             )
         );
@@ -116,10 +113,27 @@ class UserAccount implements AggregateRoot
     {
         $this->status = Status::deactivated();
         $this->record(
-            new UserAccountRolesDeactivated(
+            new UserAccountDeactivated(
                 $this->userId->toString()
             )
         );
+        return $this;
+    }
+
+    public function changeRememberToken(string $token): self
+    {
+        $this->credentials = $this->credentials->setRememberToken($token);
+        return $this;
+    }
+
+    public function changeTwoWayFactor(
+        string $twoFactorSecrete,
+        string $twoFactorRecoveryCodes
+    ): self {
+        $this->credentials = $this->credentials
+            ->setTwoFactorSecrete($twoFactorSecrete)
+            ->setTwoFactorRecoveryCodes($twoFactorRecoveryCodes)
+        ;
         return $this;
     }
 }

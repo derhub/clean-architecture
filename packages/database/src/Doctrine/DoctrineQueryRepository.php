@@ -28,11 +28,6 @@ abstract class DoctrineQueryRepository implements QueryRepository
     use QueryRepositoryFilterCapabilities;
 
     /**
-     * @return \Doctrine\ORM\EntityRepository<T>
-     */
-    protected EntityRepository $doctrineRepo;
-
-    /**
      * DoctrineQueryBusinessRepository constructor.
      * @param \Doctrine\ORM\EntityManager $entityManager
      */
@@ -40,8 +35,6 @@ abstract class DoctrineQueryRepository implements QueryRepository
         protected EntityManagerInterface $entityManager,
         ?QueryItemMapper $mapper = null,
     ) {
-        $this->doctrineRepo = $this->getRepository();
-
         if ($mapper !== null) {
             $this->setMapper($mapper);
         }

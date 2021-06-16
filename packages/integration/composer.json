@@ -18,12 +18,14 @@
   },
   "autoload": {
     "psr-4": {
-      "Derhub\\Integration\\": "src/"
+      "Derhub\\Integration\\": "src/",
+      "Derhub\\Laravel\\Integration\\": "integration/laravel/src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\Integration\\": "tests"
+      "Tests\\Integration\\": "tests",
+      "Tests\\Laravel\\Integration\\": "integration/laravel/tests"
     }
   },
   "repositories": [

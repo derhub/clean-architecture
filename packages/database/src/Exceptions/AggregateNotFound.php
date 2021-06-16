@@ -12,4 +12,9 @@ class AggregateNotFound extends \Exception implements AggregateNotFoundException
             sprintf('%s aggregate not found', $id),
         );
     }
+
+    public static function fromCriteria(array $criteria): self
+    {
+        return new self('unable to find aggregate with the given criteria');
+    }
 }

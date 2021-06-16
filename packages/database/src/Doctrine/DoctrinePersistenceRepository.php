@@ -34,7 +34,7 @@ class DoctrinePersistenceRepository implements PersistenceRepository
 
     /**
      * @param string|int $aggregateRootId
-     * @return object
+     * @return T
      * @throws \Derhub\Shared\Database\Exceptions\AggregateNotFound
      * @throws \Derhub\Shared\Database\Doctrine\MissingAggregateClassNameException
      */
@@ -43,6 +43,39 @@ class DoctrinePersistenceRepository implements PersistenceRepository
         $find = $this->getDoctrineRepo()->find($aggregateRootId);
         if ($find === null) {
             throw AggregateNotFound::fromId($aggregateRootId);
+        }
+
+        return $find;
+    }
+
+    /**
+     * @param array $criteria
+     * @return T
+     * @throws \Derhub\Shared\Database\Doctrine\MissingAggregateClassNameException
+     * @throws \Derhub\Shared\Database\Exceptions\AggregateNotFound
+     */
+    public function findBy(array $criteria): object
+    {
+        $find = $this->getDoctrineRepo()->findBy($criteria);
+        if ($find === null) {
+            throw AggregateNotFound::fromCriteria($criteria);
+        }
+
+        return $find;
+    }
+
+
+    /**
+     * @param array $criteria
+     * @return T
+     * @throws \Derhub\Shared\Database\Doctrine\MissingAggregateClassNameException
+     * @throws \Derhub\Shared\Database\Exceptions\AggregateNotFound
+     */
+    public function findOneBy(array $criteria): object
+    {
+        $find = $this->getDoctrineRepo()->findOneBy($criteria);
+        if ($find === null) {
+            throw AggregateNotFound::fromCriteria($criteria);
         }
 
         return $find;

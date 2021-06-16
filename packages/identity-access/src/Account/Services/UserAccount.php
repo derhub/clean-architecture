@@ -12,10 +12,30 @@ class UserAccount implements QueryItem
         private ?string $username,
         private string $email,
         private ?string $password,
+        private ?string $rememberToken,
+        private ?string $twoFactorSecrete,
+        private ?string $twoFactorRecoverCodes,
         private ?string $createdAt,
         private ?string $updatedAt,
     ) {
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id(),
+            'username' => $this->username(),
+            'email' => $this->email(),
+            'status' => $this->status(),
+            'password' => '[secrete]',
+            'remember_token' => $this->rememberToken(),
+            'two_factor_secrete' => $this->twoFactorSecrete(),
+            'two_factor_recovery_codes' => $this->twoFactorRecoverCodes(),
+            'created_at' => $this->createdAt(),
+            'updated_at' => $this->updatedAt(),
+        ];
+    }
+
 
     public function id(): string
     {
@@ -52,16 +72,26 @@ class UserAccount implements QueryItem
         return $this->updatedAt;
     }
 
-    public function toArray(): array
+    public function rememberToken(): ?string
     {
-        return [
-            'id' => $this->id(),
-            'username' => $this->username(),
-            'email' => $this->email(),
-            'status' => $this->status(),
-            'password' => '[secrete]',
-            'created_at' => $this->createdAt(),
-            'updated_at' => $this->updatedAt(),
-        ];
+        return $this->rememberToken;
+    }
+
+    public function twoFactorSecrete(): ?string
+    {
+        return $this->twoFactorSecrete;
+    }
+
+    public function twoFactorRecoverCodes(): ?string
+    {
+        return $this->twoFactorRecoverCodes;
+    }
+
+
+    public function __debugInfo(): ?array
+    {
+        $properties = get_object_vars($this);
+        $properties['password'] = '[secrete]';
+        return $properties;
     }
 }

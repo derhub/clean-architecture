@@ -20,7 +20,7 @@ final class CreateBusinessTable extends AbstractMigration
             ->addColumn('owner_id', Column::BINARYUUID, ['null' => true])
             ->addColumn(
                 'onboard_status', Column::SMALLINTEGER,
-                ['null' => true, 'default' => OnBoardStatus::none()->toInt()]
+                ['null' => true, 'default' => OnBoardStatus::start()->toInt()]
             )->addColumn(
                 'status', Column::SMALLINTEGER,
                 ['null' => true, 'default' => Status::disable()->toInt()]

@@ -13,6 +13,7 @@ class DoctrineFactory
     /**
      * @param array $config
      * @param \Psr\Cache\CacheItemPoolInterface $cachePool
+     * @param \Derhub\Shared\Database\Doctrine\TenantIdentityProvider $tenant
      * @return \Doctrine\ORM\EntityManagerInterface
      * @throws \Doctrine\ORM\ORMException config:
      * [
@@ -33,8 +34,8 @@ class DoctrineFactory
     public static function createEntityManager(
         array $config,
         CacheItemPoolInterface $cachePool,
+        ?TenantIdentityProvider $tenantProvider = null,
     ): EntityManagerInterface {
-
         $setup = Setup::createXMLMetadataConfiguration(
             $config['metadata'],
             $config['dev_mode'],
@@ -42,9 +43,24 @@ class DoctrineFactory
             DoctrineProvider::wrap($cachePool)
         );
 
-        return EntityManager::create(
+        $setup->addFilter('tenant_id', TenantSqlFilter::class);
+
+        $entityManager = EntityManager::create(
             $config['connection'],
             $setup
         );
+
+        if ($tenantProvider) {
+            $filter = $entityManager->getFilters()
+                ->enable(TenantSqlFilter::NAME)
+            ;
+
+            $filter->setParameter(
+                TenantSqlFilter::PARAM_KEY,
+                $tenantProvider->getTenantId()
+            );
+        }
+
+        return $entityManager;
     }
 }

@@ -20,12 +20,14 @@
   },
   "autoload": {
     "psr-4": {
-      "Derhub\\Shared\\Database\\": "src"
+      "Derhub\\Shared\\Database\\": "src",
+      "Derhub\\Laravel\\Database\\": "integration/laravel/src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\Database\\": "tests"
+      "Tests\\Database\\": "tests",
+      "Tests\\Laravel\\Database\\": "integration/laravel/tests"
     }
   },
   "scripts": {

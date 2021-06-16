@@ -13,12 +13,12 @@ use function json_encode;
 
 class DispatcherSuccessResponse implements DispatcherResponse
 {
-    private Generator | array $data;
+    private Generator|array $data;
     private array $errors;
     private int $status;
 
     public function __construct(
-        private null | CommandResponse | QueryResponse $response
+        private null|CommandResponse|QueryResponse $response
     ) {
         $this->status = $this->response === null || $this->response->isSuccess()
             ? self::HTTP_SUCCESS
@@ -44,9 +44,13 @@ class DispatcherSuccessResponse implements DispatcherResponse
         }
 
         $results = [];
-        foreach ($this->data as $data) {
+
+        // resolve generator
+        foreach ($this->data as $key => $data) {
             if ($data instanceof QueryItem) {
-                $results[] = $data->toArray();
+                $results[$key] = $data->toArray();
+            } else {
+                $results[$key] = $data;
             }
         }
 

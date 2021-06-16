@@ -4,7 +4,7 @@ namespace Derhub\IdentityAccess\Account\Services\Query;
 
 use Derhub\IdentityAccess\Account\Infrastructure\Database\QueryUserAccountRepository;
 use Derhub\IdentityAccess\Account\Model\Values\Email;
-use Derhub\IdentityAccess\Account\Model\Values\Password;
+use Derhub\IdentityAccess\Account\Model\Values\HashedPassword;
 use Derhub\IdentityAccess\Account\Model\Values\Username;
 use Derhub\IdentityAccess\Account\Services\CommonQueryResponse;
 use Derhub\Shared\Message\Query\QueryResponse;

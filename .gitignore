@@ -13,7 +13,9 @@ vendor
 
 apps
 
-.*
+.vscode/*
+.php-cs-fixer.dist.php
+*.cache
 composer.json
 monorepo-builder.php
 psalm.xml.dist

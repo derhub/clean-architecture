@@ -1,6 +1,6 @@
 <?php
 
-use App\BuildingBlocks\LaravelAuthDriver\UserIdentityProvider;
+use Derhub\Laravel\IdentityAccess\AuthProvider\IdentityAccessAuthProvider;
 
 return [
 
@@ -18,7 +18,7 @@ return [
     'defaults' => [
         'guard' => 'web',
         //'passwords' => 'users',
-        'passwords' => UserIdentityProvider::NAME,
+        'passwords' => IdentityAccessAuthProvider::NAME,
     ],
 
     /*
@@ -42,13 +42,13 @@ return [
         'web' => [
             'driver' => 'session',
             //'provider' => 'users',
-            'provider' => UserIdentityProvider::NAME,
+            'provider' => IdentityAccessAuthProvider::NAME,
         ],
 
         'api' => [
             'driver' => 'token',
             //'provider' => 'users',
-            'provider' => UserIdentityProvider::NAME,
+            'provider' => IdentityAccessAuthProvider::NAME,
             'hash' => false,
         ],
     ],
@@ -76,10 +76,9 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        UserIdentityProvider::NAME => [
-            //'driver' => '',
-            'driver' => UserIdentityProvider::NAME,
-            'provider' => UserIdentityProvider::NAME,
+        IdentityAccessAuthProvider::NAME => [
+            'driver' => IdentityAccessAuthProvider::NAME,
+            'provider' => IdentityAccessAuthProvider::NAME,
         ],
     ],
 

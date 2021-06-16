@@ -23,7 +23,7 @@ abstract class AbstractQueryResponse extends AbstractMessageResponse implements 
 
     public function firstResult(): mixed
     {
-        foreach ($this->result() as $item) {
+        foreach ($this->results() as $item) {
             return $item;
         }
 

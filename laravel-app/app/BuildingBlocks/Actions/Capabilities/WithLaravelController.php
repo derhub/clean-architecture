@@ -6,8 +6,6 @@ use App\BuildingBlocks\Actions\DispatcherErrorResponse;
 use App\BuildingBlocks\Actions\DispatcherResponse;
 use Illuminate\Validation\ValidationException;
 
-use const PHP_EOL;
-
 trait WithLaravelController
 {
     /**
@@ -16,7 +14,7 @@ trait WithLaravelController
     public function __invoke(...$args): mixed
     {
         if (static::getRouteMethod() === 'post'
-            && $this->getRequest()->method() === 'GET') {
+            && $this->getRequest()->getMethod() === 'GET') {
             return $this->onViewRequest();
         }
 
@@ -43,8 +41,6 @@ trait WithLaravelController
 
     public function onSuccessResponse(DispatcherResponse $response): mixed
     {
-        \session()->flash('message', 'success');
-
         return \redirect()->back();
     }
 
@@ -61,7 +57,7 @@ trait WithLaravelController
     {
         $message = \sprintf(
             'The %s method is not supported for this action.',
-            $this->getRequest()->method()
+            $this->getRequest()->getMethod()
         );
 
         if (\app()->environment() === 'local') {
@@ -77,5 +73,11 @@ trait WithLaravelController
     public function isInertia(): bool
     {
         return $this->getRequest()->hasHeader('x-inertia');
+    }
+
+
+    protected function getSegments(): array
+    {
+        return request()?->route()?->parameters() ?? [];
     }
 }

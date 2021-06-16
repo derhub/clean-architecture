@@ -4,5 +4,5 @@ namespace Derhub\IdentityAccess\Account\Shared;
 
 class UserAccountValues
 {
-    public const TABLE_NAME = 'user_accounts';
+    public const TABLE_NAME = 'users';
 }

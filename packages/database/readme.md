@@ -8,16 +8,16 @@ Manage orm integration, migration and testing
 
 We have two repository for persistence and query
 
-1. `Derhub\Shared\Database\Doctrine\DoctrinePersistenceRepository` for aggregate
+1. `Derhub\Shared\Database\Doctrine\PersistenceRepository` for aggregate
   persistence
 ```php
 // sample usage
-use Derhub\Shared\Persistence\DatabasePersistenceRepository;
+use Derhub\Shared\Persistence\PersistenceRepository;
 
 class YourAggregatePersistenceRepository implements YourAggregateRepository
 {
     public function __construct(
-        private DatabasePersistenceRepository $persistence
+        private PersistenceRepository $persistence
     ) {
         $this->persistence->setAggregateClass(YourAggregate::class);
     }
@@ -53,10 +53,9 @@ use Doctrine\ORM\EntityRepository;
 class DoctrineQueryBusinessRepository extends DoctrineQueryRepository implements QueryYourAggregateRepository
 {
     public function __construct(
-        EntityManagerInterface $entityManager,
-        BusinessQueryItemMapper $mapper
+        EntityManagerInterface $entityManager
     ) {
-        parent::__construct($entityManager, $mapper);
+        parent::__construct($entityManager);
     }
 
     protected function getRepository(): EntityRepository

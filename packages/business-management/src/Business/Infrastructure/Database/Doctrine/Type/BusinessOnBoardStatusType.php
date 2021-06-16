@@ -29,7 +29,7 @@ class BusinessOnBoardStatusType extends IntegerType
 
     public function defineEmptyValueForPHP(mixed $value): OnBoardStatus
     {
-        return OnBoardStatus::notHanded();
+        return OnBoardStatus::start();
     }
 
     public function defineName(): string

@@ -6,7 +6,7 @@
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity name="Derhub\IdentityAccess\Account\Model\UserAccount"
-            table="user_accounts">
+            table="users">
 
         <indexes>
             <index columns="status"/>

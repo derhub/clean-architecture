@@ -2,12 +2,19 @@
 
 namespace Derhub\IdentityAccess\Account\Model\Values;
 
-class HashedPassword
-{
-    private Password $value;
+use Derhub\Shared\Utils\Assert;
+use Derhub\Shared\Values\ValueObjectStr;
 
-    public function __construct()
+class HashedPassword implements ValueObjectStr
+{
+    use BasicStringValue;
+
+    public function __toString()
     {
-        $this->value = new Password();
+        if ($this->isEmpty()) {
+            return 'empty user password';
+        }
+
+        return 'user password [secrete]';
     }
 }

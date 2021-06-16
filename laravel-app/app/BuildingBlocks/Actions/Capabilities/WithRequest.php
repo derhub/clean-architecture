@@ -3,28 +3,29 @@
 namespace App\BuildingBlocks\Actions\Capabilities;
 
 use Illuminate\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 trait WithRequest
 {
-    protected ?Request $request = null;
+    protected ?ServerRequestInterface $request = null;
 
-    public function setRequest(Request $request): void
+    public function setRequest(ServerRequestInterface $request): void
     {
         $this->request = $request;
     }
 
-    public function getRequest(): Request
+    public function getRequest(): ServerRequestInterface
     {
-        return $this->request ?? request();
+        return $this->request ?? \app()->get(ServerRequestInterface::class);
     }
 
-    public function input(string $key, mixed $default = null): mixed
+    public function getRequestBody(): array
     {
-        return $this->getRequest()->get($key, $default);
+        return $this->getRequest()->getParsedBody();
     }
 
-    public function inputHas(string $key): bool
+    public function getRequestQueries(): array
     {
-        return $this->getRequest()->has($key);
+        return $this->getRequest()->getQueryParams();
     }
 }
