@@ -16,12 +16,14 @@
   },
   "autoload": {
     "psr-4": {
-      "Derhub\\BusinessManagement\\": "src"
+      "Derhub\\BusinessManagement\\": "src",
+      "Derhub\\Laravel\\BusinessManagement\\": "integration/laravel/src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\BusinessManagement\\": "tests"
+      "Tests\\BusinessManagement\\": "tests",
+      "Tests\\Laravel\\BusinessManagement\\": "tests"
     }
   },
   "scripts": {

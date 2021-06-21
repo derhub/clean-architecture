@@ -10,11 +10,11 @@
   "require": {
     "php": "^7.4|^8.0",
     "ext-pdo": "*",
-    "derhub/business-management": "dev-master",
-    "derhub/identity-access": "dev-master",
-    "derhub/integration": "dev-master",
+    "derhub/laravel-business-management": "dev-master",
+    "derhub/laravel-identity-access": "dev-master",
+    "derhub/laravel-integration": "dev-master",
     "derhub/shared": "dev-master",
-    "derhub/shared-database": "dev-master",
+    "derhub/laravel-shared-database": "dev-master",
     "doctrine/cache": "^1.1",
     "doctrine/orm": "^2.9",
     "fideloper/proxy": "^4.4",
@@ -99,6 +99,10 @@
     {
       "type": "path",
       "url": "../packages/*"
+    },
+    {
+      "type": "path",
+      "url": "../packages/*/integration/*"
     }
   ],
   "minimum-stability": "dev",

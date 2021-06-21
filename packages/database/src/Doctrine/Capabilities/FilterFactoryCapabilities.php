@@ -1,8 +1,7 @@
 <?php
 
-namespace Derhub\Shared\Database\Doctrine;
+namespace Derhub\Shared\Database\Doctrine\Capabilities;
 
-use Doctrine\ORM\QueryBuilder;
 use Derhub\Shared\Query\Filters\InArrayFilter;
 use Derhub\Shared\Query\Filters\OperationFilter;
 use Derhub\Shared\Query\Filters\PaginationFilter;
@@ -10,70 +9,67 @@ use Derhub\Shared\Query\Filters\RangeFilter;
 use Derhub\Shared\Query\Filters\SearchFilter;
 use Derhub\Shared\Query\Filters\SortFilter;
 use Derhub\Shared\Query\QueryFilter;
-use Derhub\Shared\Query\QueryFilterFactory;
-use Doctrine\Persistence\ObjectRepository;
+use Doctrine\ORM\QueryBuilder;
 
-/**
- * @template T
- */
-class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
+trait FilterFactoryCapabilities
 {
-    private const ALIAS = 'b';
-    private int|string $loopKey;
-    private QueryBuilder $queryBuilder;
+    private mixed $loopKey;
 
-    /**
-     * @param \Doctrine\Persistence\ObjectRepository<T> $model
-     */
-    public function __construct(
-        private ObjectRepository $model
-    ) {
-        $this->loopKey = 0;
-        $this->queryBuilder = $this->model->createQueryBuilder(self::ALIAS);
+    protected function setLoopKey(string|int $key): void
+    {
+        $this->loopKey = $key;
     }
 
-    public function create(mixed $id, QueryFilter $filter): QueryBuilder
-    {
+    abstract protected function getQueryBuilder(
+    ): \Doctrine\ORM\QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder;
+
+    abstract public function createField(
+        QueryFilter|\Doctrine\DBAL\Query\QueryBuilder $filter
+    ): string;
+
+    abstract public function createLookupField(
+        QueryFilter|\Doctrine\DBAL\Query\QueryBuilder $filter
+    ): string;
+
+    public function create(
+        mixed $id,
+        QueryFilter|\Doctrine\DBAL\Query\QueryBuilder $filter
+    ): \Doctrine\ORM\QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder {
         $this->loopKey = $id;
 
         return match (true) {
             $filter instanceof SearchFilter => $this->createForSearch(
-                $this->queryBuilder,
+                $this->getQueryBuilder(),
                 $filter
             ),
             $filter instanceof OperationFilter => $this->createForOperation(
-                $this->queryBuilder,
+                $this->getQueryBuilder(),
                 $filter
             ),
             $filter instanceof PaginationFilter => $this->createForPagination(
-                $this->queryBuilder,
+                $this->getQueryBuilder(),
                 $filter
             ),
             $filter instanceof RangeFilter => $this->createForRange(
-                $this->queryBuilder,
+                $this->getQueryBuilder(),
                 $filter
             ),
             $filter instanceof SortFilter => $this->createForSort(
-                $this->queryBuilder,
+                $this->getQueryBuilder(),
                 $filter
             ),
             $filter instanceof InArrayFilter => $this->createForInArray(
-                $this->queryBuilder,
+                $this->getQueryBuilder(),
                 $filter
             ),
-            default => $this->queryBuilder,
+            default => $this->getQueryBuilder(),
         };
     }
 
-    public function createField(QueryFilter $filter): string
-    {
-        return self::ALIAS.'.'.$filter->field();
-    }
-
     public function createForInArray(
-        QueryBuilder $queryBuilder,
+        QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder $queryBuilder,
         InArrayFilter $filter
-    ): QueryBuilder {
+    ): QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder {
         $symbol = $filter->operation();
         $lookupField = $this->createLookupField($filter);
 
@@ -86,9 +82,9 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
     }
 
     public function createForOperation(
-        QueryBuilder $queryBuilder,
+        QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder $queryBuilder,
         OperationFilter $filter
-    ): QueryBuilder {
+    ): QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder {
         $symbol = $filter->operationSymbol();
         $lookupField = $this->createLookupField($filter);
 
@@ -101,9 +97,9 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
     }
 
     public function createForPagination(
-        QueryBuilder $queryBuilder,
+        QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder $queryBuilder,
         PaginationFilter $filter
-    ): QueryBuilder {
+    ): QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder {
         return $queryBuilder
             ->setFirstResult($filter->page())
             ->setMaxResults($filter->perPage())
@@ -111,9 +107,9 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
     }
 
     public function createForRange(
-        QueryBuilder $queryBuilder,
+        QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder $queryBuilder,
         RangeFilter $filter
-    ): QueryBuilder {
+    ): QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder {
         $symbol = $filter->operationSymbol();
         $lookupField = $this->createLookupField($filter);
 
@@ -136,9 +132,9 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
     }
 
     public function createForSearch(
-        QueryBuilder $queryBuilder,
+        QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder $queryBuilder,
         SearchFilter $filter
-    ): QueryBuilder {
+    ): QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder {
         $lookupField = $this->createLookupField($filter);
 
         return $queryBuilder
@@ -153,22 +149,14 @@ class DoctrineQueryBuilderFilterFactory implements QueryFilterFactory
     }
 
     public function createForSort(
-        QueryBuilder $queryBuilder,
+        QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder $queryBuilder,
         SortFilter $filter
     ): QueryBuilder {
         return $queryBuilder
-            ->addOrderBy($this->createField($filter), $filter->value())
+            ->addOrderBy(
+                $this->createField($filter),
+                $filter->value()
+            )
         ;
-    }
-
-    public function createLookupField(
-        QueryFilter $filter,
-    ): string {
-        return $filter->field()[0].$this->loopKey;
-    }
-
-    public function getQueryBuilder(): QueryBuilder
-    {
-        return $this->queryBuilder;
     }
 }

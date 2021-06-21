@@ -23,7 +23,7 @@ class GetByEmailHandler
         $queryResult = $this->repo
             ->addFilter(
                 OperationFilter::eq(
-                    DBColumns::EMAIL, $email->toString()
+                    DBColumns::DBAL_EMAIL, $email->toString()
                 )
             )
             ->singleResult()

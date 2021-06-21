@@ -2,19 +2,30 @@
 
 namespace Derhub\Shared\Database\Doctrine;
 
+use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\ORM\Tools\Setup;
 use Psr\Cache\CacheItemPoolInterface;
 
 class DoctrineFactory
 {
+    public static function createConfig(
+        bool $devMode,
+        ?string $proxyDir = null,
+        ?Cache $cachePool = null,
+    ): Configuration {
+        return Setup::createConfiguration(
+            $devMode,
+            $proxyDir,
+            $cachePool
+        );
+    }
+
     /**
-     * @param array $config
-     * @param \Psr\Cache\CacheItemPoolInterface $cachePool
-     * @param \Derhub\Shared\Database\Doctrine\TenantIdentityProvider $tenant
-     * @return \Doctrine\ORM\EntityManagerInterface
      * @throws \Doctrine\ORM\ORMException config:
      * [
      *      'dev_mode' => false,
@@ -36,11 +47,18 @@ class DoctrineFactory
         CacheItemPoolInterface $cachePool,
         ?TenantIdentityProvider $tenantProvider = null,
     ): EntityManagerInterface {
-        $setup = Setup::createXMLMetadataConfiguration(
-            $config['metadata'],
-            $config['dev_mode'],
+        $setup = self::createConfig(
+            $config['dev_mode'] ?? true,
             $config['proxy_dir'] ?? null,
-            DoctrineProvider::wrap($cachePool)
+            DoctrineProvider::wrap($cachePool),
+        );
+
+        foreach ($config['metadata'] as $path) {
+            DoctrineXmlMetadataRegistry::addPath($path);
+        }
+
+        $setup->setMetadataDriverImpl(
+            new XmlDriver(DoctrineXmlMetadataRegistry::metadata())
         );
 
         $setup->addFilter('tenant_id', TenantSqlFilter::class);

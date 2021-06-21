@@ -23,7 +23,7 @@ class GetByUsernameHandler
         $queryResult = $this->repo
             ->addFilter(
                 OperationFilter::eq(
-                    DBColumns::USERNAME, $username->toString()
+                    DBColumns::DBAL_USERNAME, $username->toString()
                 )
             )
             ->singleResult()

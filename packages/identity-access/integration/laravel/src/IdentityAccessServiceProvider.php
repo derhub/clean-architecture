@@ -6,6 +6,7 @@ use Derhub\IdentityAccess\Account\Infrastructure\Database\Doctrine\UserAccountDo
 use Derhub\IdentityAccess\Account\Model\PasswordEncryption;
 use Derhub\Laravel\IdentityAccess\AuthProvider\IdentityAccessAuthProvider;
 use Derhub\Laravel\IdentityAccess\Encryption\PasswordEncryptor;
+use Derhub\Shared\Database\Doctrine\DoctrineXmlMetadataRegistry;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,7 +32,12 @@ class IdentityAccessServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        DoctrineXmlMetadataRegistry::addPath(
+            __DIR__.'/../../../configs/mapping'
+        );
+
         UserAccountDoctrineTypes::register();
+
         $this->app->bind(
             PasswordEncryption::class,
             PasswordEncryptor::class

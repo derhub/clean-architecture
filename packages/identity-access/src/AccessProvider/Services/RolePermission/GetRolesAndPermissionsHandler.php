@@ -14,7 +14,7 @@ class GetRolesAndPermissionsHandler
 
     public function __invoke(GetRolesAndPermissions $req): QueryResponse
     {
-        $roles = $this->repo->allRoles();
+        $roles = $this->repo->all();
         $permission = $this->repo->getPermissions($roles);
 
         return new GetRolesAndPermissionsResponse(

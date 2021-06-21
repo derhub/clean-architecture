@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->register(\Derhub\Laravel\Database\DatabaseServiceProvider::class);
         $this->app->register(\Derhub\Laravel\Integration\IntegrationServiceProvider::class);
         $this->app->register(\Derhub\Laravel\IdentityAccess\IdentityAccessServiceProvider::class);
+        $this->app->register(\Derhub\Laravel\BusinessManagement\BMServiceProvider::class);
 
         $this->boostrapModules();
         $this->registerDebugBar();

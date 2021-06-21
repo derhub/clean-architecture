@@ -39,10 +39,6 @@ class DispatcherSuccessResponse implements DispatcherResponse
 
     public function data(): array
     {
-        if (is_array($this->data)) {
-            return $this->data;
-        }
-
         $results = [];
 
         // resolve generator

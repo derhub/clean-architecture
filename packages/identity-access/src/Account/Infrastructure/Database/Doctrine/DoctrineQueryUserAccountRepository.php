@@ -6,11 +6,11 @@ use Derhub\IdentityAccess\Account\Infrastructure\Database\QueryUserAccountReposi
 use Derhub\IdentityAccess\Account\Model\UserAccount;
 use Derhub\IdentityAccess\Account\Services\UserAccountMapper;
 use Derhub\IdentityAccess\Account\Shared\UserAccountValues;
-use Derhub\Shared\Database\Doctrine\DoctrineQueryRepository;
+use Derhub\Shared\Database\Doctrine\DoctrineDbalQueryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class DoctrineQueryUserAccountRepository extends DoctrineQueryRepository
+class DoctrineQueryUserAccountRepository extends DoctrineDbalQueryRepository
     implements QueryUserAccountRepository
 {
     public function __construct(
@@ -20,10 +20,10 @@ class DoctrineQueryUserAccountRepository extends DoctrineQueryRepository
         $this->setMapper(new UserAccountMapper());
     }
 
-    protected function getRepository(): EntityRepository
-    {
-        return $this->entityManager->getRepository(UserAccount::class);
-    }
+    //protected function getRepository(): EntityRepository
+    //{
+    //    return $this->entityManager->getRepository(UserAccount::class);
+    //}
 
     protected function getTableName(): string
     {
